@@ -13,6 +13,7 @@ namespace Base
 {
 
 
+//! \brief	Fsm main class.
 class CFsm:
 	public IFsm,
 	public Fsm::IWalkable
@@ -46,26 +47,29 @@ public:
 	//! \copydoc IFsm::GenerateStateId
 	virtual Fsm::StateId GenerateState(Fsm::ContextId ctx) override;
 
-	virtual void Optimize() override;
-
 	//! \copydoc IFsm::CreateWalker
 	virtual std::shared_ptr<IFsmWalker> CreateWalker() override;
 
 public:
+	//! \copydoc Fsm::IWalkable::GetNextStates
 	virtual const std::vector<Fsm::StateId>& GetNextStates(const Fsm::StateId& currentState, Fsm::AlphabetType ch) const override;
 	
+	//! \copydoc Fsm::IWalkable::GetContext
 	virtual Fsm::ContextId GetContext(const Fsm::StateId& state) const override;
 
+	//! \copydoc Fsm::IWalkable::GetStart
 	virtual const Fsm::StateId& GetStart() const override;
 
 private:
 	void Initialize();
+	void Optimize();
 
 private:
-	bool m_optimized = false;
-	std::unordered_map<Fsm::StateId, Fsm::CState::Holder> m_states;
-	Fsm::StateId m_start;
-	std::shared_ptr<IFsmContextFactory> m_spContextFactory;
+	std::unordered_map<Fsm::StateId, Fsm::CState::Holder>	m_states;			// All states in fsm.
+	std::shared_ptr<IFsmContextFactory>						m_spContextFactory;	// Injected ctx factory.
+
+	bool			m_optimized;	// After optimization fsm became readonly. KTTODO - Use local optimized copy to remove readonly property.
+	Fsm::StateId	m_start;		// Id of start state.
 };
 
 

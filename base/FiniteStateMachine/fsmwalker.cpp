@@ -4,9 +4,11 @@
 
 namespace Base
 {
+namespace Fsm
+{
 
 
-CFsmWalker::CFsmWalker(Fsm::IWalkable& walkable, std::shared_ptr<IFsmContextFactory>& spCtxFactory):
+CWalker::CWalker(Fsm::IWalkable& walkable, std::shared_ptr<IFsmContextFactory>& spCtxFactory):
 	m_spCtxFactory(spCtxFactory),
 	m_pWalkable(&walkable)
 {
@@ -14,9 +16,8 @@ CFsmWalker::CFsmWalker(Fsm::IWalkable& walkable, std::shared_ptr<IFsmContextFact
 }
 
 
-bool CFsmWalker::ProcessStep(Fsm::AlphabetType ch)
+bool CWalker::ProcessStep(Fsm::AlphabetType ch)
 {
-	// Process states by character:
 	std::vector<Fsm::StateId> newState;
 	for (const auto& s : m_actualState)
 	{
@@ -36,12 +37,13 @@ bool CFsmWalker::ProcessStep(Fsm::AlphabetType ch)
 }
 
 
-bool CFsmWalker::VerifyLiteral(const String& literal)
+bool CWalker::VerifyLiteral(const String& literal)
 {
 	for (CharType c : literal)
 	{
 		if (ProcessStep(c) == false)
 		{
+			// Literal was not readed:
 			return false;
 		}
 	}
@@ -50,14 +52,16 @@ bool CFsmWalker::VerifyLiteral(const String& literal)
 }
 
 
-void CFsmWalker::Reset()
+void CWalker::Reset()
 {
+	// Actual state is fsm start.
 	m_actualState = { m_pWalkable->GetStart() };
 }
 
 
-Fsm::ContextId CFsmWalker::GetContext() const
+Fsm::ContextId CWalker::GetContext() const
 {
+	// Get context of all current states:
 	std::vector<Fsm::ContextId> ctxs;
 	for (const auto& s : m_actualState)
 	{
@@ -68,8 +72,10 @@ Fsm::ContextId CFsmWalker::GetContext() const
 		}
 	}
 
+	// Return most priorited context by factory:
 	return m_spCtxFactory->SelectContext(ctxs);
 }
 
 
+}
 }

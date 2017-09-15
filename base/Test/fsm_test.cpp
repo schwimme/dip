@@ -24,7 +24,6 @@ TEST_METHOD(Email_validation)
 	Base::Fsm::StateId code2 = fsm->GenerateState(Base::Fsm::FINITE);
 
 	fsm->SetStart(name1);
-
 	fsm->AddRule(name1, name2, TEXT('a'), TEXT('z'));
 	fsm->AddRule(name2, name2, TEXT('a'), TEXT('z'));
 	fsm->AddRule(name2, domain1, TEXT('@'));

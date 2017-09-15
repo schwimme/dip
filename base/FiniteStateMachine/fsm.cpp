@@ -11,12 +11,14 @@ namespace Base
 
 
 CFsm::CFsm(std::shared_ptr<IFsmContextFactory>& spCtxFactory):
-	m_spContextFactory(spCtxFactory)
+	m_spContextFactory(spCtxFactory),
+	m_optimized(false)
 {}
 
 
 void CFsm::Initialize()
 {
+	// Currently no action taken.
 }
 
 
@@ -46,7 +48,7 @@ void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::Alphab
 
 void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType a, Fsm::AlphabetType b)
 {
-	// KTTODO - optimize this using ranges (should be done after UT).
+	// KTTODO - optimize this using ranges (should be done after UT to be sure, optimization doesnt break anything).
 	do
 	{
 		AddRule(from, to, a);
@@ -74,8 +76,6 @@ Fsm::StateId CFsm::GenerateState(Fsm::ContextId ctx)
 
 void CFsm::Optimize()
 {
-	m_optimized = true;
-
 	// Remove epsilon rules:
 	for (auto& s : m_states)
 	{
@@ -115,6 +115,7 @@ void CFsm::Optimize()
 	} while (position != reachableStates.size());
 
 	// Commit point:
+	m_optimized = true;
 	std::unordered_map<Fsm::StateId, Fsm::CState::Holder> newStates;
 	for (const auto& s : reachableStates)
 	{
@@ -156,7 +157,7 @@ std::shared_ptr<IFsmWalker> CFsm::CreateWalker()
 		Optimize();
 	}
 
-	return std::make_shared<CFsmWalker>(*this, m_spContextFactory);
+	return std::make_shared<Fsm::CWalker>(*this, m_spContextFactory);
 }
 
 

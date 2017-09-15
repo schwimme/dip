@@ -4,12 +4,16 @@
 
 #include <base/Debugging/debug.h>
 
+
 namespace Base
 {
 namespace Fsm
 {
 
-	
+// Empty vector for returning in case, rule does not exists.
+static const std::vector<StateId> g_emptyVector;
+
+
 void CState::AddRule(const StateId& to, AlphabetType ch)
 {
 	std::vector<StateId>& nextStates = m_rules[ch];
@@ -43,7 +47,7 @@ const std::vector<StateId>& CState::GetRules(AlphabetType ch) const
 	auto it = m_rules.find(ch);
 	if (it == m_rules.end())
 	{
-		return m_emptyVector;
+		return g_emptyVector;
 	}
 
 	return it->second;

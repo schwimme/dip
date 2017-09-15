@@ -14,6 +14,7 @@ struct CScopeGuard
 		m_dismissed(false)
 	{}
 
+
 	~CScopeGuard()
 	{
 		if (!m_dismissed)
@@ -25,6 +26,7 @@ struct CScopeGuard
 			catch (...) {} // Ignore any exception.
 		}
 	}
+
 
 	void Dismiss()
 	{

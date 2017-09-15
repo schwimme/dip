@@ -8,6 +8,7 @@ namespace Fsm
 {
 
 
+//! \brief	Generate unique state id.
 class CStateIdGenerator
 {
 public:

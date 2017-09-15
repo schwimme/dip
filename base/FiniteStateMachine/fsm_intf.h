@@ -27,9 +27,10 @@ struct IFsm
 	//! \brief Generate new state id.
 	virtual Fsm::StateId GenerateState(Fsm::ContextId ctx) = 0;
 
-	//! \warning FSM cannot changed after optimization (AddRule, SetIdle and GenerateState are forbidden).
-	virtual void Optimize() = 0;
-
+	/*!
+		\brief		Create walker for current fsm.
+		\warning	FSM cannot changed after optimization (AddRule, SetIdle and GenerateState are forbidden).
+	*/
 	virtual std::shared_ptr<IFsmWalker> CreateWalker() = 0;
 };
 

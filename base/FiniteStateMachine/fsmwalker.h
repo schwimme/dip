@@ -11,23 +11,34 @@
 
 namespace Base
 {
+namespace Fsm
+{
 
-
-class CFsmWalker:
+//! \brief Class for walking fsm.
+class CWalker:
 	public IFsmWalker
 {
 public:
-	CFsmWalker(Fsm::IWalkable& walkable, std::shared_ptr<IFsmContextFactory>& spCtxFactory);
-	virtual bool ProcessStep(Fsm::AlphabetType ch) override;
+	CWalker(IWalkable& walkable, std::shared_ptr<IFsmContextFactory>& spCtxFactory);
+
+	//! \copydoc IFsmWalker::ProcessStep
+	virtual bool ProcessStep(AlphabetType ch) override;
+
+	//! \copydoc IFsmWalker::VerifyLiteral
 	virtual bool VerifyLiteral(const String& literal) override;
+
+	//! \copydoc IFsmWalker::Reset
 	virtual void Reset() override;
+
+	//! \copydoc IFsmWalker::GetContext
 	virtual Fsm::ContextId GetContext() const override;
 
 private:
 	std::vector<Fsm::StateId>			m_actualState;
 	std::shared_ptr<IFsmContextFactory> m_spCtxFactory;
-	Fsm::IWalkable*						m_pWalkable;
+	IWalkable*							m_pWalkable;
 };
 
 
+}
 }

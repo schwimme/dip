@@ -1,32 +1,46 @@
 #pragma once
 
-// KTTODO remove:
-#include <iostream>
+#include "debug_impl.h"
+
 
 #ifdef WITH_ASSERTS
-#	define ASSETS_DISABLED true
+#	define ASSERTS_DISABLED true
 #else
-#	define ASSETS_DISABLED false
+#	define ASSERTS_DISABLED false
 #endif
 
 
+#ifdef WITH_BREAKPOINTS
+#	define BREAK_POINTS_DISABLED true
+#else
+#	define BREAK_POINTS_DISABLED false
+#endif
+
 namespace Base
 {
-namespace detail
+namespace Debugging
 {
 
 
 template<bool IsAssertsDisabled>
-static void AssertImpl(const char* file, int line, const char* msg)
-{
-	std::cout << "Not assert";
-}
+static void AssertImpl(const char*, int, const char*) {}
 
 
 template<>
 static void AssertImpl<false>(const char* file, int line, const char* msg)
 {
-	std::cout << "[Assert] - " << file << ':' << line << '-' << msg << std::endl;
+	detail::AssertImpl(file, line, msg);
+}
+
+
+template<bool IsBreakPointsDisabled>
+static void BreakPointImpl() {}
+
+
+template<>
+static void BreakPointImpl<false>()
+{
+	detail::BreakPointImpl();
 }
 
 
@@ -38,6 +52,13 @@ static void AssertImpl<false>(const char* file, int line, const char* msg)
 	do { \
 		if ((condition) == false) \
 		{\
-			Base::detail::AssertImpl<ASSETS_DISABLED>(__FILE__, __LINE__, #condition " failed");\
+			Base::Debugging::AssertImpl<ASSERTS_DISABLED>(__FILE__, __LINE__, "[ASSERT FAILED] ("#condition ")");\
 		}\
 	} while (0)
+
+
+#ifdef WITH_ASSERTS
+#	define VERIFY_NO_EVAL(condition) VERIFY(condition)
+#else
+#	define VERIFY_NO_EVAL(condition) (void)(0)
+#endif
