@@ -18,6 +18,9 @@ struct IFsm
 	//! \brief 'from'->'ch'->'to'.
 	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType ch) = 0;
 
+	//! \brief 'from'->[a, b]->'to'.
+	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType a, Fsm::AlphabetType b) = 0;
+
 	//! \brief Mark state as starting state.
 	virtual void SetStart(const Fsm::StateId& state) = 0;
 

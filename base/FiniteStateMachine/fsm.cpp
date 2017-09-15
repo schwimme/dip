@@ -44,6 +44,16 @@ void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::Alphab
 }
 
 
+void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType a, Fsm::AlphabetType b)
+{
+	// KTTODO - optimize this using ranges (should be done after UT).
+	do
+	{
+		AddRule(from, to, a);
+	} while (a++ != b);
+}
+
+
 void CFsm::SetStart(const Fsm::StateId& state)
 {
 	VERIFY(m_optimized == false);
