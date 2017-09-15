@@ -19,7 +19,7 @@ struct IFsm
 	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType ch) = 0;
 
 	//! \brief Mark state as starting state.
-	virtual void SetIdle(const Fsm::StateId& state) = 0;
+	virtual void SetStart(const Fsm::StateId& state) = 0;
 
 	//! \brief Generate new state id.
 	virtual Fsm::StateId GenerateState(Fsm::ContextId ctx) = 0;

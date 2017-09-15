@@ -21,7 +21,7 @@ TEST_METHOD(test1)
 	Base::Fsm::StateId s2 = fsm->GenerateState(Base::Fsm::NON_FINITE);
 	Base::Fsm::StateId s3 = fsm->GenerateState(Base::Fsm::FINITE);
 
-	fsm->SetIdle(s0);
+	fsm->SetStart(s0);
 
 	fsm->AddRule(s0, s0);
 	fsm->AddRule(s0, s1);

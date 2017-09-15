@@ -38,7 +38,7 @@ public:
 	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType ch) override;
 
 	//! \copydoc IFsm::SetIdle
-	virtual void SetIdle(const Fsm::StateId& state) override;
+	virtual void SetStart(const Fsm::StateId& state) override;
 
 	//! \copydoc IFsm::GenerateStateId
 	virtual Fsm::StateId GenerateState(Fsm::ContextId ctx) override;
@@ -53,7 +53,7 @@ public:
 	
 	virtual Fsm::ContextId GetContext(const Fsm::StateId& state) const override;
 
-	virtual const Fsm::StateId& GetIdle() const override;
+	virtual const Fsm::StateId& GetStart() const override;
 
 private:
 	void Initialize();
@@ -61,7 +61,7 @@ private:
 private:
 	bool m_optimized = false;
 	std::unordered_map<Fsm::StateId, Fsm::CState::Holder> m_states;
-	Fsm::StateId m_idle;
+	Fsm::StateId m_start;
 	std::shared_ptr<IFsmContextFactory> m_spContextFactory;
 };
 

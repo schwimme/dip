@@ -44,12 +44,12 @@ void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::Alphab
 }
 
 
-void CFsm::SetIdle(const Fsm::StateId& state)
+void CFsm::SetStart(const Fsm::StateId& state)
 {
 	VERIFY(m_optimized == false);
-	VERIFY(m_idle.empty());
+	VERIFY(m_start.empty());
 
-	m_idle = state;
+	m_start = state;
 }
 
 
@@ -81,7 +81,7 @@ void CFsm::Optimize()
 	}
 
 	// Remove unreachable states:
-	std::vector<Fsm::StateId> reachableStates = { m_idle };
+	std::vector<Fsm::StateId> reachableStates = { m_start };
 	size_t position = 0;
 	do
 	{
@@ -133,9 +133,9 @@ Fsm::ContextId CFsm::GetContext(const Fsm::StateId& state) const
 }
 
 
-const Fsm::StateId& CFsm::GetIdle() const
+const Fsm::StateId& CFsm::GetStart() const
 {
-	return m_idle;
+	return m_start;
 }
 
 

@@ -52,7 +52,7 @@ bool CFsmWalker::VerifyLiteral(const String& literal)
 
 void CFsmWalker::Reset()
 {
-	m_actualState = { m_pWalkable->GetIdle() };
+	m_actualState = { m_pWalkable->GetStart() };
 }
 
 
