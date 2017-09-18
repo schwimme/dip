@@ -7,6 +7,7 @@
 #include "walkable_intf.h"
 #include <unordered_map>
 #include "basecontextfactory.h"
+#include "fsmbuilder.h"
 
 
 namespace Base
@@ -30,6 +31,9 @@ public:
 	};
 
 	CFsm(std::shared_ptr<IFsmContextFactory>& spCtxFactory);
+
+private:
+	using StatesStorage = std::unordered_map<Fsm::StateId, Fsm::CState::Holder>;
 
 public:
 	//! \copydoc IFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to)
@@ -65,11 +69,13 @@ private:
 	void Optimize();
 
 private:
-	std::unordered_map<Fsm::StateId, Fsm::CState::Holder>	m_states;			// All states in fsm.
-	std::shared_ptr<IFsmContextFactory>						m_spContextFactory;	// Injected ctx factory.
+	StatesStorage						m_states;			// All states in fsm.
+	std::shared_ptr<IFsmContextFactory>	m_spContextFactory;	// Injected ctx factory.
 
 	bool			m_optimized;	// After optimization fsm became readonly. KTTODO - Use local optimized copy to remove readonly property.
 	Fsm::StateId	m_start;		// Id of start state.
+
+	friend class Fsm::CBuilder;
 };
 
 

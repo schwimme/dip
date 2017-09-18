@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="fsm.cpp" />
+    <ClCompile Include="fsmbuilder.cpp" />
     <ClCompile Include="fsmwalker.cpp" />
     <ClCompile Include="state.cpp" />
     <ClCompile Include="stateidgenerator.cpp" />
@@ -27,6 +28,7 @@
   <ItemGroup>
     <ClInclude Include="basecontextfactory.h" />
     <ClInclude Include="fsm.h" />
+    <ClInclude Include="fsmbuilder.h" />
     <ClInclude Include="fsmcontextfactory_intf.h" />
     <ClInclude Include="fsmwalker.h" />
     <ClInclude Include="fsmwalker_intf.h" />
