@@ -55,5 +55,11 @@
     <ClInclude Include="fsmbuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="regexcontextfactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Fsm.natvis" />
   </ItemGroup>
 </Project>

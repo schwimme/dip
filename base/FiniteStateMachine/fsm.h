@@ -19,6 +19,16 @@ class CFsm:
 	public IFsm,
 	public Fsm::IWalkable
 {
+private:
+	//	Order is used in evaluation so do not shuffle this enum.
+	enum class OptimizationLevel
+	{
+		NOTHING = 0,
+		EPSILON_RULES,
+		UNREACHABLE_STATES,
+		DETERMINE
+	};
+
 public:
 	struct Factory
 	{
@@ -66,7 +76,13 @@ public:
 
 private:
 	void Initialize();
-	void Optimize();
+
+	// KTTODO - move to fsm optimizier:
+	void Optimize(OptimizationLevel level);
+	void RemoveEpsilonRules();
+	bool RemoveEpsilonRulesImpl(Fsm::CState::Holder& pState);
+	void RemoveUnreachableStates();
+	void Determine();
 
 private:
 	StatesStorage						m_states;			// All states in fsm.

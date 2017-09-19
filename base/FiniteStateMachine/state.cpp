@@ -28,16 +28,17 @@ void CState::AddOptimizedEpsilonRule(const CState& to)
 {
 	for (const auto& rule : to.m_rules)
 	{
-		auto& v = m_rules[rule.first];
-		v = Base::Union(v, rule.second);
+		if (rule.first != Fsm::detail::EPSILON)
+		{
+			auto& v = m_rules[rule.first];
+			v = Base::Union(v, rule.second);
+		}
 	}
-	// KTTODO - commit point - do not work with m_rules until here
 }
 
 
 void CState::RemoveRules(AlphabetType ch)
 {
-	VERIFY(m_rules.find(ch) != m_rules.end());
 	m_rules.erase(ch);
 }
 
@@ -51,18 +52,6 @@ const std::vector<StateId>& CState::GetRules(AlphabetType ch) const
 	}
 
 	return it->second;
-}
-
-
-const std::unordered_map<AlphabetType, std::vector<StateId>> CState::GetAllRules()
-{
-	return m_rules;
-}
-
-
-ContextId CState::GetContext()
-{
-	return m_context;
 }
 
 

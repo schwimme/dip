@@ -2,6 +2,7 @@
 
 
 #include "fsmcontextfactory_intf.h"
+#include <base/Algorithm/algorithm.h>
 #include <base/Debugging/debug.h>
 
 
@@ -13,8 +14,8 @@ namespace Fsm
 
 /*!
 	\brief		Default context factory used if no other factory is given.
-	\warning	Factory is not dealing with context priorities. For more
-				contexts asserts and returns first one.
+	\detail		Factory behaves as standard fsm so if at least one VALID
+				context given, result is VALID. Otherwise INVALID.
 */
 class CBaseContextFactory:
 	public IFsmContextFactory
@@ -22,8 +23,12 @@ class CBaseContextFactory:
 public:
 	virtual Fsm::ContextId SelectContext(const std::vector<Fsm::ContextId>& allContexts) const override
 	{
-		VERIFY(allContexts.size() == 1);
-		return allContexts[0];
+		if (Base::Find(allContexts, VALID))
+		{
+			return VALID;
+		}
+
+		return INVALID;
 	}
 };
 

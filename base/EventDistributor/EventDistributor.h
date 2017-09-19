@@ -7,6 +7,7 @@
 #include <map>
 #include <mutex>
 
+// KTTODO move to separe file and namespace Base
 struct IRegistrator
 {
 	virtual ~IRegistrator() {}

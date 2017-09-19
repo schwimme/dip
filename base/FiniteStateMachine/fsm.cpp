@@ -74,28 +74,68 @@ Fsm::StateId CFsm::GenerateState(Fsm::ContextId ctx)
 }
 
 
-void CFsm::Optimize()
+void CFsm::Optimize(OptimizationLevel level)
 {
-	// Remove epsilon rules:
+	if (level > OptimizationLevel::NOTHING)
+	{
+		RemoveEpsilonRules();
+	}
+
+	if (level > OptimizationLevel::EPSILON_RULES)
+	{
+		RemoveUnreachableStates();
+	}
+
+	// After this call, fsm has no longer some exported states, so cant be changed:
+	m_optimized = true;
+
+	if (level > OptimizationLevel::UNREACHABLE_STATES)
+	{
+		Determine();
+	}
+}
+
+
+bool CFsm::RemoveEpsilonRulesImpl(Fsm::CState::Holder& pState)
+{
+	if (pState->m_epsVisited)
+	{
+		return false;
+	}
+
+	pState->m_epsVisited = true;
+
+	const std::vector<Fsm::StateId>& epsilonRules = pState->GetRules(Fsm::detail::EPSILON);
+	for (const auto& r : epsilonRules)
+	{
+		RemoveEpsilonRulesImpl(m_states[r]);
+		pState->AddOptimizedEpsilonRule(*(m_states[r]));
+		pState->m_context = m_spContextFactory->SelectContext({ pState->m_context, m_states[r]->m_context });
+	}
+
+	pState->RemoveRules(Fsm::detail::EPSILON);
+
+	return true;
+}
+
+
+void CFsm::RemoveEpsilonRules()
+{
 	for (auto& s : m_states)
 	{
 		Fsm::CState::Holder& pState = s.second;
-		const std::vector<Fsm::StateId>& epsilonRules = pState->GetRules(Fsm::detail::EPSILON);
-	
-		for (const auto& r : epsilonRules)
-		{
-			pState->AddOptimizedEpsilonRule(*(m_states[r]));
-		}
-
-		pState->RemoveRules(Fsm::detail::EPSILON);
+		RemoveEpsilonRulesImpl(pState);
 	}
+}
 
-	// Remove unreachable states:
+
+void CFsm::RemoveUnreachableStates()
+{
 	std::vector<Fsm::StateId> reachableStates = { m_start };
 	size_t position = 0;
 	do
 	{
-		const auto& allStateRules = m_states[reachableStates[position]]->GetAllRules();
+		const auto& allStateRules = m_states[reachableStates[position]]->m_rules;
 		std::vector<Fsm::StateId> allNextStates;
 		for (const auto& p : allStateRules)
 		{
@@ -115,7 +155,6 @@ void CFsm::Optimize()
 	} while (position != reachableStates.size());
 
 	// Commit point:
-	m_optimized = true;
 	std::unordered_map<Fsm::StateId, Fsm::CState::Holder> newStates;
 	for (const auto& s : reachableStates)
 	{
@@ -123,6 +162,12 @@ void CFsm::Optimize()
 	}
 
 	m_states = std::move(newStates);
+}
+
+
+void CFsm::Determine()
+{
+	// KTTODO
 }
 
 
@@ -140,7 +185,7 @@ Fsm::ContextId CFsm::GetContext(const Fsm::StateId& state) const
 	auto it = m_states.find(state);
 	VERIFY(it != m_states.end());
 
-	return it->second->GetContext();
+	return it->second->m_context;
 }
 
 
@@ -154,7 +199,8 @@ std::shared_ptr<IFsmWalker> CFsm::CreateWalker()
 {
 	if (m_optimized == false)
 	{
-		Optimize();
+		// Cannot determine fsm, because may context lose here.
+		Optimize(OptimizationLevel::UNREACHABLE_STATES);
 	}
 
 	return std::make_shared<Fsm::CWalker>(*this, m_spContextFactory);

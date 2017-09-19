@@ -34,13 +34,11 @@ protected:
 			NUMERIC_ITERATION,	// For x{2}
 		};
 
-		CharType normal				= 0;
-		CharType range_begin		= 0;
-		CharType range_end			= 0;
+		CharType char1 = 0;
+		CharType char2 = 0;
 		uint32_t iteration_begin	= 0;
 		uint32_t iteration_count	= 0;
 		Type type					= Type::NORMAL;
-		bool isFinite				= false;
 	};
 
 	using Regex = std::vector<RegexItem>;
@@ -49,8 +47,8 @@ public:
 	void MergeRegex(CFsm& fsm, const Base::String& regex, ContextId valid, ContextId invalid) const;
 
 protected:
-	// KTTODO - other class
-	Regex ParseRegex(const Base::String& regex) const;
+	// KTTODO - other class and remove virtual
+	virtual Regex ParseRegex(const Base::String& regex) const;
 };
 
 

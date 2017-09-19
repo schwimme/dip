@@ -33,8 +33,12 @@
     <ClInclude Include="fsmwalker.h" />
     <ClInclude Include="fsmwalker_intf.h" />
     <ClInclude Include="fsm_intf.h" />
+    <ClInclude Include="regexcontextfactory.h" />
     <ClInclude Include="state.h" />
     <ClInclude Include="stateidgenerator.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Fsm.natvis" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BA0A8A32-F18A-4863-AE66-EEFE4734250D}</ProjectGuid>

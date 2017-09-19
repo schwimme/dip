@@ -12,41 +12,40 @@ TEST_CLASS(Fsm_test)
 {
 public:
 
-TEST_METHOD(Email_validation)
+	struct BuilderTest :
+		public Base::Fsm::CBuilder
+	{
+		virtual Base::Fsm::CBuilder::Regex ParseRegex(const Base::String& regex) const override
+		{
+			return m_fakeRegex;
+		}
+
+		using RType = Base::Fsm::CBuilder::RegexItem::Type;
+		using RItem = Base::Fsm::CBuilder::RegexItem;
+		Base::Fsm::CBuilder::Regex m_fakeRegex;
+	};
+
+TEST_METHOD(KTTODO_All_UT)
 {
-	auto fsm = Base::CFsm::Factory().CreateFiniteStateMachine();
+	BuilderTest b;
+	BuilderTest::RItem r;
+	r.char1 = 'a';
+	b.m_fakeRegex.push_back(r);
+	r.iteration_begin = 0;
+	r.type = BuilderTest::RType::ITERATION;
+	b.m_fakeRegex.push_back(r);
+	r.char1 = 'c';
+	r.type = BuilderTest::RType::NORMAL;
+	b.m_fakeRegex.push_back(r);
 
-	Base::Fsm::StateId name1 = fsm->GenerateState(Base::Fsm::NON_FINITE);
-	Base::Fsm::StateId name2 = fsm->GenerateState(Base::Fsm::NON_FINITE);
-	Base::Fsm::StateId domain1 = fsm->GenerateState(Base::Fsm::NON_FINITE);
-	Base::Fsm::StateId domain2 = fsm->GenerateState(Base::Fsm::NON_FINITE);
-	Base::Fsm::StateId code1 = fsm->GenerateState(Base::Fsm::NON_FINITE);
-	Base::Fsm::StateId code2 = fsm->GenerateState(Base::Fsm::FINITE);
+	std::shared_ptr<Base::IFsmContextFactory> f = std::make_shared<Base::Fsm::CBaseContextFactory>();
+	Base::CFsm fsm(f);
+	auto a = fsm.GenerateState(1);
+	fsm.SetStart(a);
+	b.MergeRegex(fsm, TEXT(""), 1, 0);
 
-	fsm->SetStart(name1);
-	fsm->AddRule(name1, name2, TEXT('a'), TEXT('z'));
-	fsm->AddRule(name2, name2, TEXT('a'), TEXT('z'));
-	fsm->AddRule(name2, domain1, TEXT('@'));
-	fsm->AddRule(domain1, domain2, TEXT('a'), TEXT('z'));
-	fsm->AddRule(domain2, domain2, TEXT('a'), TEXT('z'));
-	fsm->AddRule(domain2, code1, TEXT('.'));
-	fsm->AddRule(code1, code2, TEXT('a'), TEXT('z'));
-	fsm->AddRule(code2, code2, TEXT('a'), TEXT('z'));
-
-	auto w = fsm->CreateWalker();
-
-	bool readed = w->VerifyLiteral(TEXT("valid@mail.com"));
-	Assert::IsTrue(readed);
-	Assert::AreEqual(w->GetContext(), Base::Fsm::FINITE);
-
-	w->Reset();
-	readed = w->VerifyLiteral(TEXT("invalid@readed"));
-	Assert::IsTrue(readed);
-	Assert::AreEqual(w->GetContext(), Base::Fsm::NON_FINITE);
-
-	w->Reset();
-	readed = w->VerifyLiteral(TEXT("invalid.not.readed"));
-	Assert::IsFalse(readed);
+	auto w = fsm.CreateWalker();
+	Assert::IsTrue(w->VerifyLiteral(TEXT("c")));
 }
 
 
