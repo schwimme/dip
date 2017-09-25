@@ -26,7 +26,8 @@ private:
 		NOTHING = 0,
 		EPSILON_RULES,
 		UNREACHABLE_STATES,
-		DETERMINE
+		DETERMINE,
+		MINIMIZE
 	};
 
 public:
@@ -74,6 +75,9 @@ public:
 	//! \copydoc Fsm::IWalkable::GetStart
 	virtual const Fsm::StateId& GetStart() const override;
 
+protected:
+	Base::String Dump() const;
+
 private:
 	void Initialize();
 
@@ -83,6 +87,7 @@ private:
 	bool RemoveEpsilonRulesImpl(Fsm::CState::Holder& pState);
 	void RemoveUnreachableStates();
 	void Determine();
+	void Minimize();
 
 private:
 	StatesStorage						m_states;			// All states in fsm.
@@ -91,6 +96,7 @@ private:
 	bool			m_optimized;	// After optimization fsm became readonly. KTTODO - Use local optimized copy to remove readonly property.
 	Fsm::StateId	m_start;		// Id of start state.
 
+// All FSM manipulators:
 	friend class Fsm::CBuilder;
 };
 

@@ -12,7 +12,8 @@ namespace Fsm
 void CBuilder::MergeRegex(CFsm& fsm, const Base::String& regex, ContextId valid, ContextId invalid) const
 {
 	// Parse regex to internal structure:
-	Regex parsedRegex = ParseRegex(regex);
+	const CharType* t = regex.c_str();
+	Regex parsedRegex = ParseRegex(t);
 
 	// Prepare output fsm:
 	std::shared_ptr<IFsmContextFactory> spCtxF = std::make_shared<CRegexContextFactory>(valid, invalid);
@@ -25,27 +26,28 @@ void CBuilder::MergeRegex(CFsm& fsm, const Base::String& regex, ContextId valid,
 	StateId fsmEnd = regexFsm.GenerateState(valid);
 
 	// Prepare mapping from parsed regex to fsm states:
-	std::vector<CFsm::StatesStorage::value_type*> newStates;
+	std::vector<CFsm::StatesStorage::iterator> newStates = { regexFsm.m_states.find(fsmStart) };
 
 	// Generate:
 	size_t regexSize = parsedRegex.size();
 	for (size_t it = 0; it < regexSize; ++it)
 	{
-		switch (parsedRegex[it].type)
+		const auto& currentParsedRegex = parsedRegex[it];
+		switch (currentParsedRegex.type)
 		{
 		case RegexItem::Type::NORMAL:
 		{
 			// Generate state:
 			StateId s = regexFsm.GenerateState(invalid);
 
-			// Is there previous state?
-			const StateId& b = (it == 0) ? fsmStart : newStates.at(newStates.size() - 1)->first;
+			// Current end:
+			const StateId& b = newStates.at(newStates.size() - 1)->first;
 
 			// Store reference to new states:
-			newStates.push_back(&(*(regexFsm.m_states.find(s))));
+			newStates.push_back(regexFsm.m_states.find(s));
 
 			// Add rule from starting position to newly generated state via character
-			regexFsm.AddRule(b, s, parsedRegex[it].char1);
+			regexFsm.AddRule(b, s, currentParsedRegex.char1);
 		}
 		break;
 
@@ -54,47 +56,47 @@ void CBuilder::MergeRegex(CFsm& fsm, const Base::String& regex, ContextId valid,
 			// Generate state:
 			StateId s = regexFsm.GenerateState(invalid);
 
-			// Is there previous state?
-			const StateId& b = (it == 0) ? fsmStart : newStates.at(newStates.size() - 1)->first;
+			// Current end:
+			const StateId& b = newStates.at(newStates.size() - 1)->first;
 
 			// Store reference to new states:
-			newStates.push_back(&(*(regexFsm.m_states.find(s))));
+			newStates.push_back(regexFsm.m_states.find(s));
 
 			// Add rule from starting position to newly generated state via character
-			regexFsm.AddRule(b, s, parsedRegex[it].char1, parsedRegex[it].char2);
+			regexFsm.AddRule(b, s, currentParsedRegex.char1, currentParsedRegex.char2);
 		}
 		break;
 
 		case RegexItem::Type::ITERATION:
 		{
 			// Cannot iterate nothing:
-			VERIFY_NO_EVAL(it != 0);
+			ASSERT_NO_EVAL(it != 0);
 
 			// Insert last->epsilon->empty to not harm processing:
 			StateId s = regexFsm.GenerateState(invalid);
 			regexFsm.AddRule(newStates.at(newStates.size() - 1)->first, s);
-			newStates.push_back(&(*(regexFsm.m_states.find(s))));
+			newStates.push_back(regexFsm.m_states.find(s));
 
 			// Register loop:
-			regexFsm.AddRule(s, newStates[parsedRegex[it].iteration_begin]->first);
+			regexFsm.AddRule(s, newStates[currentParsedRegex.iteration_begin]->first);
 
 			// Register epsilon rule from begin iteration to here to allow skip all the loop:
-			regexFsm.AddRule(newStates[parsedRegex[it].iteration_begin]->first, s);
+			regexFsm.AddRule(newStates[currentParsedRegex.iteration_begin]->first, s);
 		}
 		break;
 
 		case RegexItem::Type::POSITIVE_ITERATION:
 		{
 			// Cannot iterate nothing:
-			VERIFY_NO_EVAL(it != 0);
+			ASSERT_NO_EVAL(it != 0);
 
 			// Insert last->epsilon->empty to not harm processing:
 			StateId s = regexFsm.GenerateState(invalid);
 			regexFsm.AddRule(newStates.at(newStates.size() - 1)->first, s);
-			newStates.push_back(&(*(regexFsm.m_states.find(s))));
+			newStates.push_back(regexFsm.m_states.find(s));
 
 			// Register loop:
-			regexFsm.AddRule(s, newStates[parsedRegex[it].iteration_begin]->first);
+			regexFsm.AddRule(s, newStates[currentParsedRegex.iteration_begin]->first);
 		}
 		break;
 
@@ -112,10 +114,8 @@ void CBuilder::MergeRegex(CFsm& fsm, const Base::String& regex, ContextId valid,
 	// Add end rule:
 	regexFsm.AddRule(newStates.at(newStates.size() - 1)->first, fsmEnd);
 
-	// This fsm can be determined because all generated states are just internal:
-	regexFsm.Optimize(CFsm::OptimizationLevel::DETERMINE);
-
-	// KTTODO optimize - remove not endable states:
+	// This fsm can be fully optimized because all generated states are just internal:
+	regexFsm.Optimize(CFsm::OptimizationLevel::MINIMIZE);
 
 	// Merge fsm:
 	// - Copy new states:
@@ -129,9 +129,153 @@ void CBuilder::MergeRegex(CFsm& fsm, const Base::String& regex, ContextId valid,
 }
 
 
-CBuilder::Regex CBuilder::ParseRegex(const Base::String& regex) const
+CBuilder::Regex CBuilder::ParseRegex(const Base::CharType*& regex) const
 {
-	return CBuilder::Regex();
+	CBuilder::Regex outputStack;
+
+	while (*regex)
+	{
+		Base::CharType c = ParseCharacter(regex, outputStack);
+
+		switch (c)
+		{
+		case TEXT('['):
+			outputStack.push_back(std::move(ParseRange(regex)));
+			break;
+
+		case TEXT('('):
+		{
+			// KTTODO - comment:
+			CBuilder::Regex tmp = ParseRegex(++regex);
+			size_t oldPosition = outputStack.size();
+			outputStack.insert(outputStack.end(), tmp.begin(), tmp.end());
+			size_t newPosition = outputStack.size() - 1;
+			outputStack[newPosition].iteration_begin = oldPosition;
+			break;
+		}
+
+		case TEXT(')'):
+		{
+			++regex;
+			CheckEnd(regex);
+			
+			RegexItem i;
+			switch (*regex)
+			{
+			case TEXT('*'):
+				i.type = RegexItem::Type::ITERATION;
+				break;
+
+			case TEXT('+'):
+				i.type = RegexItem::Type::POSITIVE_ITERATION;
+				break;
+			
+			case TEXT('{'):
+				i.type = RegexItem::Type::NUMERIC_ITERATION;
+
+				++regex;
+				CheckEnd(regex);
+				i.iteration_count = (*regex - TEXT('0')); // KTTODO - more numbers
+
+				++regex;
+				CheckIs(regex, TEXT('}'));
+				break;
+
+			default:
+				ThrowParsingException(regex);
+			}
+			++regex;
+
+			outputStack.push_back(std::move(i));
+
+			return outputStack;
+		}
+
+		default:
+		{
+			RegexItem i;
+			i.type = RegexItem::Type::NORMAL;
+			i.char1 = *regex;
+			outputStack.push_back(std::move(i));
+
+			++regex;
+			break;
+		}
+
+		}
+	}
+
+	return outputStack;
+}
+
+
+Base::CharType CBuilder::ParseCharacter(const Base::CharType*& rest, CBuilder::Regex& out) const
+{
+	while (*rest == TEXT('\\'))
+	{
+		++rest;
+		CheckEnd(rest);
+
+		// Special character:
+		switch (*rest)
+		{
+		case TEXT('['):
+		case TEXT(']'):
+		case TEXT('('):
+		case TEXT(')'):
+		case TEXT('{'):
+		case TEXT('}'):
+		case TEXT('*'):
+		{
+			RegexItem i;
+			i.type = RegexItem::Type::NORMAL;
+			i.char1 = *rest;
+			out.push_back(std::move(i));
+			++rest;
+		}
+		break;
+
+		default:
+			// Wrong special character:
+			ThrowParsingException(rest);
+		}
+	}
+
+	return *rest;
+}
+
+
+CBuilder::RegexItem CBuilder::ParseRange(const Base::CharType*& rest) const
+{
+	CBuilder::RegexItem item;
+	item.type = RegexItem::Type::RANGE;
+
+	// [a-b]
+	ASSERT_NO_EVAL(*rest == TEXT('['));
+
+	++rest;
+	// a-b]
+	CheckEnd(rest);
+	item.char1 = *rest;
+
+	++rest;
+	// -b]
+	CheckIs(rest, TEXT('-'));
+	item.char1 = *rest;
+
+	++rest;
+	// b]
+	CheckEnd(rest);
+	item.char2 = *rest;
+
+	++rest;
+	// ]
+	CheckIs(rest, TEXT('-'));
+
+	// 
+	++rest;
+
+	return item;
 }
 
 

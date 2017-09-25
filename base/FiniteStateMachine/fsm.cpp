@@ -24,9 +24,9 @@ void CFsm::Initialize()
 
 void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to)
 {
-	VERIFY(m_optimized == false);
-	VERIFY(m_states.find(from) != m_states.end());
-	VERIFY(m_states.find(to) != m_states.end());
+	ASSERT_NO_EVAL(m_optimized == false);
+	ASSERT_NO_EVAL(m_states.find(from) != m_states.end());
+	ASSERT_NO_EVAL(m_states.find(to) != m_states.end());
 
 	if (from != to)
 	{
@@ -37,10 +37,10 @@ void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to)
 
 void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType ch)
 {
-	VERIFY(m_optimized == false);
-	VERIFY(ch != Fsm::detail::EPSILON);
-	VERIFY(m_states.find(from) != m_states.end());
-	VERIFY(m_states.find(to) != m_states.end());
+	ASSERT_NO_EVAL(m_optimized == false);
+	ASSERT_NO_EVAL(ch != Fsm::detail::EPSILON);
+	ASSERT_NO_EVAL(m_states.find(from) != m_states.end());
+	ASSERT_NO_EVAL(m_states.find(to) != m_states.end());
 
 	m_states[from]->AddRule(to, ch);
 }
@@ -58,8 +58,8 @@ void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::Alphab
 
 void CFsm::SetStart(const Fsm::StateId& state)
 {
-	VERIFY(m_optimized == false);
-	VERIFY(m_start.empty());
+	ASSERT_NO_EVAL(m_optimized == false);
+	ASSERT_NO_EVAL(m_start.empty());
 
 	m_start = state;
 }
@@ -67,7 +67,7 @@ void CFsm::SetStart(const Fsm::StateId& state)
 
 Fsm::StateId CFsm::GenerateState(Fsm::ContextId ctx)
 {
-	VERIFY(m_optimized == false);
+	ASSERT(m_optimized == false);
 	Fsm::StateId s = Fsm::CStateIdGenerator::Generate();
 	m_states[s] = std::make_unique<Fsm::CState>(ctx);
 	return s;
@@ -92,6 +92,11 @@ void CFsm::Optimize(OptimizationLevel level)
 	if (level > OptimizationLevel::UNREACHABLE_STATES)
 	{
 		Determine();
+	}
+
+	if (level > OptimizationLevel::DETERMINE)
+	{
+		Minimize();
 	}
 }
 
@@ -170,11 +175,16 @@ void CFsm::Determine()
 	// KTTODO
 }
 
+void CFsm::Minimize()
+{
+	// KTTODO
+}
+
 
 const std::vector<Fsm::StateId>& CFsm::GetNextStates(const Fsm::StateId& currentState, Fsm::AlphabetType ch) const
 {
 	auto it = m_states.find(currentState);
-	VERIFY(it != m_states.end());
+	ASSERT(it != m_states.end());
 
 	return it->second->GetRules(ch);
 }
@@ -183,7 +193,7 @@ const std::vector<Fsm::StateId>& CFsm::GetNextStates(const Fsm::StateId& current
 Fsm::ContextId CFsm::GetContext(const Fsm::StateId& state) const
 {
 	auto it = m_states.find(state);
-	VERIFY(it != m_states.end());
+	ASSERT(it != m_states.end());
 
 	return it->second->m_context;
 }
@@ -206,6 +216,34 @@ std::shared_ptr<IFsmWalker> CFsm::CreateWalker()
 	return std::make_shared<Fsm::CWalker>(*this, m_spContextFactory);
 }
 
+
+Base::String CFsm::Dump() const
+{
+	Base::String out;
+
+	// For all states:
+	for (const auto& state : m_states)
+	{
+		const Base::String& beginState = (state.first + TEXT('(') + Base::ToString(GetContext(state.first)) + TEXT(')'));
+
+		// For all characters in rule:
+		for (const auto& character : state.second->m_rules)
+		{
+			// For all destination states:
+			for (const auto& destState : character.second)
+			{
+				out += beginState;
+				out += TEXT("--");
+				out += ((character.first == Fsm::detail::EPSILON) ? TEXT('_') : character.first);
+				out += TEXT("->");
+				out += (destState + TEXT('(') + Base::ToString(GetContext(destState)) + TEXT(')'));
+				out += TEXT('\n');
+			}
+		}
+	}
+
+	return out;
+}
 
 
 }

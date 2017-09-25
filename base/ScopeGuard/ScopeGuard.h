@@ -9,7 +9,7 @@ namespace Base
 
 struct CScopeGuard
 {
-	CScopeGuard(std::function<void()> guard):
+	explicit CScopeGuard(std::function<void()> guard):
 		m_guard(guard),
 		m_dismissed(false)
 	{}

@@ -48,7 +48,33 @@ public:
 
 protected:
 	// KTTODO - other class and remove virtual
-	virtual Regex ParseRegex(const Base::String& regex) const;
+	virtual Regex ParseRegex(const Base::CharType*& regex) const;
+
+	void CheckEnd(const Base::CharType* rest) const
+	{
+		if (*rest == 0)
+		{
+			throw "KTTODO";
+		}
+	}
+
+	void CheckIs(const Base::CharType* rest, Base::CharType expected) const
+	{
+		if (*rest != expected)
+		{
+			throw "KTTODO";
+		}
+	}
+
+	void ThrowParsingException(const Base::CharType* rest) const
+	{
+		throw "KTTODO";
+	}
+
+	Base::CharType ParseCharacter(const Base::CharType*& rest, CBuilder::Regex& out) const;
+
+	RegexItem ParseRange(const Base::CharType*& rest) const;
+
 };
 
 

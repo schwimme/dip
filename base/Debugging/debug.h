@@ -23,11 +23,11 @@ namespace Debugging
 
 
 template<bool IsAssertsDisabled>
-static void AssertImpl(const char*, int, const char*) {}
+static void Assert(const char*, int, const char*) {}
 
 
 template<>
-static void AssertImpl<false>(const char* file, int line, const char* msg)
+static void Assert<false>(const char* file, int line, const char* msg)
 {
 	detail::AssertImpl(file, line, msg);
 }
@@ -48,17 +48,17 @@ static void BreakPointImpl<false>()
 }
 
 
-#define VERIFY(condition) \
+#define ASSERT(condition) \
 	do { \
 		if ((condition) == false) \
 		{\
-			Base::Debugging::AssertImpl<ASSERTS_DISABLED>(__FILE__, __LINE__, "[ASSERT FAILED] ("#condition ")");\
+			Base::Debugging::Assert<ASSERTS_DISABLED>(__FILE__, __LINE__, "[ASSERT FAILED] ("#condition ")");\
 		}\
 	} while (0)
 
 
 #ifdef WITH_ASSERTS
-#	define VERIFY_NO_EVAL(condition) VERIFY(condition)
+#	define ASSERT_NO_EVAL(condition) ASSERT(condition)
 #else
-#	define VERIFY_NO_EVAL(condition) (void)(0)
+#	define ASSERT_NO_EVAL(condition) (void)(0)
 #endif
