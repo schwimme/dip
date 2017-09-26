@@ -30,17 +30,26 @@ TEST_METHOD(KTTODO_All_UT)
 {
 	std::shared_ptr<Base::IFsmContextFactory> f = std::make_shared<Base::Fsm::CBaseContextFactory>();
 	FsmDumper fsm(f);
-	auto a = fsm.GenerateState(0);
+	Base::Fsm::StateId a = fsm.GenerateState(0);
 	fsm.SetStart(a);
 
 	Base::Fsm::CBuilder b;
 	b.MergeRegex(fsm, TEXT("(c)*(a)+c"), 1, 0);
 
-	auto w = fsm.CreateWalker();
+	std::shared_ptr<Base::IFsmWalker> w = fsm.CreateWalker();
 
 	Base::String dump = fsm.Dump();
 
 	Assert::IsTrue(w->VerifyLiteral(TEXT("c")));
+	Assert::IsTrue(w->GetContext() == 0);
+	w->Reset();
+
+	Assert::IsTrue(w->VerifyLiteral(TEXT("a")));
+	Assert::IsTrue(w->GetContext() == 0);
+	w->Reset();
+
+	Assert::IsTrue(w->VerifyLiteral(TEXT("ac")));
+	Assert::IsTrue(w->GetContext() == 1);
 }
 
 
