@@ -54,7 +54,7 @@ public:
 	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType ch) override;
 
 	//! \copydoc IFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType& a, Fsm::AlphabetType b)
-	virtual void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType a, Fsm::AlphabetType b) override;
+	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType a, Fsm::AlphabetType b) override;
 
 	//! \copydoc IFsm::SetIdle
 	virtual void SetStart(const Fsm::StateId& state) override;

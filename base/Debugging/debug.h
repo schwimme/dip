@@ -1,5 +1,8 @@
 #pragma once
 
+
+#ifdef WITH_DEBUG
+
 #include "debug_impl.h"
 
 
@@ -62,3 +65,13 @@ static void BreakPointImpl<false>()
 #else
 #	define ASSERT_NO_EVAL(condition) (void)(0)
 #endif
+
+
+#else // WITH_DEBUG
+
+
+#define ASSERT(c) do { (c); } while (0)
+#define ASSERT_NO_EVAL(c) 
+
+#endif
+

@@ -20,7 +20,7 @@ bool Find(typename ContainerType::const_iterator& it, const ContainerType& conta
 template<typename ToSearchType, typename ContainerType>
 bool Find(const ContainerType& container, const ToSearchType& toSearch)
 {
-	ContainerType::const_iterator it;
+	typename ContainerType::const_iterator it;
 	return Find(it, container, toSearch);
 }
 

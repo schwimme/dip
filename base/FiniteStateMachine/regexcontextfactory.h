@@ -2,7 +2,7 @@
 
 
 #include "fsmcontextfactory_intf.h"
-#include <Base/Algorithm/algorithm.h>
+#include <base/Algorithm/algorithm.h>
 
 
 namespace Base
