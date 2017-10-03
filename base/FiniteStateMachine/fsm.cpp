@@ -4,6 +4,7 @@
 
 #include <base/Debugging/debug.h>
 #include <base/Algorithm/algorithm.h>
+#include "regexcontextfactory.h"
 
 
 namespace Base
@@ -35,7 +36,7 @@ void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to)
 }
 
 
-void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType ch)
+void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType ch)
 {
 	ASSERT_NO_EVAL(m_optimized == false);
 	ASSERT_NO_EVAL(ch != Fsm::detail::EPSILON);
@@ -46,7 +47,27 @@ void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::Alphab
 }
 
 
-void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType a, Fsm::AlphabetType b)
+void CFsm::AddRegex(const Fsm::StateId& from, const Base::String& regex, Fsm::ContextId valid, Fsm::ContextId invalid)
+{
+	std::shared_ptr<IFsmContextFactory> spCtxFactory = std::make_shared<Fsm::CRegexContextFactory>(valid, invalid);
+	CFsm regexFsm(spCtxFactory);
+
+	// KTTODO use intf and injection
+	Fsm::CBuilder b;
+	b.BuildFsmFromRegex(regexFsm, regex, valid, invalid);
+
+	// Get fsm content:
+	for (auto& i : regexFsm.m_states)
+	{
+		m_states[i.first] = std::move(i.second);
+	}
+
+	// Add rule 'from'->epsilon->fsm.start
+	AddRule(from, regexFsm.m_start);
+}
+
+
+void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType a, Base::CharType b)
 {
 	// KTTODO - optimize this using ranges (should be done after UT to be sure, optimization doesnt break anything).
 	do
@@ -181,7 +202,7 @@ void CFsm::Minimize()
 }
 
 
-const std::vector<Fsm::StateId>& CFsm::GetNextStates(const Fsm::StateId& currentState, Fsm::AlphabetType ch) const
+const std::vector<Fsm::StateId>& CFsm::GetNextStates(const Fsm::StateId& currentState, Base::CharType ch) const
 {
 	auto it = m_states.find(currentState);
 	ASSERT(it != m_states.end());

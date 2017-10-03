@@ -25,7 +25,7 @@ struct CState
 	{}
 
 	//! \brief	Add simple rule this->'ch'->'to'
-	void AddRule(const StateId& to, AlphabetType ch);
+	void AddRule(const StateId& to, Base::CharType ch);
 
 	/*!
 		\brief	Convert this->epsilon->to->character->other
@@ -34,12 +34,12 @@ struct CState
 	void AddOptimizedEpsilonRule(const CState& to);
 
 	//! \brief	Remove all rules using given character.
-	void RemoveRules(AlphabetType ch);
+	void RemoveRules(Base::CharType ch);
 
 	//! \brief	Get all rules using given character.
-	const std::vector<StateId>& GetRules(AlphabetType ch) const;
+	const std::vector<StateId>& GetRules(Base::CharType ch) const;
 
-	std::unordered_map<AlphabetType, std::vector<StateId>>	m_rules;
+	std::unordered_map<Base::CharType, std::vector<StateId>>	m_rules;
 	ContextId	m_context;
 	bool		m_epsVisited = false;
 };

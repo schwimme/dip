@@ -11,7 +11,7 @@ namespace Base
 struct IFsmWalker
 {
 	//! \brief Process step in automat by given character.
-	virtual bool ProcessStep(Fsm::AlphabetType ch) = 0;
+	virtual bool ProcessStep(Base::CharType ch) = 0;
 
 	/*!
 		\brief	Verify entire literal.

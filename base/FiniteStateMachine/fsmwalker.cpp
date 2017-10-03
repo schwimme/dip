@@ -16,7 +16,7 @@ CWalker::CWalker(Fsm::IWalkable& walkable, std::shared_ptr<IFsmContextFactory>& 
 }
 
 
-bool CWalker::ProcessStep(Fsm::AlphabetType ch)
+bool CWalker::ProcessStep(Base::CharType ch)
 {
 	std::vector<Fsm::StateId> newState;
 	for (const auto& s : m_actualState)

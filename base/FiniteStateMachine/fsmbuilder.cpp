@@ -9,24 +9,20 @@ namespace Fsm
 {
 
 
-void CBuilder::MergeRegex(CFsm& fsm, const Base::String& regex, ContextId valid, ContextId invalid) const
+void CBuilder::BuildFsmFromRegex(CFsm& fsm, const Base::String& regex, ContextId valid, ContextId invalid) const
 {
 	// Parse regex to internal structure:
 	const CharType* t = regex.c_str();
 	Regex parsedRegex = ParseRegex(t);
 
 	// Prepare output fsm:
-	std::shared_ptr<IFsmContextFactory> spCtxF = std::make_shared<CRegexContextFactory>(valid, invalid);
-	CFsm regexFsm(spCtxF);
-	regexFsm.Initialize();
+	StateId fsmStart = fsm.GenerateState(invalid);
+	fsm.SetStart(fsmStart);
 
-	StateId fsmStart = regexFsm.GenerateState(invalid);
-	regexFsm.SetStart(fsmStart);
-
-	StateId fsmEnd = regexFsm.GenerateState(valid);
+	StateId fsmEnd = fsm.GenerateState(valid);
 
 	// Prepare mapping from parsed regex to fsm states:
-	std::vector<CFsm::StatesStorage::iterator> newStates = { regexFsm.m_states.find(fsmStart) };
+	std::vector<CFsm::StatesStorage::iterator> newStates = { fsm.m_states.find(fsmStart) };
 
 	// Generate:
 	size_t regexSize = parsedRegex.size();
@@ -38,32 +34,32 @@ void CBuilder::MergeRegex(CFsm& fsm, const Base::String& regex, ContextId valid,
 		case RegexItem::Type::NORMAL:
 		{
 			// Generate state:
-			StateId s = regexFsm.GenerateState(invalid);
+			StateId s = fsm.GenerateState(invalid);
 
 			// Current end:
 			const StateId& b = newStates.at(newStates.size() - 1)->first;
 
 			// Store reference to new states:
-			newStates.push_back(regexFsm.m_states.find(s));
+			newStates.push_back(fsm.m_states.find(s));
 
 			// Add rule from starting position to newly generated state via character
-			regexFsm.AddRule(b, s, currentParsedRegex.char1);
+			fsm.AddRule(b, s, currentParsedRegex.char1);
 		}
 		break;
 
 		case RegexItem::Type::RANGE:
 		{
 			// Generate state:
-			StateId s = regexFsm.GenerateState(invalid);
+			StateId s = fsm.GenerateState(invalid);
 
 			// Current end:
 			const StateId& b = newStates.at(newStates.size() - 1)->first;
 
 			// Store reference to new states:
-			newStates.push_back(regexFsm.m_states.find(s));
+			newStates.push_back(fsm.m_states.find(s));
 
 			// Add rule from starting position to newly generated state via character
-			regexFsm.AddRule(b, s, currentParsedRegex.char1, currentParsedRegex.char2);
+			fsm.AddRule(b, s, currentParsedRegex.char1, currentParsedRegex.char2);
 		}
 		break;
 
@@ -73,15 +69,15 @@ void CBuilder::MergeRegex(CFsm& fsm, const Base::String& regex, ContextId valid,
 			ASSERT_NO_EVAL(it != 0);
 
 			// Insert last->epsilon->empty to not harm processing:
-			StateId s = regexFsm.GenerateState(invalid);
-			regexFsm.AddRule(newStates.at(newStates.size() - 1)->first, s);
-			newStates.push_back(regexFsm.m_states.find(s));
+			StateId s = fsm.GenerateState(invalid);
+			fsm.AddRule(newStates.at(newStates.size() - 1)->first, s);
+			newStates.push_back(fsm.m_states.find(s));
 
 			// Register loop:
-			regexFsm.AddRule(s, newStates[currentParsedRegex.iteration_begin]->first);
+			fsm.AddRule(s, newStates[currentParsedRegex.iteration_begin]->first);
 
 			// Register epsilon rule from begin iteration to here to allow skip all the loop:
-			regexFsm.AddRule(newStates[currentParsedRegex.iteration_begin]->first, s);
+			fsm.AddRule(newStates[currentParsedRegex.iteration_begin]->first, s);
 		}
 		break;
 
@@ -91,12 +87,12 @@ void CBuilder::MergeRegex(CFsm& fsm, const Base::String& regex, ContextId valid,
 			ASSERT_NO_EVAL(it != 0);
 
 			// Insert last->epsilon->empty to not harm processing:
-			StateId s = regexFsm.GenerateState(invalid);
-			regexFsm.AddRule(newStates.at(newStates.size() - 1)->first, s);
-			newStates.push_back(regexFsm.m_states.find(s));
+			StateId s = fsm.GenerateState(invalid);
+			fsm.AddRule(newStates.at(newStates.size() - 1)->first, s);
+			newStates.push_back(fsm.m_states.find(s));
 
 			// Register loop:
-			regexFsm.AddRule(s, newStates[currentParsedRegex.iteration_begin]->first);
+			fsm.AddRule(s, newStates[currentParsedRegex.iteration_begin]->first);
 		}
 		break;
 
@@ -112,20 +108,10 @@ void CBuilder::MergeRegex(CFsm& fsm, const Base::String& regex, ContextId valid,
 	}
 
 	// Add end rule:
-	regexFsm.AddRule(newStates.at(newStates.size() - 1)->first, fsmEnd);
+	fsm.AddRule(newStates.at(newStates.size() - 1)->first, fsmEnd);
 
 	// This fsm can be fully optimized because all generated states are just internal:
-	regexFsm.Optimize(CFsm::OptimizationLevel::MINIMIZE);
-
-	// Merge fsm:
-	// - Copy new states:
-	for (auto& it : regexFsm.m_states)
-	{
-		fsm.m_states.insert(std::move(it));
-	}
-
-	// - Merge:
-	fsm.AddRule(fsm.m_start, fsmStart);
+	fsm.Optimize(CFsm::OptimizationLevel::MINIMIZE);
 }
 
 
@@ -261,7 +247,6 @@ CBuilder::RegexItem CBuilder::ParseRange(const Base::CharType*& rest) const
 	++rest;
 	// -b]
 	CheckIs(rest, TEXT('-'));
-	item.char1 = *rest;
 
 	++rest;
 	// b]
@@ -270,7 +255,7 @@ CBuilder::RegexItem CBuilder::ParseRange(const Base::CharType*& rest) const
 
 	++rest;
 	// ]
-	CheckIs(rest, TEXT('-'));
+	CheckIs(rest, TEXT(']'));
 
 	// 
 	++rest;

@@ -44,7 +44,7 @@ protected:
 	using Regex = std::vector<RegexItem>;
 
 public:
-	void MergeRegex(CFsm& fsm, const Base::String& regex, ContextId valid, ContextId invalid) const;
+	void BuildFsmFromRegex(CFsm& fsm, const Base::String& regex, ContextId valid, ContextId invalid) const;
 
 protected:
 	// KTTODO - other class and remove virtual

@@ -22,7 +22,7 @@ public:
 	CWalker(IWalkable& walkable, std::shared_ptr<IFsmContextFactory>& spCtxFactory);
 
 	//! \copydoc IFsmWalker::ProcessStep
-	virtual bool ProcessStep(AlphabetType ch) override;
+	virtual bool ProcessStep(Base::CharType ch) override;
 
 	//! \copydoc IFsmWalker::VerifyLiteral
 	virtual bool VerifyLiteral(const String& literal) override;

@@ -14,7 +14,7 @@ namespace Fsm
 static const std::vector<StateId> g_emptyVector;
 
 
-void CState::AddRule(const StateId& to, AlphabetType ch)
+void CState::AddRule(const StateId& to, Base::CharType ch)
 {
 	std::vector<StateId>& nextStates = m_rules[ch];
 	if (Base::Find(nextStates, to) == false)
@@ -37,13 +37,13 @@ void CState::AddOptimizedEpsilonRule(const CState& to)
 }
 
 
-void CState::RemoveRules(AlphabetType ch)
+void CState::RemoveRules(Base::CharType ch)
 {
 	m_rules.erase(ch);
 }
 
 
-const std::vector<StateId>& CState::GetRules(AlphabetType ch) const 
+const std::vector<StateId>& CState::GetRules(Base::CharType ch) const
 {
 	auto it = m_rules.find(ch);
 	if (it == m_rules.end())

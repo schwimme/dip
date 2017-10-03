@@ -33,8 +33,7 @@ TEST_METHOD(KTTODO_All_UT)
 	Base::Fsm::StateId a = fsm.GenerateState(0);
 	fsm.SetStart(a);
 
-	Base::Fsm::CBuilder b;
-	b.MergeRegex(fsm, TEXT("(c)*(a)+c"), 1, 0);
+	fsm.AddRegex(a, TEXT("(c)*(a)+c"), 1, 0);
 
 	std::shared_ptr<Base::IFsmWalker> w = fsm.CreateWalker();
 

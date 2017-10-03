@@ -50,11 +50,14 @@ public:
 	//! \copydoc IFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to)
 	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to) override;
 
-	//! \copydoc IFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType& ch)
-	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType ch) override;
+	//! \copydoc IFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType& ch)
+	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType ch) override;
 
-	//! \copydoc IFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType& a, Fsm::AlphabetType b)
-	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType a, Fsm::AlphabetType b) override;
+	//! \copydoc IFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType& a, Base::CharType b)
+	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType a, Base::CharType b) override;
+
+	//! \copydoc IFsm::AddRegex
+	virtual void AddRegex(const Fsm::StateId& from, const Base::String& regex, Fsm::ContextId valid, Fsm::ContextId invalid) override;
 
 	//! \copydoc IFsm::SetIdle
 	virtual void SetStart(const Fsm::StateId& state) override;
@@ -67,7 +70,7 @@ public:
 
 public:
 	//! \copydoc Fsm::IWalkable::GetNextStates
-	virtual const std::vector<Fsm::StateId>& GetNextStates(const Fsm::StateId& currentState, Fsm::AlphabetType ch) const override;
+	virtual const std::vector<Fsm::StateId>& GetNextStates(const Fsm::StateId& currentState, Base::CharType ch) const override;
 	
 	//! \copydoc Fsm::IWalkable::GetContext
 	virtual Fsm::ContextId GetContext(const Fsm::StateId& state) const override;

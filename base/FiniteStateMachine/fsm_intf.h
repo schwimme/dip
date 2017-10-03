@@ -16,10 +16,13 @@ struct IFsm
 	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to) = 0;
 
 	//! \brief 'from'->'ch'->'to'.
-	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType ch) = 0;
+	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType ch) = 0;
 
 	//! \brief 'from'->[a, b]->'to'.
-	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Fsm::AlphabetType a, Fsm::AlphabetType b) = 0;
+	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType a, Base::CharType b) = 0;
+
+	//! \brief 'from'->epsilon->regex.
+	virtual void AddRegex(const Fsm::StateId& from, const Base::String& regex, Fsm::ContextId valid, Fsm::ContextId invalid) = 0;
 
 	//! \brief Mark state as starting state.
 	virtual void SetStart(const Fsm::StateId& state) = 0;
