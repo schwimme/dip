@@ -86,9 +86,9 @@ void SimpleFsmUsingRegex()
 struct MemberCtxFactory:
 	public Base::IFsmContextFactory
 {
-	static const Base::Fsm::ContextId INVALID = 0;
-	static const Base::Fsm::ContextId IDENTIFICATOR = 1;
-	static const Base::Fsm::ContextId MEMBER = 2;
+	static const Base::Fsm::ContextId INVALID;
+	static const Base::Fsm::ContextId IDENTIFICATOR;
+	static const Base::Fsm::ContextId MEMBER;
 
 	virtual Base::Fsm::ContextId SelectContext(const std::vector<Base::Fsm::ContextId>& allContexts) const
 	{
@@ -105,6 +105,10 @@ struct MemberCtxFactory:
 		return INVALID;
 	}
 };
+
+const Base::Fsm::ContextId MemberCtxFactory::INVALID = 0;
+const Base::Fsm::ContextId MemberCtxFactory::IDENTIFICATOR = 1;
+const Base::Fsm::ContextId MemberCtxFactory::MEMBER = 2;
 
 void IdOrMemberDecission()
 {
