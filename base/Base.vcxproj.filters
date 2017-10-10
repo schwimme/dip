@@ -13,6 +13,9 @@
     <Filter Include="Types">
       <UniqueIdentifier>{b8344876-0ce0-429b-ab24-e8ade107f12e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{768b0625-be8c-45cd-b66e-ca4054483f6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debugging\debug.h">
@@ -30,10 +33,16 @@
     <ClInclude Include="..\base_intf\Types\string.h">
       <Filter>Types</Filter>
     </ClInclude>
+    <ClInclude Include="..\base_intf\BaseFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debugging\win_debug_impl.cpp">
       <Filter>Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base_intf\BaseFactory.cpp">
+      <Filter>Factory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

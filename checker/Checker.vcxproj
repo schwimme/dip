@@ -19,26 +19,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\base_intf\Algorithm\algorithm.h" />
-    <ClInclude Include="..\base_intf\BaseFactory.h" />
-    <ClInclude Include="..\base_intf\ScopeGuard\ScopeGuard.h" />
-    <ClInclude Include="..\base_intf\Types\string.h" />
-    <ClInclude Include="Debugging\debug.h" />
-    <ClInclude Include="Debugging\debug_impl.h" />
+    <ClCompile Include="LexicalAnalysis\LexicalAnalysis.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\base_intf\BaseFactory.cpp" />
-    <ClCompile Include="Debugging\win_debug_impl.cpp" />
+    <ClInclude Include="LexicalAnalysis\LexicalAnalysis.h" />
+    <ClInclude Include="LexicalAnalysis\LexicalAnalysis_intf.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="FiniteStateMachine\FiniteStateMachine.vcxproj">
-      <Project>{ba0a8a32-f18a-4863-ae66-eefe4734250d}</Project>
+    <ProjectReference Include="..\base\Base.vcxproj">
+      <Project>{222fcebf-90bc-49c1-87ce-12829b04c9e3}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{222FCEBF-90BC-49C1-87CE-12829B04C9E3}</ProjectGuid>
+    <ProjectGuid>{A7BCAE97-6347-4F2E-B5A5-E854E219B47F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Base</RootNamespace>
+    <RootNamespace>Checker</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -86,17 +81,15 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..;</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -104,12 +97,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../..</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -118,8 +109,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -134,8 +124,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
