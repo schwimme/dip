@@ -19,9 +19,9 @@ struct CConfigurableFsmCtxFactory :
 			{
 				return i;
 			}
-
-			return INVALID_CTX;
 		}
+
+		return INVALID_CTX;
 	}
 };
 
