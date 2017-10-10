@@ -26,13 +26,14 @@
     <ClCompile Include="stateidgenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\base_intf\FiniteStateMachine\fsmcontextfactory_intf.h" />
+    <ClInclude Include="..\..\base_intf\FiniteStateMachine\fsmdefs.h" />
+    <ClInclude Include="..\..\base_intf\FiniteStateMachine\fsmwalker_intf.h" />
+    <ClInclude Include="..\..\base_intf\FiniteStateMachine\fsm_intf.h" />
     <ClInclude Include="basecontextfactory.h" />
     <ClInclude Include="fsm.h" />
     <ClInclude Include="fsmbuilder.h" />
-    <ClInclude Include="fsmcontextfactory_intf.h" />
     <ClInclude Include="fsmwalker.h" />
-    <ClInclude Include="fsmwalker_intf.h" />
-    <ClInclude Include="fsm_intf.h" />
     <ClInclude Include="regexcontextfactory.h" />
     <ClInclude Include="state.h" />
     <ClInclude Include="stateidgenerator.h" />

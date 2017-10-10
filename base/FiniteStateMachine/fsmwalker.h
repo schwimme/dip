@@ -1,12 +1,14 @@
 #pragma once
 
 
-#include "fsmwalker_intf.h"
+#include <base_intf/FiniteStateMachine/fsmwalker_intf.h>
+#include <base_intf/FiniteStateMachine/fsmcontextfactory_intf.h>
+#include <base_intf/FiniteStateMachine/fsmdefs.h>
+
+#include "walkable_intf.h"
+
 #include <vector>
 #include <memory>
-#include "defs.h"
-#include "walkable_intf.h"
-#include "fsmcontextfactory_intf.h"
 
 
 namespace Base

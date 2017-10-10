@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "defs.h"
+#include "fsmdefs.h"
 
 
 namespace Base
@@ -18,7 +18,7 @@ struct IFsmWalker
 		\return	true if literal was readed successfuly,
 		\return	false otherwise.
 	*/
-	virtual bool VerifyLiteral(const String& literal) = 0;
+	virtual bool VerifyLiteral(const Base::String& literal) = 0;
 
 	//! \brief	Reset to initial state.
 	virtual void Reset() = 0;

@@ -19,12 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Algorithm\algorithm.h" />
+    <ClInclude Include="..\base_intf\Algorithm\algorithm.h" />
+    <ClInclude Include="..\base_intf\ScopeGuard\ScopeGuard.h" />
+    <ClInclude Include="..\base_intf\Types\string.h" />
     <ClInclude Include="Debugging\debug.h" />
     <ClInclude Include="Debugging\debug_impl.h" />
-    <ClInclude Include="EventDistributor\EventDistributor.h" />
-    <ClInclude Include="ScopeGuard\ScopeGuard.h" />
-    <ClInclude Include="Types\string.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debugging\win_debug_impl.cpp" />
@@ -33,9 +32,6 @@
     <ProjectReference Include="FiniteStateMachine\FiniteStateMachine.vcxproj">
       <Project>{ba0a8a32-f18a-4863-ae66-eefe4734250d}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="EventDistributor\EventDistributor.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{222FCEBF-90BC-49C1-87CE-12829B04C9E3}</ProjectGuid>

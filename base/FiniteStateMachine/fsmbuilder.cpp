@@ -2,6 +2,7 @@
 #include "fsm.h"
 #include "regexcontextfactory.h"
 
+#include <base/Debugging/debug.h>
 
 namespace Base
 {

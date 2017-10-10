@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "fsm_intf.h"
+#include <base_intf/FiniteStateMachine/fsm_intf.h>
 #include "stateidgenerator.h"
 #include "state.h"
 #include "walkable_intf.h"

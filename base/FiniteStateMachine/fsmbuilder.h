@@ -2,8 +2,9 @@
 
 
 #include <vector>
-#include <base/Types/string.h>
-#include "defs.h"
+#include <base_intf/Types/string.h>
+#include <base_intf/FiniteStateMachine/fsmdefs.h>
+
 
 namespace Base
 {

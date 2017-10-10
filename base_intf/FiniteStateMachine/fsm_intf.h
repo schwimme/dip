@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "defs.h"
+#include "fsmdefs.h"
 #include "fsmwalker_intf.h"
 #include <memory>
 

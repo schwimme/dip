@@ -1,6 +1,8 @@
 #pragma once
 
-#include "defs.h"
+
+#include <base_intf/FiniteStateMachine/fsmdefs.h>
+
 
 namespace Base
 {

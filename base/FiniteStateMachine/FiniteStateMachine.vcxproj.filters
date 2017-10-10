@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Header Files\Intf">
+      <UniqueIdentifier>{13889c3b-a1c6-46e4-9064-2146e685cabd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="fsm.cpp">
@@ -31,9 +34,6 @@
     <ClInclude Include="fsm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="fsm_intf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="stateidgenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -43,13 +43,7 @@
     <ClInclude Include="fsmwalker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="fsmwalker_intf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="basecontextfactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fsmcontextfactory_intf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="fsmbuilder.h">
@@ -57,6 +51,18 @@
     </ClInclude>
     <ClInclude Include="regexcontextfactory.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base_intf\FiniteStateMachine\fsm_intf.h">
+      <Filter>Header Files\Intf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base_intf\FiniteStateMachine\fsmcontextfactory_intf.h">
+      <Filter>Header Files\Intf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base_intf\FiniteStateMachine\fsmdefs.h">
+      <Filter>Header Files\Intf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base_intf\FiniteStateMachine\fsmwalker_intf.h">
+      <Filter>Header Files\Intf</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

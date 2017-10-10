@@ -1,8 +1,8 @@
 #pragma once
 
 
-#include "fsmcontextfactory_intf.h"
-#include <base/Algorithm/algorithm.h>
+#include <base_intf/FiniteStateMachine/fsmcontextfactory_intf.h>
+#include <base_intf/Algorithm/algorithm.h>
 
 
 namespace Base

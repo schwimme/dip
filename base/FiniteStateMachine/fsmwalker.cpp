@@ -1,5 +1,5 @@
 #include "fsmwalker.h"
-#include <base/Algorithm/algorithm.h>
+#include <base_intf/Algorithm/algorithm.h>
 
 
 namespace Base

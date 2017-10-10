@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "defs.h"
+#include <base_intf/FiniteStateMachine/fsmdefs.h>
 #include <unordered_map>
 #include <vector>
 #include <memory>
