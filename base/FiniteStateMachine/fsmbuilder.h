@@ -37,8 +37,8 @@ protected:
 
 		CharType char1 = 0;
 		CharType char2 = 0;
-		uint32_t iteration_begin	= 0;
-		uint32_t iteration_count	= 0;
+		size_t iteration_begin	= 0;
+		size_t iteration_count	= 0;
 		Type type					= Type::NORMAL;
 	};
 

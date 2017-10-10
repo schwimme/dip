@@ -66,7 +66,7 @@ public:
 	virtual Fsm::StateId GenerateState(Fsm::ContextId ctx) override;
 
 	//! \copydoc IFsm::CreateWalker
-	virtual std::shared_ptr<IFsmWalker> CreateWalker() override;
+	virtual std::shared_ptr<IFsmWalker> CreateWalker()override;
 
 public:
 	//! \copydoc Fsm::IWalkable::GetNextStates

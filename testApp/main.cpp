@@ -6,7 +6,7 @@
 #define TEST_ASSERT(c) \
 if ((c) == false) \
 {\
-	std::cout << __LINE__ << " Assert failed - (" << #c << ")\n"; throw 0;\
+	std::cout << __LINE__ << " Assert failed - (" << #c << ")\n";\
 }\
 
 

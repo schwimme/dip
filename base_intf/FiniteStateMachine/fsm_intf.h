@@ -33,6 +33,7 @@ struct IFsm
 	/*!
 		\brief		Create walker for current fsm.
 		\warning	FSM cannot changed after optimization (AddRule, SetIdle and GenerateState are forbidden).
+		\note		Walker does not change fsm structure so more instances can be used at the time. 
 	*/
 	virtual std::shared_ptr<IFsmWalker> CreateWalker() = 0;
 };
