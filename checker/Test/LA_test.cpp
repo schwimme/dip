@@ -19,8 +19,7 @@ TEST_METHOD(KTTODO_ALL_UT)
 
 	Checker::LexicalAnalysisConfiguration cfg;
 	cfg.definition = {
-//		{ TEXT("member"), TEXT("m_([a-z])+") },
-
+		{ 6, TEXT("m_([a-z])+") }, // member
 		{ 1, TEXT("([a-z])+") }, // id
 		{ 1, TEXT("([A-Z])+") }, // id
 		{ 2, TEXT("+") }, // operator
@@ -31,9 +30,14 @@ TEST_METHOD(KTTODO_ALL_UT)
 		{ 4, TEXT("\t") }, // tab
 	};
 
+	cfg.priority = {
+		{6, 1}
+	};
+
+
 	spLA->BuildFsm(cfg);
 
-	Base::String data = TEXT("someid--	+ OTHERID");
+	Base::String data = TEXT("someid--	m_pica+ OTHERID");
 
 	std::vector<Checker::Token> tokens = spLA->Parse(data);
 }

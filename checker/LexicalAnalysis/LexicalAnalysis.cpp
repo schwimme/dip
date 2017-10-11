@@ -13,16 +13,64 @@ struct CConfigurableFsmCtxFactory :
 
 	virtual Base::Fsm::ContextId SelectContext(const std::vector<Base::Fsm::ContextId>& allContexts) const override
 	{
+		bool hasInvalidCtx = Base::Find(allContexts, INVALID_CTX);
+
+		// Remove all invalid cotexts as they have lowest priority:
+		std::vector<Base::Fsm::ContextId> ctxWithoutInvalid;
 		for (const auto& i : allContexts)
 		{
 			if (i != INVALID_CTX)
 			{
-				return i;
+				ctxWithoutInvalid.push_back(i);
 			}
 		}
 
-		return INVALID_CTX;
+		// Just invalid ctxs given:
+		if (ctxWithoutInvalid.size() == 0)
+		{
+			return INVALID_CTX;
+		}
+
+		// One ctx remaining:
+		if (ctxWithoutInvalid.size() == 1)
+		{
+			return ctxWithoutInvalid[0];
+		}
+
+		// Identify priority group:
+		for (const auto& oneGroup : m_priorities)
+		{
+			if (Base::Find(oneGroup, ctxWithoutInvalid[0]))
+			{
+				// oneGroup is group where all priorities must be - verify:
+				for (const auto& ctx : ctxWithoutInvalid)
+				{
+					if (Base::Find(oneGroup, ctx) == false)
+					{
+						throw "KTTODO - ctx is not in priority group with others";
+					}
+				}
+
+				// Ctx with higher priority are in front of m_priorities:
+				LexicalAnalysisConfiguration::PriorityGroup::const_iterator ctxIter = oneGroup.begin();
+				while (ctxIter != oneGroup.end())
+				{
+					if (Base::Find(ctxWithoutInvalid, *ctxIter))
+					{
+						return *ctxIter;
+					}
+					++ctxIter;
+				}
+
+				// ASSERT(false); // ctxIter must be found at least one time in ctxWithoutInvalid.
+			}
+		}
+
+		throw "KTTODO - not specified priority group for given ctx";
 	}
+
+private:
+	std::vector<LexicalAnalysisConfiguration::PriorityGroup>	m_priorities;
 };
 
 
