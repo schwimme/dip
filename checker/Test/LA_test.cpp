@@ -13,31 +13,44 @@ TEST_CLASS(LA_test)
 {
 public:
 		
+enum TokenEnum
+{
+	IDENTIFIER = 0,
+	SMPTR,
+	MUTEX,
+	M_IDENTIFIER,
+	M_SMPTR,
+	M_MUTEX,
+	COMMA
+};
+
+
 TEST_METHOD(KTTODO_ALL_UT)
 {
 	std::shared_ptr<Checker::ILexicalAnalysis> spLA = Checker::CLexicalAnalysis::Factory().CreateLexicalAnalysis();
 
 	Checker::LexicalAnalysisConfiguration cfg;
+
+
 	cfg.definition = {
-		{ 6, TEXT("m_([a-z])+") }, // member
-		{ 1, TEXT("([a-z])+") }, // id
-		{ 1, TEXT("([A-Z])+") }, // id
-		{ 2, TEXT("+") }, // operator
-		{ 2, TEXT("++") }, // operator
-		{ 2, TEXT("-") }, // operator
-		{ 2, TEXT("--") }, // operator
-		{ 3, TEXT(" ") }, // space
-		{ 4, TEXT("\t") }, // tab
+		{ IDENTIFIER,	TEXT("([a-z])+") },
+		{ SMPTR,		TEXT("sp([a-z])+") },
+		{ MUTEX,		TEXT("([a-z])*mutex") },
+		{ M_IDENTIFIER,	TEXT("m([a-z])+") },
+		{ M_SMPTR,		TEXT("msp([a-z])+") },
+		{ M_MUTEX,		TEXT("m([a-z])*mutex") },
+		{ COMMA,		TEXT(", ") }
 	};
 
 	cfg.priority = {
-		{6, 1}
+		{M_MUTEX, M_IDENTIFIER ,MUTEX, IDENTIFIER},
+		{M_SMPTR, M_IDENTIFIER ,SMPTR, IDENTIFIER}
 	};
 
 
 	spLA->BuildFsm(cfg);
 
-	Base::String data = TEXT("someid--	m_pica+ OTHERID");
+	Base::String data = TEXT("id, spid, idmutex, mid, mspid, midmutex");
 
 	std::vector<Checker::Token> tokens = spLA->Parse(data);
 }

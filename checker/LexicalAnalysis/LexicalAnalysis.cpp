@@ -6,24 +6,18 @@ namespace Checker
 
 // KTTODO - make as normal class:
 
-struct CConfigurableFsmCtxFactory :
+struct CConfigurableFsmCtxFactory:
 	public Base::IFsmContextFactory
 {
-	static const Base::Fsm::ContextId INVALID_CTX = 0;
+	CConfigurableFsmCtxFactory(const std::vector<LexicalAnalysisConfiguration::PriorityGroup>& priorities):
+		m_priorities(priorities)
+	{}
+
+	static const Base::Fsm::ContextId INVALID_CTX = -1;
 
 	virtual Base::Fsm::ContextId SelectContext(const std::vector<Base::Fsm::ContextId>& allContexts) const override
 	{
-		bool hasInvalidCtx = Base::Find(allContexts, INVALID_CTX);
-
-		// Remove all invalid cotexts as they have lowest priority:
-		std::vector<Base::Fsm::ContextId> ctxWithoutInvalid;
-		for (const auto& i : allContexts)
-		{
-			if (i != INVALID_CTX)
-			{
-				ctxWithoutInvalid.push_back(i);
-			}
-		}
+		std::vector<Base::Fsm::ContextId> ctxWithoutInvalid = RemoveInvalidCtx(allContexts);
 
 		// Just invalid ctxs given:
 		if (ctxWithoutInvalid.size() == 0)
@@ -40,17 +34,8 @@ struct CConfigurableFsmCtxFactory :
 		// Identify priority group:
 		for (const auto& oneGroup : m_priorities)
 		{
-			if (Base::Find(oneGroup, ctxWithoutInvalid[0]))
+			if (VerifyPriorityGroup(oneGroup, ctxWithoutInvalid))
 			{
-				// oneGroup is group where all priorities must be - verify:
-				for (const auto& ctx : ctxWithoutInvalid)
-				{
-					if (Base::Find(oneGroup, ctx) == false)
-					{
-						throw "KTTODO - ctx is not in priority group with others";
-					}
-				}
-
 				// Ctx with higher priority are in front of m_priorities:
 				LexicalAnalysisConfiguration::PriorityGroup::const_iterator ctxIter = oneGroup.begin();
 				while (ctxIter != oneGroup.end())
@@ -66,7 +51,36 @@ struct CConfigurableFsmCtxFactory :
 			}
 		}
 
-		throw "KTTODO - not specified priority group for given ctx";
+		throw "cannot found given contexts in one priority group";
+	}
+
+protected:
+	std::vector<Base::Fsm::ContextId> RemoveInvalidCtx(const std::vector<Base::Fsm::ContextId>& allContexts) const
+	{
+		std::vector<Base::Fsm::ContextId> ctxWithoutInvalid;
+		for (const auto& i : allContexts)
+		{
+			if (i != INVALID_CTX)
+			{
+				ctxWithoutInvalid.push_back(i);
+			}
+		}
+
+		return ctxWithoutInvalid;
+	}
+
+	bool VerifyPriorityGroup(const LexicalAnalysisConfiguration::PriorityGroup& priorityGroup, const std::vector<Base::Fsm::ContextId>& ctxToVerify) const
+	{
+		// oneGroup is group where all priorities must be - verify:
+		for (const auto& ctx : ctxToVerify)
+		{
+			if (Base::Find(priorityGroup, ctx) == false)
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 private:
@@ -74,9 +88,9 @@ private:
 };
 
 
-std::shared_ptr<Base::IFsmContextFactory> CLexicalAnalysis::CreateConfigurableFsmCtxFactory(const std::vector<LexicalAnalysisConfiguration::PriorityGroup>&) const
+std::shared_ptr<Base::IFsmContextFactory> CLexicalAnalysis::CreateConfigurableFsmCtxFactory(const std::vector<LexicalAnalysisConfiguration::PriorityGroup>& priorities) const
 {
-	return std::make_shared<CConfigurableFsmCtxFactory>();
+	return std::make_shared<CConfigurableFsmCtxFactory>(priorities);
 }
 
 
