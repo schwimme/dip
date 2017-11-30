@@ -5,9 +5,9 @@
 #include <base_intf/Algorithm/algorithm.h>
 
 
-namespace Base
+namespace base
 {
-namespace Fsm 
+namespace fsm
 {
 	
 
@@ -16,15 +16,21 @@ namespace Fsm
 	\detail		Factory behaves as standard fsm so if at least one VALID
 				context given, result is VALID. Otherwise INVALID.
 */
-class CBaseContextFactory:
-	public IFsmContextFactory
+class base_context_factory:
+	public fsm_context_factory_intf
 {
 public:
-	virtual Fsm::ContextId SelectContext(const std::vector<Fsm::ContextId>& allContexts) const override
+	virtual fsm::context_id select_context(crossmodule::enumerator<fsm::context_id>* const allContexts) const override
 	{
-		if (Base::Find(allContexts, VALID))
+		fsm::context_id const* pCtx = nullptr;
+		while (pCtx = allContexts->get())
 		{
-			return VALID;
+			if (*pCtx == VALID)
+			{
+				return VALID;
+			}
+
+			allContexts->next();
 		}
 
 		return INVALID;

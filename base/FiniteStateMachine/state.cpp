@@ -5,45 +5,45 @@
 #include <base/Debugging/debug.h>
 
 
-namespace Base
+namespace base
 {
-namespace Fsm
+namespace fsm
 {
 
 // Empty vector for returning in case, rule does not exists.
-static const std::vector<StateId> g_emptyVector;
+static const std::vector<state_id> g_emptyVector;
 
 
-void CState::AddRule(const StateId& to, Base::CharType ch)
+void state::add_rule(const state_id& to, base::char_t ch)
 {
-	std::vector<StateId>& nextStates = m_rules[ch];
-	if (Base::Find(nextStates, to) == false)
+	std::vector<state_id>& nextStates = m_rules[ch];
+	if (base::find(nextStates, to) == false)
 	{
 		nextStates.push_back(to);
 	}
 }
 
 
-void CState::AddOptimizedEpsilonRule(const CState& to)
+void state::add_optimized_epsilon_rule(const state& to)
 {
 	for (const auto& rule : to.m_rules)
 	{
-		if (rule.first != Fsm::detail::EPSILON)
+		if (rule.first != fsm::detail::EPSILON)
 		{
 			auto& v = m_rules[rule.first];
-			v = Base::Union(v, rule.second);
+			v = base::make_union(v, rule.second);
 		}
 	}
 }
 
 
-void CState::RemoveRules(Base::CharType ch)
+void state::remove_rules(base::char_t ch)
 {
 	m_rules.erase(ch);
 }
 
 
-const std::vector<StateId>& CState::GetRules(Base::CharType ch) const
+const std::vector<state_id>& state::get_rules(base::char_t ch) const
 {
 	auto it = m_rules.find(ch);
 	if (it == m_rules.end())

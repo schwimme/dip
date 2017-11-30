@@ -10,18 +10,18 @@
 #include "fsmbuilder.h"
 
 
-namespace Base
+namespace base
 {
 
 
 //! \brief	Fsm main class.
-class CFsm:
-	public IFsm,
-	public Fsm::IWalkable
+class fsm_impl:
+	public fsm_intf,
+	public fsm::walkable_intf
 {
 private:
 	//	Order is used in evaluation so do not shuffle this enum.
-	enum class OptimizationLevel
+	enum class optimization_level_t
 	{
 		NOTHING = 0,
 		EPSILON_RULES,
@@ -31,76 +31,76 @@ private:
 	};
 
 public:
-	struct Factory
+	struct factory
 	{
-		virtual std::shared_ptr<IFsm> CreateFiniteStateMachine(std::shared_ptr<IFsmContextFactory> spCtxFactory = std::make_shared<Fsm::CBaseContextFactory>()) const
+		virtual std::shared_ptr<fsm_intf> create_finite_state_machine(std::shared_ptr<fsm_context_factory_intf> spCtxFactory = std::make_shared<fsm::base_context_factory>()) const
 		{
-			std::shared_ptr<CFsm> spImpl = std::make_shared<CFsm>(spCtxFactory);
-			spImpl->Initialize();
+			std::shared_ptr<fsm_impl> spImpl = std::make_shared<fsm_impl>(spCtxFactory);
+			spImpl->initialize();
 			return spImpl;
 		}
 	};
 
-	CFsm(std::shared_ptr<IFsmContextFactory>& spCtxFactory);
+	fsm_impl(std::shared_ptr<fsm_context_factory_intf>& spCtxFactory);
 
 private:
-	using StatesStorage = std::unordered_map<Fsm::StateId, Fsm::CState::Holder>;
+	using states_storage_t = std::unordered_map<fsm::state_id, fsm::state::holder>;
 
 public:
-	//! \copydoc IFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to)
-	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to) override;
+	//! \copydoc IFsm::add_rule(const fsm::state_id& from, const fsm::state_id& to)
+	virtual void add_rule(const fsm::state_id& from, const fsm::state_id& to) override;
 
-	//! \copydoc IFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType& ch)
-	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType ch) override;
+	//! \copydoc IFsm::add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t& ch)
+	virtual void add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t ch) override;
 
-	//! \copydoc IFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType& a, Base::CharType b)
-	virtual void AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType a, Base::CharType b) override;
+	//! \copydoc IFsm::add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t& a, base::char_t b)
+	virtual void add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t a, base::char_t b) override;
 
-	//! \copydoc IFsm::AddRegex
-	virtual void AddRegex(const Fsm::StateId& from, const Base::String& regex, Fsm::ContextId valid, Fsm::ContextId invalid) override;
+	//! \copydoc IFsm::add_regex
+	virtual void add_regex(const fsm::state_id& from, crossmodule::string_ref regex, fsm::context_id valid, fsm::context_id invalid) override;
 
-	//! \copydoc IFsm::SetIdle
-	virtual void SetStart(const Fsm::StateId& state) override;
+	//! \copydoc IFsm::set_start
+	virtual void set_start(const fsm::state_id& state) override;
 
-	//! \copydoc IFsm::GenerateStateId
-	virtual Fsm::StateId GenerateState(Fsm::ContextId ctx) override;
+	//! \copydoc IFsm::generate_state
+	virtual fsm::state_id generate_state(fsm::context_id ctx) override;
 
 	//! \copydoc IFsm::CreateWalker
-	virtual std::shared_ptr<IFsmWalker> CreateWalker()override;
+	virtual std::shared_ptr<fsm_walker_intf> create_walker()override;
 
 public:
 	//! \copydoc Fsm::IWalkable::GetNextStates
-	virtual const std::vector<Fsm::StateId>& GetNextStates(const Fsm::StateId& currentState, Base::CharType ch) const override;
+	virtual const std::vector<fsm::state_id>& get_next_states(const fsm::state_id& currentState, base::char_t ch) const override;
 	
 	//! \copydoc Fsm::IWalkable::GetContext
-	virtual Fsm::ContextId GetContext(const Fsm::StateId& state) const override;
+	virtual fsm::context_id get_context(const fsm::state_id& state) const override;
 
 	//! \copydoc Fsm::IWalkable::GetStart
-	virtual const Fsm::StateId& GetStart() const override;
+	virtual const fsm::state_id& get_start() const override;
 
 protected:
-	Base::String Dump() const;
+	base::string dump() const;
 
 private:
-	void Initialize();
+	void initialize();
 
 	// KTTODO - move to fsm optimizier:
-	void Optimize(OptimizationLevel level);
-	void RemoveEpsilonRules();
-	bool RemoveEpsilonRulesImpl(Fsm::CState::Holder& pState);
-	void RemoveUnreachableStates();
-	void Determine();
-	void Minimize();
+	void optimize(optimization_level_t level);
+	void remove_epsilon_rules();
+	bool remove_epsilon_rules_impl(fsm::state::holder& pState);
+	void remove_unreachable_states();
+	void determine();
+	void minimize();
 
 private:
-	StatesStorage						m_states;			// All states in fsm.
-	std::shared_ptr<IFsmContextFactory>	m_spContextFactory;	// Injected ctx factory.
+	states_storage_t							m_states;			// All states in fsm.
+	std::shared_ptr<fsm_context_factory_intf>	m_spContextFactory;	// Injected ctx factory.
 
 	bool			m_optimized;	// After optimization fsm became readonly. KTTODO - Use local optimized copy to remove readonly property.
-	Fsm::StateId	m_start;		// Id of start state.
+	fsm::state_id	m_start;		// Id of start state.
 
 // All FSM manipulators:
-	friend class Fsm::CBuilder;
+	friend class fsm::builder;
 };
 
 

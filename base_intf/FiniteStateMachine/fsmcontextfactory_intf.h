@@ -2,17 +2,16 @@
 
 
 #include "fsmdefs.h"
-#include <vector>
+#include <crossmodule/types/enumerator.h>
 
-
-namespace Base
+namespace base
 {
 	
 //! \brief	Interface for injected ctx factory to fsm.
-struct IFsmContextFactory
+struct fsm_context_factory_intf
 {
 	//!	\brief	Select most priorited context from all given contexts.
-	virtual Fsm::ContextId SelectContext(const std::vector<Fsm::ContextId>& allContexts) const = 0;
+	virtual fsm::context_id select_context(crossmodule::enumerator<fsm::context_id>* const allContexts) const = 0;
 };
 
 

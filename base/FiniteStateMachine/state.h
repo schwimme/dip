@@ -7,40 +7,40 @@
 #include <memory>
 
 
-namespace Base
+namespace base
 {
-namespace Fsm
+namespace fsm
 {
 
 
 //! \brief	One fsm state.
-struct CState
+struct state
 {
 	//! Holder used in fsm for simple memory managment.
-	using Holder = std::unique_ptr<CState>;
+	using holder = std::unique_ptr<state>;
 
 
-	CState(ContextId ctx):
+	state(context_id ctx):
 		m_context(ctx)
 	{}
 
 	//! \brief	Add simple rule this->'ch'->'to'
-	void AddRule(const StateId& to, Base::CharType ch);
+	void add_rule(const state_id& to, base::char_t ch);
 
 	/*!
 		\brief	Convert this->epsilon->to->character->other
 				to		this->character->other
 	*/
-	void AddOptimizedEpsilonRule(const CState& to);
+	void add_optimized_epsilon_rule(const state& to);
 
 	//! \brief	Remove all rules using given character.
-	void RemoveRules(Base::CharType ch);
+	void remove_rules(base::char_t ch);
 
 	//! \brief	Get all rules using given character.
-	const std::vector<StateId>& GetRules(Base::CharType ch) const;
+	const std::vector<state_id>& get_rules(base::char_t ch) const;
 
-	std::unordered_map<Base::CharType, std::vector<StateId>>	m_rules;
-	ContextId	m_context;
+	std::unordered_map<base::char_t, std::vector<state_id>>	m_rules;
+	context_id	m_context;
 	bool		m_epsVisited = false;
 };
 

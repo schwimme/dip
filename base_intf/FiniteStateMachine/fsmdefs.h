@@ -1,24 +1,25 @@
 #pragma once
 
 
-#include <base_intf/Types/string.h>
+#include <types/chartype.h>
+#include <cstdint>
 
 
-namespace Base
+namespace base
 {
-namespace Fsm
+namespace fsm
 {
 
 
-using StateId = Base::String;
-using ContextId = uint32_t;
+using state_id = uint32_t;
+using context_id = uint32_t;
 
-static const ContextId INVALID	= 0;
-static const ContextId VALID	= 1;
+static const context_id INVALID	= 0;
+static const context_id VALID	= 1;
 
 namespace detail
 {
-	static const Base::CharType EPSILON = 0;
+	static const base::char_t EPSILON = 0;
 }
 
 

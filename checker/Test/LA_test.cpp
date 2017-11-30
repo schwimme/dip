@@ -2,7 +2,7 @@
 #include "CppUnitTest.h"
 
 #include "../LexicalAnalysis/LexicalAnalysis.h"
-#include <base_intf/Types/string.h>
+#include <types/string.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -27,9 +27,9 @@ enum TokenEnum
 
 TEST_METHOD(KTTODO_ALL_UT)
 {
-	std::shared_ptr<Checker::ILexicalAnalysis> spLA = Checker::CLexicalAnalysis::Factory().CreateLexicalAnalysis();
+	std::shared_ptr<checker::lexical_analysis_intf> spLA = checker::lexical_analysis::factory().create_lexical_analysis();
 
-	Checker::LexicalAnalysisConfiguration cfg;
+	checker::lexical_analysis_configuration cfg;
 
 
 	cfg.definition = {
@@ -43,16 +43,16 @@ TEST_METHOD(KTTODO_ALL_UT)
 	};
 
 	cfg.priority = {
-		{M_MUTEX, M_IDENTIFIER ,MUTEX, IDENTIFIER},
-		{M_SMPTR, M_IDENTIFIER ,SMPTR, IDENTIFIER}
+		{ M_MUTEX, M_IDENTIFIER ,MUTEX, IDENTIFIER },
+		{ M_SMPTR, M_IDENTIFIER ,SMPTR, IDENTIFIER }
 	};
 
 
-	spLA->BuildFsm(cfg);
+	spLA->configure(cfg);
 
-	Base::String data = TEXT("id, spid, idmutex, mid, mspid, midmutex");
+	base::string data = TEXT("id, spid, idmutex, mid, mspid, midmutex");
 
-	std::vector<Checker::Token> tokens = spLA->Parse(data);
+	std::vector<checker::token> tokens = spLA->parse(data);
 }
 
 };

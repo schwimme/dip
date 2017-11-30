@@ -1,22 +1,23 @@
 #pragma once
 
 #include <base_intf/FiniteStateMachine/fsmdefs.h>
+#include <vector>
 
 
-namespace Base
+namespace base
 {
-namespace Fsm 
+namespace fsm 
 {
 	
 
-struct IWalkable
+struct walkable_intf
 {
-	virtual const std::vector<Fsm::StateId>& GetNextStates(const Fsm::StateId& currentState, Base::CharType ch) const = 0;
-	virtual Fsm::ContextId GetContext(const Fsm::StateId& state) const = 0;
-	virtual const Fsm::StateId& GetStart() const = 0;
+	virtual const std::vector<fsm::state_id>& get_next_states(const fsm::state_id& currentState, base::char_t ch) const = 0;
+	virtual fsm::context_id get_context(const fsm::state_id& state) const = 0;
+	virtual const fsm::state_id& get_start() const = 0;
 
 protected:
-	IWalkable() {}
+	walkable_intf() {}
 };
 
 

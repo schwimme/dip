@@ -3,31 +3,31 @@
 
 #include <vector>
 #include <utility>
-#include <base_intf/Types/string.h>
+#include <types/string.h>
 
-namespace Checker
+namespace checker
 {
 
 //KTTODO - move to defs
-using TokenId = uint32_t;
+using token_id = uint32_t;
 
-using Token = std::pair<TokenId, Base::String>;
+using token = std::pair<token_id, base::string>;
 
-struct LexicalAnalysisConfiguration
+struct lexical_analysis_configuration
 {
-	using PriorityGroup = std::vector<TokenId>;
+	using priority_group = std::vector<token_id>;
 
-	std::vector<std::pair<TokenId, Base::String>> definition;
-	std::vector<PriorityGroup> priority;
+	std::vector<std::pair<token_id, base::string>> definition;
+	std::vector<priority_group> priority;
 };
 
 
 
-struct ILexicalAnalysis
+struct lexical_analysis_intf
 {
-	virtual void BuildFsm(const LexicalAnalysisConfiguration& configuration) = 0;
+	virtual void configure(const lexical_analysis_configuration& configuration) = 0;
 
-	virtual std::vector<Token> Parse(const Base::String& input) = 0;
+	virtual std::vector<token> parse(const base::string& input) = 0;
 };
 
 

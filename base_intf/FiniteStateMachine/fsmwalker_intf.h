@@ -2,29 +2,30 @@
 
 
 #include "fsmdefs.h"
+#include <crossmodule/types/string.h>
 
 
-namespace Base
+namespace base
 {
 	
 	
-struct IFsmWalker
+struct fsm_walker_intf
 {
 	//! \brief Process step in automat by given character.
-	virtual bool ProcessStep(Base::CharType ch) = 0;
+	virtual bool process_step(base::char_t ch) = 0;
 
 	/*!
 		\brief	Verify entire literal.
 		\return	true if literal was readed successfuly,
 		\return	false otherwise.
 	*/
-	virtual bool VerifyLiteral(const Base::String& literal) = 0;
+	virtual bool verify_literal(crossmodule::string_ref literal) = 0;
 
 	//! \brief	Reset to initial state.
-	virtual void Reset() = 0;
+	virtual void reset() = 0;
 
 	//! \brief	Get context of actual state.
-	virtual Fsm::ContextId GetContext() const = 0;
+	virtual fsm::context_id get_context() const = 0;
 };
 	
 

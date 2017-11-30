@@ -5,27 +5,32 @@
 #include <base_intf/Algorithm/algorithm.h>
 
 
-namespace Base
+namespace base
 {
-namespace Fsm
-{
-
-
-struct CRegexContextFactory:
-	public IFsmContextFactory
+namespace fsm
 {
 
-	CRegexContextFactory(ContextId valid, ContextId invalid):
+
+struct regex_context_factory:
+	public fsm_context_factory_intf
+{
+
+	regex_context_factory(context_id valid, context_id invalid):
 		m_valid(valid),
 		m_invalid(invalid)
 	{}
 
 
-	virtual Fsm::ContextId SelectContext(const std::vector<Fsm::ContextId>& allContexts) const override
+	virtual fsm::context_id select_context(crossmodule::enumerator<fsm::context_id>* const allContexts) const override
 	{
-		if (Base::Find(allContexts, m_valid))
+		fsm::context_id const* id = nullptr;
+		while (id = allContexts->get())
 		{
-			return m_valid;
+			if (*id == m_valid)
+			{
+				return m_valid;
+			}
+			allContexts->next();
 		}
 
 		return m_invalid;
@@ -33,8 +38,8 @@ struct CRegexContextFactory:
 
 
 private:
-	ContextId m_valid;
-	ContextId m_invalid;
+	context_id m_valid;
+	context_id m_invalid;
 };
 
 

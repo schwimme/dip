@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="types">
+      <UniqueIdentifier>{bbf6c4e4-130a-4775-a1fb-c41a72bce7f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="adapters">
+      <UniqueIdentifier>{679cfe90-6a35-4593-9dcd-bc0f40671ce1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="factory">
+      <UniqueIdentifier>{1d493ad0-7544-4165-a2c1-b712b20c2318}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="types\string.h">
+      <Filter>types</Filter>
+    </ClInclude>
+    <ClInclude Include="adapters\basestring.h">
+      <Filter>adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="factory\objectfactory.h">
+      <Filter>factory</Filter>
+    </ClInclude>
+    <ClInclude Include="types\enumerator.h">
+      <Filter>types</Filter>
+    </ClInclude>
+    <ClInclude Include="adapters\vector.h">
+      <Filter>adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="types\backinserter.h">
+      <Filter>types</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="factory\objectfactory.cpp">
+      <Filter>factory</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

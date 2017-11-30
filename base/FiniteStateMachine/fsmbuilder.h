@@ -2,16 +2,15 @@
 
 
 #include <vector>
-#include <base_intf/Types/string.h>
 #include <base_intf/FiniteStateMachine/fsmdefs.h>
+#include <types/string.h>
 
-
-namespace Base
+namespace base
 {
 
-class CFsm;
+class fsm_impl;
 
-namespace Fsm
+namespace fsm
 {
 
 /*
@@ -21,12 +20,12 @@ namespace Fsm
 	Completly adding unix regex has to be implemented in future.
 */
 
-class CBuilder
+class builder
 {
 protected:
-	struct RegexItem
+	struct regex_item
 	{
-		enum class Type
+		enum class type_t
 		{
 			NORMAL,				// For standart character
 			RANGE,				// For [a-z] type
@@ -35,23 +34,23 @@ protected:
 			NUMERIC_ITERATION,	// For x{2}
 		};
 
-		CharType char1 = 0;
-		CharType char2 = 0;
+		char_t char1 = 0;
+		char_t char2 = 0;
 		size_t iteration_begin	= 0;
 		size_t iteration_count	= 0;
-		Type type					= Type::NORMAL;
+		type_t type				= type_t::NORMAL;
 	};
 
-	using Regex = std::vector<RegexItem>;
+	using regex = std::vector<regex_item>;
 
 public:
-	void BuildFsmFromRegex(CFsm& fsm, const Base::String& regex, ContextId valid, ContextId invalid) const;
+	void build_fsm_from_regex(fsm_impl& f, const base::string& rgx, context_id valid, context_id invalid) const;
 
 protected:
 	// KTTODO - other class and remove virtual
-	virtual Regex ParseRegex(const Base::CharType*& regex) const;
+	virtual regex parse_regex(const base::char_t*& rgx) const;
 
-	void CheckEnd(const Base::CharType* rest) const
+	void CheckEnd(const base::char_t* rest) const
 	{
 		if (*rest == 0)
 		{
@@ -59,7 +58,7 @@ protected:
 		}
 	}
 
-	void CheckIs(const Base::CharType* rest, Base::CharType expected) const
+	void CheckIs(const base::char_t* rest, base::char_t expected) const
 	{
 		if (*rest != expected)
 		{
@@ -67,14 +66,14 @@ protected:
 		}
 	}
 
-	void ThrowParsingException(const Base::CharType* rest) const
+	void ThrowParsingException(const base::char_t* rest) const
 	{
 		throw "KTTODO";
 	}
 
-	Base::CharType ParseCharacter(const Base::CharType*& rest, CBuilder::Regex& out) const;
+	base::char_t parse_character(const base::char_t*& rest, builder::regex& out) const;
 
-	RegexItem ParseRange(const Base::CharType*& rest) const;
+	regex_item parse_range(const base::char_t*& rest) const;
 
 };
 

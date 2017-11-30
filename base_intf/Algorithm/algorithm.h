@@ -5,30 +5,30 @@
 #include <algorithm>
 #include <iterator>
 
-namespace Base
+namespace base
 {
 	
 	
-template<typename ToSearchType, typename ContainerType>
-bool Find(typename ContainerType::const_iterator& it, const ContainerType& container, const ToSearchType& toSearch)
+template<typename to_search_t, typename container_t>
+bool find(typename container_t::const_iterator& it, const container_t& container, const to_search_t& toSearch)
 {
 	it = std::find(container.begin(), container.end(), toSearch);
 	return it != container.end();
 }
 
 
-template<typename ToSearchType, typename ContainerType>
-bool Find(const ContainerType& container, const ToSearchType& toSearch)
+template<typename to_search_t, typename container_t>
+bool find(const container_t& container, const to_search_t& toSearch)
 {
-	typename ContainerType::const_iterator it;
-	return Find(it, container, toSearch);
+	typename container_t::const_iterator it;
+	return find(it, container, toSearch);
 }
 
 
-template<typename ContainerType>
-ContainerType Union(const ContainerType& first, const ContainerType& second)
+template<typename container_t>
+container_t make_union(const container_t& first, const container_t& second)
 {
-	ContainerType tmp;
+	container_t tmp;
 	std::set_union(
 		first.begin(), first.end(),
 		second.begin(), second.end(),

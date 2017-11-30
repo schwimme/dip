@@ -4,18 +4,18 @@
 #include <functional>
 
 
-namespace Base
+namespace base
 {
 
-struct CScopeGuard
+struct scope_guard
 {
-	explicit CScopeGuard(std::function<void()> guard):
+	explicit scope_guard(std::function<void()> guard):
 		m_guard(guard),
 		m_dismissed(false)
 	{}
 
 
-	~CScopeGuard()
+	~scope_guard()
 	{
 		if (!m_dismissed)
 		{
@@ -28,7 +28,7 @@ struct CScopeGuard
 	}
 
 
-	void Dismiss()
+	void dismiss()
 	{
 		m_dismissed = true;
 	}

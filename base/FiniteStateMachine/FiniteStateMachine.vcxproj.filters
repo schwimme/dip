@@ -64,6 +64,9 @@
     <ClInclude Include="..\..\base_intf\FiniteStateMachine\fsmwalker_intf.h">
       <Filter>Header Files\Intf</Filter>
     </ClInclude>
+    <ClInclude Include="walkable_intf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Fsm.natvis" />

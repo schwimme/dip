@@ -5,26 +5,26 @@
 #include <base/Debugging/debug.h>
 
 
-namespace Base
+namespace base
 {
-namespace Fsm
+namespace fsm
 {
 
 
-void CBuilder::BuildFsmFromRegex(CFsm& fsm, const Base::String& regex, ContextId valid, ContextId invalid) const
+void builder::build_fsm_from_regex(fsm_impl& fsm, const base::string& rgx, context_id valid, context_id invalid) const
 {
 	// Parse regex to internal structure:
-	const CharType* t = regex.c_str();
-	Regex parsedRegex = ParseRegex(t);
+	const base::char_t* t = rgx.c_str();
+	regex parsedRegex = parse_regex(t);
 
 	// Prepare output fsm:
-	StateId fsmStart = fsm.GenerateState(invalid);
-	fsm.SetStart(fsmStart);
+	state_id fsmStart = fsm.generate_state(invalid);
+	fsm.set_start(fsmStart);
 
-	StateId fsmEnd = fsm.GenerateState(valid);
+	state_id fsmEnd = fsm.generate_state(valid);
 
 	// Prepare mapping from parsed regex to fsm states:
-	std::vector<CFsm::StatesStorage::iterator> newStates = { fsm.m_states.find(fsmStart) };
+	std::vector<fsm_impl::states_storage_t::iterator> newStates = { fsm.m_states.find(fsmStart) };
 
 	// Generate:
 	size_t regexSize = parsedRegex.size();
@@ -33,72 +33,72 @@ void CBuilder::BuildFsmFromRegex(CFsm& fsm, const Base::String& regex, ContextId
 		const auto& currentParsedRegex = parsedRegex[it];
 		switch (currentParsedRegex.type)
 		{
-		case RegexItem::Type::NORMAL:
+		case regex_item::type_t::NORMAL:
 		{
 			// Generate state:
-			StateId s = fsm.GenerateState(invalid);
+			state_id s = fsm.generate_state(invalid);
 
 			// Current end:
-			const StateId& b = newStates.at(newStates.size() - 1)->first;
+			const state_id& b = newStates.at(newStates.size() - 1)->first;
 
 			// Store reference to new states:
 			newStates.push_back(fsm.m_states.find(s));
 
 			// Add rule from starting position to newly generated state via character
-			fsm.AddRule(b, s, currentParsedRegex.char1);
+			fsm.add_rule(b, s, currentParsedRegex.char1);
 		}
 		break;
 
-		case RegexItem::Type::RANGE:
+		case regex_item::type_t::RANGE:
 		{
 			// Generate state:
-			StateId s = fsm.GenerateState(invalid);
+			state_id s = fsm.generate_state(invalid);
 
 			// Current end:
-			const StateId& b = newStates.at(newStates.size() - 1)->first;
+			const state_id& b = newStates.at(newStates.size() - 1)->first;
 
 			// Store reference to new states:
 			newStates.push_back(fsm.m_states.find(s));
 
 			// Add rule from starting position to newly generated state via character
-			fsm.AddRule(b, s, currentParsedRegex.char1, currentParsedRegex.char2);
+			fsm.add_rule(b, s, currentParsedRegex.char1, currentParsedRegex.char2);
 		}
 		break;
 
-		case RegexItem::Type::ITERATION:
+		case regex_item::type_t::ITERATION:
 		{
 			// Cannot iterate nothing:
 			ASSERT_NO_EVAL(it != 0);
 
 			// Insert last->epsilon->empty to not harm processing:
-			StateId s = fsm.GenerateState(invalid);
-			fsm.AddRule(newStates.at(newStates.size() - 1)->first, s);
+			state_id s = fsm.generate_state(invalid);
+			fsm.add_rule(newStates.at(newStates.size() - 1)->first, s);
 			newStates.push_back(fsm.m_states.find(s));
 
 			// Register loop:
-			fsm.AddRule(s, newStates[currentParsedRegex.iteration_begin]->first);
+			fsm.add_rule(s, newStates[currentParsedRegex.iteration_begin]->first);
 
 			// Register epsilon rule from begin iteration to here to allow skip all the loop:
-			fsm.AddRule(newStates[currentParsedRegex.iteration_begin]->first, s);
+			fsm.add_rule(newStates[currentParsedRegex.iteration_begin]->first, s);
 		}
 		break;
 
-		case RegexItem::Type::POSITIVE_ITERATION:
+		case regex_item::type_t::POSITIVE_ITERATION:
 		{
 			// Cannot iterate nothing:
 			ASSERT_NO_EVAL(it != 0);
 
 			// Insert last->epsilon->empty to not harm processing:
-			StateId s = fsm.GenerateState(invalid);
-			fsm.AddRule(newStates.at(newStates.size() - 1)->first, s);
+			state_id s = fsm.generate_state(invalid);
+			fsm.add_rule(newStates.at(newStates.size() - 1)->first, s);
 			newStates.push_back(fsm.m_states.find(s));
 
 			// Register loop:
-			fsm.AddRule(s, newStates[currentParsedRegex.iteration_begin]->first);
+			fsm.add_rule(s, newStates[currentParsedRegex.iteration_begin]->first);
 		}
 		break;
 
-		case RegexItem::Type::NUMERIC_ITERATION:
+		case regex_item::type_t::NUMERIC_ITERATION:
 		{
 
 		}
@@ -110,31 +110,31 @@ void CBuilder::BuildFsmFromRegex(CFsm& fsm, const Base::String& regex, ContextId
 	}
 
 	// Add end rule:
-	fsm.AddRule(newStates.at(newStates.size() - 1)->first, fsmEnd);
+	fsm.add_rule(newStates.at(newStates.size() - 1)->first, fsmEnd);
 
 	// This fsm can be fully optimized because all generated states are just internal:
-	fsm.Optimize(CFsm::OptimizationLevel::MINIMIZE);
+	fsm.optimize(fsm_impl::optimization_level_t::MINIMIZE);
 }
 
 
-CBuilder::Regex CBuilder::ParseRegex(const Base::CharType*& regex) const
+builder::regex builder::parse_regex(const base::char_t*& rgx) const
 {
-	CBuilder::Regex outputStack;
+	regex outputStack;
 
-	while (*regex)
+	while (*rgx)
 	{
-		Base::CharType c = ParseCharacter(regex, outputStack);
+		base::char_t c = parse_character(rgx, outputStack);
 
 		switch (c)
 		{
 		case TEXT('['):
-			outputStack.push_back(std::move(ParseRange(regex)));
+			outputStack.push_back(std::move(parse_range(rgx)));
 			break;
 
 		case TEXT('('):
 		{
 			// KTTODO - comment:
-			CBuilder::Regex tmp = ParseRegex(++regex);
+			regex tmp = parse_regex(++rgx);
 			size_t oldPosition = outputStack.size();
 			outputStack.insert(outputStack.end(), tmp.begin(), tmp.end());
 			size_t newPosition = outputStack.size() - 1;
@@ -144,35 +144,35 @@ CBuilder::Regex CBuilder::ParseRegex(const Base::CharType*& regex) const
 
 		case TEXT(')'):
 		{
-			++regex;
-			CheckEnd(regex);
+			++rgx;
+			CheckEnd(rgx);
 			
-			RegexItem i;
-			switch (*regex)
+			regex_item i;
+			switch (*rgx)
 			{
 			case TEXT('*'):
-				i.type = RegexItem::Type::ITERATION;
+				i.type = regex_item::type_t::ITERATION;
 				break;
 
 			case TEXT('+'):
-				i.type = RegexItem::Type::POSITIVE_ITERATION;
+				i.type = regex_item::type_t::POSITIVE_ITERATION;
 				break;
 			
 			case TEXT('{'):
-				i.type = RegexItem::Type::NUMERIC_ITERATION;
+				i.type = regex_item::type_t::NUMERIC_ITERATION;
 
-				++regex;
-				CheckEnd(regex);
-				i.iteration_count = (*regex - TEXT('0')); // KTTODO - more numbers
+				++rgx;
+				CheckEnd(rgx);
+				i.iteration_count = (*rgx - TEXT('0')); // KTTODO - more numbers
 
-				++regex;
-				CheckIs(regex, TEXT('}'));
+				++rgx;
+				CheckIs(rgx, TEXT('}'));
 				break;
 
 			default:
-				ThrowParsingException(regex);
+				ThrowParsingException(rgx);
 			}
-			++regex;
+			++rgx;
 
 			outputStack.push_back(std::move(i));
 
@@ -181,12 +181,12 @@ CBuilder::Regex CBuilder::ParseRegex(const Base::CharType*& regex) const
 
 		default:
 		{
-			RegexItem i;
-			i.type = RegexItem::Type::NORMAL;
-			i.char1 = *regex;
+			regex_item i;
+			i.type = regex_item::type_t::NORMAL;
+			i.char1 = *rgx;
 			outputStack.push_back(std::move(i));
 
-			++regex;
+			++rgx;
 			break;
 		}
 
@@ -197,7 +197,7 @@ CBuilder::Regex CBuilder::ParseRegex(const Base::CharType*& regex) const
 }
 
 
-Base::CharType CBuilder::ParseCharacter(const Base::CharType*& rest, CBuilder::Regex& out) const
+base::char_t builder::parse_character(const base::char_t*& rest, builder::regex& out) const
 {
 	while (*rest == TEXT('\\'))
 	{
@@ -215,8 +215,8 @@ Base::CharType CBuilder::ParseCharacter(const Base::CharType*& rest, CBuilder::R
 		case TEXT('}'):
 		case TEXT('*'):
 		{
-			RegexItem i;
-			i.type = RegexItem::Type::NORMAL;
+			regex_item i;
+			i.type = regex_item::type_t::NORMAL;
 			i.char1 = *rest;
 			out.push_back(std::move(i));
 			++rest;
@@ -233,10 +233,10 @@ Base::CharType CBuilder::ParseCharacter(const Base::CharType*& rest, CBuilder::R
 }
 
 
-CBuilder::RegexItem CBuilder::ParseRange(const Base::CharType*& rest) const
+builder::regex_item builder::parse_range(const base::char_t*& rest) const
 {
-	CBuilder::RegexItem item;
-	item.type = RegexItem::Type::RANGE;
+	builder::regex_item item;
+	item.type = regex_item::type_t::RANGE;
 
 	// [a-b]
 	ASSERT_NO_EVAL(*rest == TEXT('['));

@@ -4,20 +4,20 @@
 #include <base_intf/FiniteStateMachine/fsmdefs.h>
 
 
-namespace Base
+namespace base
 {
-namespace Fsm
+namespace fsm
 {
 
 
 //! \brief	Generate unique state id.
-class CStateIdGenerator
+class state_id_generator
 {
 public:
-	static StateId Generate();
+	static state_id generate();
 
 private:
-	static uint32_t m_nextId;
+	static state_id m_nextId;
 };
 
 

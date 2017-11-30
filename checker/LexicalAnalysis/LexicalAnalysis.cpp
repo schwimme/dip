@@ -1,53 +1,65 @@
 #include "LexicalAnalysis.h"
 #include <base_intf/Algorithm/algorithm.h>
+#include <crossmodule/adapters/basestring.h>
 
-namespace Checker
+
+namespace checker
 {
 
 // KTTODO - make as normal class:
 
-struct CConfigurableFsmCtxFactory:
-	public Base::IFsmContextFactory
+struct configurable_fsm_ctx_factory:
+	public base::fsm_context_factory_intf
 {
-	CConfigurableFsmCtxFactory(const std::vector<LexicalAnalysisConfiguration::PriorityGroup>& priorities):
+	configurable_fsm_ctx_factory(const std::vector<lexical_analysis_configuration::priority_group>& priorities):
 		m_priorities(priorities)
 	{}
 
-	static const Base::Fsm::ContextId INVALID_CTX = -1;
+	static const base::fsm::context_id INVALID_CTX = -1;
 
-	virtual Base::Fsm::ContextId SelectContext(const std::vector<Base::Fsm::ContextId>& allContexts) const override
+	virtual base::fsm::context_id select_context(crossmodule::enumerator<base::fsm::context_id>* const allContexts) const override
 	{
-		std::vector<Base::Fsm::ContextId> ctxWithoutInvalid = RemoveInvalidCtx(allContexts);
+		// Extract vector from cross module safe type:
+		std::vector<base::fsm::context_id> all_ctxs_without_invalid;
+		const base::fsm::context_id* iter = nullptr;
+		while (iter = allContexts->get())
+		{
+			if (*iter != INVALID_CTX)
+			{
+				all_ctxs_without_invalid.push_back(*iter);
+			}
+			allContexts->next();
+		}
 
 		// Just invalid ctxs given:
-		if (ctxWithoutInvalid.size() == 0)
+		if (all_ctxs_without_invalid.size() == 0)
 		{
 			return INVALID_CTX;
 		}
 
 		// One ctx remaining:
-		if (ctxWithoutInvalid.size() == 1)
+		if (all_ctxs_without_invalid.size() == 1)
 		{
-			return ctxWithoutInvalid[0];
+			return all_ctxs_without_invalid[0];
 		}
 
 		// Identify priority group:
 		for (const auto& oneGroup : m_priorities)
 		{
-			if (VerifyPriorityGroup(oneGroup, ctxWithoutInvalid))
+			if (verify_priority_group(oneGroup, all_ctxs_without_invalid))
 			{
 				// Ctx with higher priority are in front of m_priorities:
-				LexicalAnalysisConfiguration::PriorityGroup::const_iterator ctxIter = oneGroup.begin();
+				lexical_analysis_configuration::priority_group::const_iterator ctxIter = oneGroup.begin();
 				while (ctxIter != oneGroup.end())
 				{
-					if (Base::Find(ctxWithoutInvalid, *ctxIter))
+					if (base::find(all_ctxs_without_invalid, *ctxIter))
 					{
 						return *ctxIter;
 					}
 					++ctxIter;
 				}
 
-				// ASSERT(false); // ctxIter must be found at least one time in ctxWithoutInvalid.
+				// ASSERT(false); // ctxIter must be found at least one time in all_ctxs_without_invalid.
 			}
 		}
 
@@ -55,26 +67,12 @@ struct CConfigurableFsmCtxFactory:
 	}
 
 protected:
-	std::vector<Base::Fsm::ContextId> RemoveInvalidCtx(const std::vector<Base::Fsm::ContextId>& allContexts) const
-	{
-		std::vector<Base::Fsm::ContextId> ctxWithoutInvalid;
-		for (const auto& i : allContexts)
-		{
-			if (i != INVALID_CTX)
-			{
-				ctxWithoutInvalid.push_back(i);
-			}
-		}
-
-		return ctxWithoutInvalid;
-	}
-
-	bool VerifyPriorityGroup(const LexicalAnalysisConfiguration::PriorityGroup& priorityGroup, const std::vector<Base::Fsm::ContextId>& ctxToVerify) const
+	bool verify_priority_group(const lexical_analysis_configuration::priority_group& priorityGroup, const std::vector<base::fsm::context_id>& ctxToVerify) const
 	{
 		// oneGroup is group where all priorities must be - verify:
 		for (const auto& ctx : ctxToVerify)
 		{
-			if (Base::Find(priorityGroup, ctx) == false)
+			if (base::find(priorityGroup, ctx) == false)
 			{
 				return false;
 			}
@@ -84,61 +82,73 @@ protected:
 	}
 
 private:
-	std::vector<LexicalAnalysisConfiguration::PriorityGroup>	m_priorities;
+	std::vector<lexical_analysis_configuration::priority_group>	m_priorities;
 };
 
 
-std::shared_ptr<Base::IFsmContextFactory> CLexicalAnalysis::CreateConfigurableFsmCtxFactory(const std::vector<LexicalAnalysisConfiguration::PriorityGroup>& priorities) const
+std::shared_ptr<base::fsm_context_factory_intf> lexical_analysis::create_configurable_fsm_ctx_factory(const std::vector<lexical_analysis_configuration::priority_group>& priorities) const
 {
-	return std::make_shared<CConfigurableFsmCtxFactory>(priorities);
+	return std::make_shared<configurable_fsm_ctx_factory>(priorities);
 }
 
 
-void CLexicalAnalysis::BuildFsm(const LexicalAnalysisConfiguration& configuration)
+void lexical_analysis::configure(const lexical_analysis_configuration& configuration)
 {
+	// Get base:
+	void* pBase;
+	if (m_objectFactory.get_object(GUID_BASE_V1, &pBase) != 0) // KTTODO - no error
+	{
+		throw "fail to get base";
+	}
+	m_spBase = std::shared_ptr<base::base_intf>((base::base_intf*)pBase);
+
 	// Create factory:
-	std::shared_ptr<Base::IFsmContextFactory> spCtxFactory = CreateConfigurableFsmCtxFactory(configuration.priority);
+	std::shared_ptr<base::fsm_context_factory_intf> spCtxFactory = create_configurable_fsm_ctx_factory(configuration.priority);
 
 	// Create fsm using factory:
-	m_spFsm = CreateFsm(spCtxFactory);
-	Base::Fsm::StateId fsmStart = m_spFsm->GenerateState(CConfigurableFsmCtxFactory::INVALID_CTX);
-	m_spFsm->SetStart(fsmStart);
+	if (m_spBase->create_fsm(m_spFsm, spCtxFactory) != 0) // KTTODO - no error
+	{
+		throw "fail to get fsm from base";
+	}
+
+	base::fsm::state_id fsmStart = m_spFsm->generate_state(configurable_fsm_ctx_factory::INVALID_CTX);
+	m_spFsm->set_start(fsmStart);
 
 	for (const auto& d : configuration.definition)
 	{
-		m_spFsm->AddRegex(fsmStart, d.second, d.first, CConfigurableFsmCtxFactory::INVALID_CTX);
+		m_spFsm->add_regex(fsmStart, crossmodule::base_string_on_string_ref(d.second), d.first, configurable_fsm_ctx_factory::INVALID_CTX);
 	}
 }
 
 
-Token CLexicalAnalysis::CreateToken(const Base::String::const_iterator tokenBegin, const Base::String::const_iterator tokenEnd, Base::Fsm::ContextId id) const
+token lexical_analysis::create_token(const base::string::const_iterator tokenBegin, const base::string::const_iterator tokenEnd, base::fsm::context_id id) const
 {
-	if (id == CConfigurableFsmCtxFactory::INVALID_CTX)
+	if (id == configurable_fsm_ctx_factory::INVALID_CTX)
 	{
 		throw "KTTODO - parse error";
 	}
 
-	Base::String tokenValue(tokenBegin, tokenEnd);
+	base::string tokenValue(tokenBegin, tokenEnd);
 
-	return Token(id, tokenValue);
+	return token(id, tokenValue);
 }
 
 
-std::vector<Token> CLexicalAnalysis::Parse(const Base::String& input)
+std::vector<token> lexical_analysis::parse(const base::string& input)
 {
 	// Prepare output:
-	std::vector<Token> tokens;
+	std::vector<token> tokens;
 
 	// Create walker:
-	std::shared_ptr<Base::IFsmWalker> spWalker = m_spFsm->CreateWalker();
+	std::shared_ptr<base::fsm_walker_intf> spWalker = m_spFsm->create_walker();
 
 	// Help iterators:
-	Base::String::const_iterator actualPosition = input.begin();
-	Base::String::const_iterator actualTokenBegin = input.begin();
+	base::string::const_iterator actualPosition = input.begin();
+	base::string::const_iterator actualTokenBegin = input.begin();
 
 	while (actualPosition != input.end())
 	{
-		bool successStep = spWalker->ProcessStep(*actualPosition);
+		bool successStep = spWalker->process_step(*actualPosition);
 
 		if (successStep == true)
 		{
@@ -147,9 +157,9 @@ std::vector<Token> CLexicalAnalysis::Parse(const Base::String& input)
 		else
 		{
 			// End of known token:
-			Token t = CreateToken(actualTokenBegin, actualPosition, spWalker->GetContext());
+			token t = create_token(actualTokenBegin, actualPosition, spWalker->get_context());
 
-			spWalker->Reset();
+			spWalker->reset();
 
 			tokens.push_back(std::move(t));
 
@@ -158,7 +168,7 @@ std::vector<Token> CLexicalAnalysis::Parse(const Base::String& input)
 		}
 	}
 
-	Token t = CreateToken(actualTokenBegin, actualPosition, spWalker->GetContext());
+	token t = create_token(actualTokenBegin, actualPosition, spWalker->get_context());
 	tokens.push_back(std::move(t));
 
 	return tokens;

@@ -5,25 +5,26 @@
 #include <base/Debugging/debug.h>
 #include <base_intf/Algorithm/algorithm.h>
 #include "regexcontextfactory.h"
+#include <types/string.h>
+#include <crossmodule/adapters/vector.h>
 
-
-namespace Base
+namespace base
 {
 
 
-CFsm::CFsm(std::shared_ptr<IFsmContextFactory>& spCtxFactory):
+fsm_impl::fsm_impl(std::shared_ptr<fsm_context_factory_intf>& spCtxFactory):
 	m_spContextFactory(spCtxFactory),
 	m_optimized(false)
 {}
 
 
-void CFsm::Initialize()
+void fsm_impl::initialize()
 {
 	// Currently no action taken.
 }
 
 
-void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to)
+void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to)
 {
 	ASSERT_NO_EVAL(m_optimized == false);
 	ASSERT_NO_EVAL(m_states.find(from) != m_states.end());
@@ -31,30 +32,31 @@ void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to)
 
 	if (from != to)
 	{
-		m_states[from]->AddRule(to, Fsm::detail::EPSILON);
+		m_states[from]->add_rule(to, fsm::detail::EPSILON);
 	}
 }
 
 
-void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType ch)
+void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t ch)
 {
 	ASSERT_NO_EVAL(m_optimized == false);
 	ASSERT_NO_EVAL(ch != Fsm::detail::EPSILON);
 	ASSERT_NO_EVAL(m_states.find(from) != m_states.end());
 	ASSERT_NO_EVAL(m_states.find(to) != m_states.end());
 
-	m_states[from]->AddRule(to, ch);
+	m_states[from]->add_rule(to, ch);
 }
 
 
-void CFsm::AddRegex(const Fsm::StateId& from, const Base::String& regex, Fsm::ContextId valid, Fsm::ContextId invalid)
+void fsm_impl::add_regex(const fsm::state_id& from, crossmodule::string_ref regex, fsm::context_id valid, fsm::context_id invalid)
 {
-	std::shared_ptr<IFsmContextFactory> spCtxFactory = std::make_shared<Fsm::CRegexContextFactory>(valid, invalid);
-	CFsm regexFsm(spCtxFactory);
+	base::string regex_non_crossmodule(regex.m_data, regex.m_size);
+	std::shared_ptr<fsm_context_factory_intf> spCtxFactory = std::make_shared<fsm::regex_context_factory>(valid, invalid);
+	fsm_impl regexFsm(spCtxFactory);
 
 	// KTTODO use intf and injection
-	Fsm::CBuilder b;
-	b.BuildFsmFromRegex(regexFsm, regex, valid, invalid);
+	fsm::builder b;
+	b.build_fsm_from_regex(regexFsm, regex_non_crossmodule, valid, invalid);
 
 	// Get fsm content:
 	for (auto& i : regexFsm.m_states)
@@ -63,21 +65,21 @@ void CFsm::AddRegex(const Fsm::StateId& from, const Base::String& regex, Fsm::Co
 	}
 
 	// Add rule 'from'->epsilon->fsm.start
-	AddRule(from, regexFsm.m_start);
+	add_rule(from, regexFsm.m_start);
 }
 
 
-void CFsm::AddRule(const Fsm::StateId& from, const Fsm::StateId& to, Base::CharType a, Base::CharType b)
+void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t a, base::char_t b)
 {
 	// KTTODO - optimize this using ranges (should be done after UT to be sure, optimization doesnt break anything).
 	do
 	{
-		AddRule(from, to, a);
+		add_rule(from, to, a);
 	} while (a++ != b);
 }
 
 
-void CFsm::SetStart(const Fsm::StateId& state)
+void fsm_impl::set_start(const fsm::state_id& state)
 {
 	ASSERT_NO_EVAL(m_optimized == false);
 	ASSERT_NO_EVAL(m_start.empty());
@@ -86,43 +88,43 @@ void CFsm::SetStart(const Fsm::StateId& state)
 }
 
 
-Fsm::StateId CFsm::GenerateState(Fsm::ContextId ctx)
+fsm::state_id fsm_impl::generate_state(fsm::context_id ctx)
 {
 	ASSERT(m_optimized == false);
-	Fsm::StateId s = Fsm::CStateIdGenerator::Generate();
-	m_states[s] = std::make_unique<Fsm::CState>(ctx);
+	fsm::state_id s = fsm::state_id_generator::generate();
+	m_states[s] = std::make_unique<fsm::state>(ctx);
 	return s;
 }
 
 
-void CFsm::Optimize(OptimizationLevel level)
+void fsm_impl::optimize(optimization_level_t level)
 {
-	if (level > OptimizationLevel::NOTHING)
+	if (level > optimization_level_t::NOTHING)
 	{
-		RemoveEpsilonRules();
+		remove_epsilon_rules();
 	}
 
-	if (level > OptimizationLevel::EPSILON_RULES)
+	if (level > optimization_level_t::EPSILON_RULES)
 	{
-		RemoveUnreachableStates();
+		remove_unreachable_states();
 	}
 
 	// After this call, fsm has no longer some exported states, so cant be changed:
 	m_optimized = true;
 
-	if (level > OptimizationLevel::UNREACHABLE_STATES)
+	if (level > optimization_level_t::UNREACHABLE_STATES)
 	{
-		Determine();
+		determine();
 	}
 
-	if (level > OptimizationLevel::DETERMINE)
+	if (level > optimization_level_t::DETERMINE)
 	{
-		Minimize();
+		minimize();
 	}
 }
 
 
-bool CFsm::RemoveEpsilonRulesImpl(Fsm::CState::Holder& pState)
+bool fsm_impl::remove_epsilon_rules_impl(fsm::state::holder& pState)
 {
 	if (pState->m_epsVisited)
 	{
@@ -131,46 +133,46 @@ bool CFsm::RemoveEpsilonRulesImpl(Fsm::CState::Holder& pState)
 
 	pState->m_epsVisited = true;
 
-	const std::vector<Fsm::StateId>& epsilonRules = pState->GetRules(Fsm::detail::EPSILON);
+	const std::vector<fsm::state_id>& epsilonRules = pState->get_rules(fsm::detail::EPSILON);
 	for (const auto& r : epsilonRules)
 	{
-		RemoveEpsilonRulesImpl(m_states[r]);
-		pState->AddOptimizedEpsilonRule(*(m_states[r]));
-		pState->m_context = m_spContextFactory->SelectContext({ pState->m_context, m_states[r]->m_context });
+		remove_epsilon_rules_impl(m_states[r]);
+		pState->add_optimized_epsilon_rule(*(m_states[r]));
+		pState->m_context = m_spContextFactory->select_context(&crossmodule::std_vector_on_enumerator<fsm::context_id>(std::vector<fsm::context_id>{ pState->m_context, m_states[r]->m_context }));
 	}
 
-	pState->RemoveRules(Fsm::detail::EPSILON);
+	pState->remove_rules(fsm::detail::EPSILON);
 
 	return true;
 }
 
 
-void CFsm::RemoveEpsilonRules()
+void fsm_impl::remove_epsilon_rules()
 {
 	for (auto& s : m_states)
 	{
-		Fsm::CState::Holder& pState = s.second;
-		RemoveEpsilonRulesImpl(pState);
+		fsm::state::holder& pState = s.second;
+		remove_epsilon_rules_impl(pState);
 	}
 }
 
 
-void CFsm::RemoveUnreachableStates()
+void fsm_impl::remove_unreachable_states()
 {
-	std::vector<Fsm::StateId> reachableStates = { m_start };
+	std::vector<fsm::state_id> reachableStates = { m_start };
 	size_t position = 0;
 	do
 	{
 		const auto& allStateRules = m_states[reachableStates[position]]->m_rules;
-		std::vector<Fsm::StateId> allNextStates;
+		std::vector<fsm::state_id> allNextStates;
 		for (const auto& p : allStateRules)
 		{
-			allNextStates = Base::Union(allNextStates, p.second);
+			allNextStates = base::make_union(allNextStates, p.second);
 		}
 
 		for (auto& i : allNextStates)
 		{
-			if (Base::Find(reachableStates, i) == false)
+			if (base::find(reachableStates, i) == false)
 			{
 				reachableStates.push_back(std::move(i));
 			}
@@ -181,7 +183,7 @@ void CFsm::RemoveUnreachableStates()
 	} while (position != reachableStates.size());
 
 	// Commit point:
-	std::unordered_map<Fsm::StateId, Fsm::CState::Holder> newStates;
+	std::unordered_map<fsm::state_id, fsm::state::holder> newStates;
 	for (const auto& s : reachableStates)
 	{
 		newStates[s] = std::move(m_states[s]);
@@ -191,27 +193,28 @@ void CFsm::RemoveUnreachableStates()
 }
 
 
-void CFsm::Determine()
-{
-	// KTTODO
-}
-
-void CFsm::Minimize()
+void fsm_impl::determine()
 {
 	// KTTODO
 }
 
 
-const std::vector<Fsm::StateId>& CFsm::GetNextStates(const Fsm::StateId& currentState, Base::CharType ch) const
+void fsm_impl::minimize()
+{
+	// KTTODO
+}
+
+
+const std::vector<fsm::state_id>& fsm_impl::get_next_states(const fsm::state_id& currentState, base::char_t ch) const
 {
 	auto it = m_states.find(currentState);
 	ASSERT(it != m_states.end());
 
-	return it->second->GetRules(ch);
+	return it->second->get_rules(ch);
 }
 
 
-Fsm::ContextId CFsm::GetContext(const Fsm::StateId& state) const
+fsm::context_id fsm_impl::get_context(const fsm::state_id& state) const
 {
 	auto it = m_states.find(state);
 	ASSERT(it != m_states.end());
@@ -220,48 +223,49 @@ Fsm::ContextId CFsm::GetContext(const Fsm::StateId& state) const
 }
 
 
-const Fsm::StateId& CFsm::GetStart() const
+const fsm::state_id& fsm_impl::get_start() const
 {
 	return m_start;
 }
 
 
-std::shared_ptr<IFsmWalker> CFsm::CreateWalker()
+std::shared_ptr<fsm_walker_intf> fsm_impl::create_walker()
 {
 	if (m_optimized == false)
 	{
 		// Cannot determine fsm, because may context lose here.
-		Optimize(OptimizationLevel::UNREACHABLE_STATES);
+		optimize(optimization_level_t::UNREACHABLE_STATES);
 	}
 
-	return std::make_shared<Fsm::CWalker>(*this, m_spContextFactory);
+	return std::make_shared<fsm::walker>(*this, m_spContextFactory);
 }
 
 
-Base::String CFsm::Dump() const
+base::string fsm_impl::dump() const
 {
-	Base::String out;
+	base::string out;
 
-	// For all states:
-	for (const auto& state : m_states)
-	{
-		const Base::String& beginState = (state.first + TEXT('(') + Base::ToString(GetContext(state.first)) + TEXT(')'));
-
-		// For all characters in rule:
-		for (const auto& character : state.second->m_rules)
-		{
-			// For all destination states:
-			for (const auto& destState : character.second)
-			{
-				out += beginState;
-				out += TEXT("--");
-				out += ((character.first == Fsm::detail::EPSILON) ? TEXT('_') : character.first);
-				out += TEXT("->");
-				out += (destState + TEXT('(') + Base::ToString(GetContext(destState)) + TEXT(')'));
-				out += TEXT('\n');
-			}
-		}
-	}
+	// KTTODO
+//	// For all states:
+//	for (const auto& state : m_states)
+//	{
+//		const base::string& beginState = (state.first + TEXT('(') + base::to_string(get_context(state.first)) + TEXT(')'));
+//
+//		// For all characters in rule:
+//		for (const auto& character : state.second->m_rules)
+//		{
+//			// For all destination states:
+//			for (const auto& destState : character.second)
+//			{
+//				out += beginState;
+//				out += TEXT("--");
+//				out += ((character.first == fsm::detail::EPSILON) ? TEXT('_') : character.first);
+//				out += TEXT("->");
+//				out += (destState + TEXT('(') + base::to_string(get_context(destState)) + TEXT(')'));
+//				out += TEXT('\n');
+//			}
+//		}
+//	}
 
 	return out;
 }

@@ -1,18 +1,18 @@
 #include "stateidgenerator.h"
 
 
-namespace Base
+namespace base
 {
-namespace Fsm
+namespace fsm
 {
 
 
-uint32_t CStateIdGenerator::m_nextId = 0;
+state_id state_id_generator::m_nextId = 0;
 
 
-StateId CStateIdGenerator::Generate()
+state_id state_id_generator::generate()
 {
-	return Base::ToString(m_nextId++);
+	return m_nextId++;
 }
 
 

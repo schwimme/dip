@@ -3,52 +3,55 @@
 
 #include <base/FiniteStateMachine/fsm.h>
 
+#include <crossmodule/types/string.h>
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace Base_Test
+namespace base_test
 {		
 
-TEST_CLASS(Fsm_test)
+TEST_CLASS(fsm_test)
 {
 public:
 
 	struct FsmDumper:
-		public Base::CFsm
+		public base::fsm_impl
 	{
-		FsmDumper(std::shared_ptr<Base::IFsmContextFactory>& spCtxFactory):
-			Base::CFsm(spCtxFactory)
+		FsmDumper(std::shared_ptr<base::fsm_context_factory_intf>& spCtxFactory):
+			base::fsm_impl(spCtxFactory)
 		{}
 
 
-		Base::String Dump() const
+		base::string dump() const
 		{
-			return __super::Dump();
+			return __super::dump();
 		}
 	};
 
+
 TEST_METHOD(KTTODO_All_UT)
 {
-	std::shared_ptr<Base::IFsmContextFactory> f = std::make_shared<Base::Fsm::CBaseContextFactory>();
+	std::shared_ptr<base::fsm_context_factory_intf> f = std::make_shared<base::fsm::base_context_factory>();
 	FsmDumper fsm(f);
-	Base::Fsm::StateId a = fsm.GenerateState(0);
-	fsm.SetStart(a);
+	base::fsm::state_id a = fsm.generate_state(0);
+	fsm.set_start(a);
 
-	fsm.AddRegex(a, TEXT("(c)*(a)+c"), 1, 0);
+	fsm.add_regex(a, TEXT("(c)*(a)+c"), 1, 0);
 
-	std::shared_ptr<Base::IFsmWalker> w = fsm.CreateWalker();
+	std::shared_ptr<base::fsm_walker_intf> w = fsm.create_walker();
 
-	Base::String dump = fsm.Dump();
+	base::string dump = fsm.dump();
 
-	Assert::IsTrue(w->VerifyLiteral(TEXT("c")));
-	Assert::IsTrue(w->GetContext() == 0);
-	w->Reset();
+	Assert::IsTrue(w->verify_literal(TEXT("c")));
+	Assert::IsTrue(w->get_context() == 0);
+	w->reset();
 
-	Assert::IsTrue(w->VerifyLiteral(TEXT("a")));
-	Assert::IsTrue(w->GetContext() == 0);
-	w->Reset();
+	Assert::IsTrue(w->verify_literal(TEXT("a")));
+	Assert::IsTrue(w->get_context() == 0);
+	w->reset();
 
-	Assert::IsTrue(w->VerifyLiteral(TEXT("ac")));
-	Assert::IsTrue(w->GetContext() == 1);
+	Assert::IsTrue(w->verify_literal(TEXT("ac")));
+	Assert::IsTrue(w->get_context() == 1);
 }
 
 

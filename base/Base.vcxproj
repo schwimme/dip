@@ -20,17 +20,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\base_intf\Algorithm\algorithm.h" />
-    <ClInclude Include="..\base_intf\BaseFactory.h" />
     <ClInclude Include="..\base_intf\ScopeGuard\ScopeGuard.h" />
-    <ClInclude Include="..\base_intf\Types\string.h" />
+    <ClInclude Include="..\types\chartype.h" />
+    <ClInclude Include="..\types\string.h" />
+    <ClInclude Include="base.h" />
+    <ClInclude Include="base_intf.h" />
     <ClInclude Include="Debugging\debug.h" />
     <ClInclude Include="Debugging\debug_impl.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\base_intf\BaseFactory.cpp" />
+    <ClCompile Include="base.cpp" />
     <ClCompile Include="Debugging\win_debug_impl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\crossmodule\crossmodule.vcxproj">
+      <Project>{d27cb579-1006-4814-adca-85d2f8f10580}</Project>
+    </ProjectReference>
     <ProjectReference Include="FiniteStateMachine\FiniteStateMachine.vcxproj">
       <Project>{ba0a8a32-f18a-4863-ae66-eefe4734250d}</Project>
     </ProjectReference>

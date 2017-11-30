@@ -37,6 +37,7 @@
     <ClInclude Include="regexcontextfactory.h" />
     <ClInclude Include="state.h" />
     <ClInclude Include="stateidgenerator.h" />
+    <ClInclude Include="walkable_intf.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Fsm.natvis" />

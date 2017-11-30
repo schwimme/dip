@@ -1,28 +1,30 @@
 #include "fsmwalker.h"
 #include <base_intf/Algorithm/algorithm.h>
+#include <crossmodule/adapters/vector.h>
+#include <types/string.h>
 
 
-namespace Base
+namespace base
 {
-namespace Fsm
+namespace fsm
 {
 
 
-CWalker::CWalker(Fsm::IWalkable& walkable, std::shared_ptr<IFsmContextFactory>& spCtxFactory):
+walker::walker(fsm::walkable_intf& walkable, std::shared_ptr<fsm_context_factory_intf>& spCtxFactory):
 	m_spCtxFactory(spCtxFactory),
 	m_pWalkable(&walkable)
 {
-	Reset();
+	reset();
 }
 
 
-bool CWalker::ProcessStep(Base::CharType ch)
+bool walker::process_step(base::char_t ch)
 {
-	std::vector<Fsm::StateId> newState;
+	std::vector<fsm::state_id> newState;
 	for (const auto& s : m_actualState)
 	{
-		std::vector<Fsm::StateId> tmp = m_pWalkable->GetNextStates(s, ch);
-		newState = Union(newState, tmp);
+		std::vector<fsm::state_id> tmp = m_pWalkable->get_next_states(s, ch);
+		newState = base::make_union(newState, tmp);
 	}
 
 	if (newState.size() == 0)
@@ -37,11 +39,13 @@ bool CWalker::ProcessStep(Base::CharType ch)
 }
 
 
-bool CWalker::VerifyLiteral(const String& literal)
+bool walker::verify_literal(crossmodule::string_ref literal)
 {
-	for (CharType c : literal)
+	base::string literal_no_crossmodule = base::string(literal.m_data, literal.m_size);
+
+	for (base::char_t c : literal_no_crossmodule)
 	{
-		if (ProcessStep(c) == false)
+		if (process_step(c) == false)
 		{
 			// Literal was not readed:
 			return false;
@@ -52,28 +56,28 @@ bool CWalker::VerifyLiteral(const String& literal)
 }
 
 
-void CWalker::Reset()
+void walker::reset()
 {
 	// Actual state is fsm start.
-	m_actualState = { m_pWalkable->GetStart() };
+	m_actualState = { m_pWalkable->get_start() };
 }
 
 
-Fsm::ContextId CWalker::GetContext() const
+fsm::context_id walker::get_context() const
 {
 	// Get context of all current states:
-	std::vector<Fsm::ContextId> ctxs;
+	std::vector<fsm::context_id> ctxs;
 	for (const auto& s : m_actualState)
 	{
-		Fsm::ContextId c = m_pWalkable->GetContext(s);
-		if (Base::Find(ctxs, c) == false)
+		fsm::context_id c = m_pWalkable->get_context(s);
+		if (base::find(ctxs, c) == false)
 		{
 			ctxs.push_back(c);
 		}
 	}
 
 	// Return most priorited context by factory:
-	return m_spCtxFactory->SelectContext(ctxs);
+	return m_spCtxFactory->select_context(&crossmodule::std_vector_on_enumerator<fsm::context_id>(ctxs));
 }
 
 
