@@ -20,10 +20,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adapters\basestring.h" />
+    <ClInclude Include="adapters\shared_ptr.h" />
     <ClInclude Include="adapters\vector.h" />
+    <ClInclude Include="counter\countable.h" />
+    <ClInclude Include="counter\counter.h" />
     <ClInclude Include="factory\objectfactory.h" />
     <ClInclude Include="types\backinserter.h" />
     <ClInclude Include="types\enumerator.h" />
+    <ClInclude Include="types\pointer.h" />
+    <ClInclude Include="types\query.h" />
     <ClInclude Include="types\string.h" />
   </ItemGroup>
   <ItemGroup>

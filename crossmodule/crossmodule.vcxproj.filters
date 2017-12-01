@@ -10,6 +10,9 @@
     <Filter Include="factory">
       <UniqueIdentifier>{1d493ad0-7544-4165-a2c1-b712b20c2318}</UniqueIdentifier>
     </Filter>
+    <Filter Include="counter">
+      <UniqueIdentifier>{fbec6c48-db55-4930-a8b5-389eb8def86a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="types\string.h">
@@ -29,6 +32,21 @@
     </ClInclude>
     <ClInclude Include="types\backinserter.h">
       <Filter>types</Filter>
+    </ClInclude>
+    <ClInclude Include="types\query.h">
+      <Filter>types</Filter>
+    </ClInclude>
+    <ClInclude Include="types\pointer.h">
+      <Filter>types</Filter>
+    </ClInclude>
+    <ClInclude Include="adapters\shared_ptr.h">
+      <Filter>adapters</Filter>
+    </ClInclude>
+    <ClInclude Include="counter\counter.h">
+      <Filter>counter</Filter>
+    </ClInclude>
+    <ClInclude Include="counter\countable.h">
+      <Filter>counter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
