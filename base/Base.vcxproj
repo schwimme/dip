@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="..\base_intf\Algorithm\algorithm.h" />
     <ClInclude Include="..\base_intf\ScopeGuard\ScopeGuard.h" />
+    <ClInclude Include="..\base_intf\ThreadPool\threadpool.h" />
     <ClInclude Include="..\types\chartype.h" />
     <ClInclude Include="..\types\string.h" />
     <ClInclude Include="base.h" />

@@ -39,9 +39,6 @@
     <ClInclude Include="stateidgenerator.h" />
     <ClInclude Include="walkable_intf.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Natvis Include="Fsm.natvis" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BA0A8A32-F18A-4863-AE66-EEFE4734250D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

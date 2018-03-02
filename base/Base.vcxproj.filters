@@ -13,6 +13,9 @@
     <Filter Include="algorithm">
       <UniqueIdentifier>{f2428e43-0dc1-4b7d-83ae-67d4161e6b5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="thread_pool">
+      <UniqueIdentifier>{ee021c12-a1e8-4a0d-a802-83f2c371fa05}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debugging\debug.h">
@@ -35,6 +38,9 @@
     </ClInclude>
     <ClInclude Include="base.h" />
     <ClInclude Include="base_intf.h" />
+    <ClInclude Include="..\base_intf\ThreadPool\threadpool.h">
+      <Filter>thread_pool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debugging\win_debug_impl.cpp">
