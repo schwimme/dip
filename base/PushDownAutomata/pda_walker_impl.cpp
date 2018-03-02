@@ -19,17 +19,23 @@ bool walker_impl::process_step(const pda::token_id& input)
 	}
 
 	m_configurations = std::move(newCfgs);
+	return (m_configurations.empty() == false);
 }
 
 
 void walker_impl::reset()
 {
-	m_configurations = {};
+	m_configurations = { {} };
 }
 
 
 bool walker_impl::accepted() const
 {
+	if (m_configurations.empty())
+	{
+		return true;
+	}
+
 	for (const auto& cfg: m_configurations)
 	{
 		if (cfg.empty())
@@ -47,22 +53,27 @@ std::list<std::vector<stack_item>> walker_impl::process_step_in_config(const std
 	std::list<std::vector<stack_item>> ret;
 
 	auto it = cfg.begin();
-	while (it != cfg.end())
+	bool end = false;
+	do
 	{
 		std::vector<stack_item> stackTop(cfg.begin(), it);
 		std::vector<stack_item> stackRest(it, cfg.end());
-
-		auto currentStackTopRules = rules.find(stackTop);
-		if (currentStackTopRules == rules.end())
+		if (it != cfg.end())
 		{
-			continue;
+			++it;
+		}
+		else
+		{
+			end = true;
 		}
 
-		auto l = expand_by_one_stack_top(stackRest, currentStackTopRules->second);
-		ret.splice(ret.end(), std::move(l));
-
-		++it;
-	}
+		auto currentStackTopRules = rules.find(stackTop);
+		if (currentStackTopRules != rules.end())
+		{
+			auto l = expand_by_one_stack_top(stackRest, currentStackTopRules->second);
+			ret.splice(ret.end(), std::move(l));
+		}
+	} while (end == false);
 
 	return ret;
 }

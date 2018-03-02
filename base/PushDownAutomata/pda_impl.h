@@ -16,10 +16,10 @@ namespace pda
 
 
 class impl:
-	walkable_intf
+	public walkable_intf
 {
 public:
-	void register_rule(const pda::token_id& input, const std::vector<stack_item>& stackTop, const std::vector<stack_item>& stackRewrite);
+	void add_rule(const pda::token_id& input, const std::vector<stack_item>& stackTop, const std::vector<stack_item>& stackRewrite);
 	std::shared_ptr<pda::walker_impl> create_walker() const;
 
 public:

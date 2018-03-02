@@ -36,7 +36,7 @@ class intf_impl:
 	public pda_intf
 {
 public:
-	virtual void register_rule(const pda::token_id& input, const crossmodule::enumerator<pda::stack_item>& stackTop, const crossmodule::enumerator<pda::stack_item>& stackRewrite) override;
+	virtual void add_rule(const pda::token_id& input, const crossmodule::enumerator<pda::stack_item>& stackTop, const crossmodule::enumerator<pda::stack_item>& stackRewrite) override;
 	virtual void create_walker(crossmodule::versioned_intf_ref<pda_walker_intf> walker) override;
 
 private:

@@ -39,6 +39,9 @@
     <ProjectReference Include="FiniteStateMachine\FiniteStateMachine.vcxproj">
       <Project>{ba0a8a32-f18a-4863-ae66-eefe4734250d}</Project>
     </ProjectReference>
+    <ProjectReference Include="PushDownAutomata\PushDownAutomata.vcxproj">
+      <Project>{b7526aea-baa3-4604-b804-8052fb025375}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{222FCEBF-90BC-49C1-87CE-12829B04C9E3}</ProjectGuid>

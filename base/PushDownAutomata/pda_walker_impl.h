@@ -15,9 +15,11 @@ namespace pda
 class walker_impl
 {
 public:
-	walker_impl(walkable_intf& walkable):
+	walker_impl(const walkable_intf& walkable):
 		m_pWalkable(&walkable)
-	{}
+	{
+		reset();
+	}
 
 public:
 	virtual bool process_step(const pda::token_id& input);
@@ -29,7 +31,7 @@ protected:
 	std::list<std::vector<stack_item>> expand_by_one_stack_top(const std::vector<stack_item>& stackRest, const std::list<std::vector<stack_item>>& rules);
 
 private:
-	walkable_intf*                     m_pWalkable = nullptr;
+	const walkable_intf*                     m_pWalkable = nullptr;
 	std::list<std::vector<stack_item>> m_configurations;
 };
 

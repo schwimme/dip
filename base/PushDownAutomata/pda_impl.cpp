@@ -11,10 +11,10 @@ namespace
 	const std::map<std::vector<stack_item>, std::list<std::vector<stack_item>>> g_emptyRule;
 }
 
-void impl::register_rule(const pda::token_id& input, const std::vector<stack_item>& stackTop, const std::vector<stack_item>& stackRewrite)
+void impl::add_rule(const pda::token_id& input, const std::vector<stack_item>& stackTop, const std::vector<stack_item>& stackRewrite)
 {
 	auto& pos = m_rules[input][stackTop];
-	if (base::find(pos, stackRewrite) == false)
+	if (base::find(pos, stackRewrite))
 	{
 		// Multiple rule registration:
 		return;
@@ -26,7 +26,7 @@ void impl::register_rule(const pda::token_id& input, const std::vector<stack_ite
 
 std::shared_ptr<pda::walker_impl> impl::create_walker() const
 {
-	return std::make_shared<pda::walker_impl>();
+	return std::make_shared<pda::walker_impl>(*this);
 }
 
 

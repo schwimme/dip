@@ -25,9 +25,9 @@ bool walker_intf_impl::accepted() const
 }
 
 
-void intf_impl::register_rule(const pda::token_id& input, const crossmodule::enumerator<pda::stack_item>& stackTop, const crossmodule::enumerator<pda::stack_item>& stackRewrite)
+void intf_impl::add_rule(const pda::token_id& input, const crossmodule::enumerator<pda::stack_item>& stackTop, const crossmodule::enumerator<pda::stack_item>& stackRewrite)
 {
-	m_impl.register_rule(input, enumerator_to_vector(stackTop), enumerator_to_vector(stackRewrite));
+	m_impl.add_rule(input, enumerator_to_vector(stackTop), enumerator_to_vector(stackRewrite));
 }
 
 
