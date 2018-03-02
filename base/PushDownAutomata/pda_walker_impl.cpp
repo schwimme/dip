@@ -1,0 +1,87 @@
+#include "pda_walker_impl.h"
+
+
+namespace base
+{
+namespace pda
+{
+
+
+bool walker_impl::process_step(const pda::token_id& input)
+{
+	const auto& rules = m_pWalkable->get_rules(input);
+
+	std::list<std::vector<stack_item>> newCfgs;
+	for (auto& cfg: m_configurations)
+	{
+		auto l = process_step_in_config(cfg, rules);
+		newCfgs.splice(newCfgs.end(), std::move(l));
+	}
+
+	m_configurations = std::move(newCfgs);
+}
+
+
+void walker_impl::reset()
+{
+	m_configurations = {};
+}
+
+
+bool walker_impl::accepted() const
+{
+	for (const auto& cfg: m_configurations)
+	{
+		if (cfg.empty())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+std::list<std::vector<stack_item>> walker_impl::process_step_in_config(const std::vector<stack_item>& cfg, const std::map<std::vector<stack_item>, std::list<std::vector<stack_item>>>& rules)
+{
+	std::list<std::vector<stack_item>> ret;
+
+	auto it = cfg.begin();
+	while (it != cfg.end())
+	{
+		std::vector<stack_item> stackTop(cfg.begin(), it);
+		std::vector<stack_item> stackRest(it, cfg.end());
+
+		auto currentStackTopRules = rules.find(stackTop);
+		if (currentStackTopRules == rules.end())
+		{
+			continue;
+		}
+
+		auto l = expand_by_one_stack_top(stackRest, currentStackTopRules->second);
+		ret.splice(ret.end(), std::move(l));
+
+		++it;
+	}
+
+	return ret;
+}
+
+
+std::list<std::vector<stack_item>> walker_impl::expand_by_one_stack_top(const std::vector<stack_item>& stackRest, const std::list<std::vector<stack_item>>& rules)
+{
+	std::list<std::vector<stack_item>> ret;
+
+	for (const auto& r: rules)
+	{
+		std::vector<stack_item> concatenate = stackRest;
+		concatenate.insert(concatenate.end(), r.begin(), r.end());
+		ret.push_back(std::move(concatenate));
+	}
+
+	return ret;
+}
+
+
+}
+}

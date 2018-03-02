@@ -19,7 +19,7 @@ struct std_vector_on_enumerator:
 		m_pos(vector.begin())
 	{}
 
-	const T* const get() override
+	const T* const get() const override
 	{
 		if (m_pos != m_vector.end())
 		{
@@ -48,7 +48,7 @@ private:
 
 template<typename T>
 struct std_vector_on_back_inserter:
-	crossmodule::back_inserter<T>
+	back_inserter<T>
 {
 	virtual error_t push_back(const T& o) override
 	{
@@ -96,5 +96,21 @@ private:
 	std::vector<T>& m_vector;
 };
 
+
+template<typename T>
+std::vector<T> enumerator_to_vector(const enumerator<T>& e)
+{
+	std::vector<T> ret;
+	enumerator<T>& localE = const_cast<enumerator<T>&>(e);
+
+	const T* ptr = nullptr;
+	while ((ptr = localE.get()) != nullptr)
+	{
+		ret.push_back(*ptr);
+		localE.next();
+	}
+
+	return ret;
+}
 
 }
