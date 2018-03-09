@@ -18,6 +18,7 @@ namespace crossmodule
 {
 
 
+// KTTODO this must have interface because of di.
 struct object_factory
 {
 	error_t get_object(const guid_t& id, void ** ppObject) const;

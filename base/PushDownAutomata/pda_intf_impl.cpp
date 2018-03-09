@@ -19,9 +19,9 @@ void walker_intf_impl::reset()
 }
 
 
-bool walker_intf_impl::accepted() const
+void walker_intf_impl::commit()
 {
-	return m_spWalker->accepted();
+	m_spWalker->commit();
 }
 
 

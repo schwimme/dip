@@ -19,16 +19,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LexicalAnalysis\LexicalAnalysis.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="LexicalAnalysis\LexicalAnalysis.h" />
-    <ClInclude Include="LexicalAnalysis\LexicalAnalysis_intf.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\base\Base.vcxproj">
       <Project>{222fcebf-90bc-49c1-87ce-12829b04c9e3}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="checker.cpp" />
+    <ClCompile Include="checker_worker.cpp" />
+    <ClCompile Include="la_cfg_builder.cpp" />
+    <ClCompile Include="sa_cfg_builder.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="checker.h" />
+    <ClInclude Include="checker_worker.h" />
+    <ClInclude Include="checker_worker_intf.h" />
+    <ClInclude Include="la_cfg_builder.h" />
+    <ClInclude Include="la_cfg_builder_intf.h" />
+    <ClInclude Include="sa_cfg_builder.h" />
+    <ClInclude Include="sa_cfg_builder_intf.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A7BCAE97-6347-4F2E-B5A5-E854E219B47F}</ProjectGuid>

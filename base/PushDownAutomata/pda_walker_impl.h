@@ -24,7 +24,7 @@ public:
 public:
 	virtual bool process_step(const pda::token_id& input);
 	virtual void reset();
-	virtual bool accepted() const;
+	virtual void commit();
 
 protected:
 	std::list<std::vector<stack_item>> process_step_in_config(const std::vector<stack_item>& cfg, const std::map<std::vector<stack_item>, std::list<std::vector<stack_item>>>& rules);
@@ -33,6 +33,7 @@ protected:
 private:
 	const walkable_intf*                     m_pWalkable = nullptr;
 	std::list<std::vector<stack_item>> m_configurations;
+	std::list<std::vector<stack_item>> m_non_commited_configurations;
 };
 
 

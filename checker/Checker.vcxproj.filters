@@ -15,15 +15,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LexicalAnalysis\LexicalAnalysis.cpp">
+    <ClCompile Include="checker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="checker_worker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="la_cfg_builder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sa_cfg_builder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LexicalAnalysis\LexicalAnalysis.h">
+    <ClInclude Include="checker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LexicalAnalysis\LexicalAnalysis_intf.h">
+    <ClInclude Include="checker_worker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="checker_worker_intf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="la_cfg_builder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="la_cfg_builder_intf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sa_cfg_builder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sa_cfg_builder_intf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

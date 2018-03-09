@@ -18,8 +18,8 @@ bool walker_impl::process_step(const pda::token_id& input)
 		newCfgs.splice(newCfgs.end(), std::move(l));
 	}
 
-	m_configurations = std::move(newCfgs);
-	return (m_configurations.empty() == false);
+	m_non_commited_configurations = std::move(newCfgs);
+	return (m_non_commited_configurations.empty() == false);
 }
 
 
@@ -29,22 +29,9 @@ void walker_impl::reset()
 }
 
 
-bool walker_impl::accepted() const
+void walker_impl::commit()
 {
-	if (m_configurations.empty())
-	{
-		return true;
-	}
-
-	for (const auto& cfg: m_configurations)
-	{
-		if (cfg.empty())
-		{
-			return true;
-		}
-	}
-
-	return false;
+	m_configurations = std::move(m_non_commited_configurations);
 }
 
 

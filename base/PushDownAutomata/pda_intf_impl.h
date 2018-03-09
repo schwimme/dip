@@ -25,7 +25,7 @@ public:
 public:
 	virtual bool process_step(const pda::token_id& input) override;
 	virtual void reset() override;
-	virtual bool accepted() const override;
+	virtual void commit() override;
 
 private:
 	std::shared_ptr<pda::walker_impl> m_spWalker;
@@ -33,7 +33,7 @@ private:
 
 
 class intf_impl:
-	public pda_intf
+	public crossmodule::query_impl<pda_intf>
 {
 public:
 	virtual void add_rule(const pda::token_id& input, const crossmodule::enumerator<pda::stack_item>& stackTop, const crossmodule::enumerator<pda::stack_item>& stackRewrite) override;

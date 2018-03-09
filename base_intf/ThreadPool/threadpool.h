@@ -44,7 +44,7 @@ public:
 		}
 	}
 
-	void register_item(job_t&& job)
+	void push(job_t&& job)
 	{
 		{
 			std::lock_guard<std::mutex> l(m_jobs_lock);
@@ -83,7 +83,7 @@ private:
 	std::condition_variable m_jobs_cv;
 	std::mutex              m_jobs_lock;
 	std::list<job_t>        m_jobs;
-	std::thread[N]          m_workers;
+	std::thread             m_workers[N];
 };
 	
 
