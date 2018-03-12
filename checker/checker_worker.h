@@ -34,6 +34,7 @@ public:
 	virtual void check(const base::string& file) override;
 
 protected:
+	virtual // KTTODO - virtual because of tests - use base::file_intf
 	base::string read_file_content() const;
 
 // KTTODO - move else:
@@ -49,7 +50,7 @@ protected:
 	std::vector<token> parse(const base::string& content);
 	token create_token(const base::string& value, token_id id);
 
-	void check_syntax_analysis(std::vector<token>& tokens);
+	void check_syntax_analysis(const std::vector<token>& tokens);
 
 private:
 	std::shared_ptr<base::fsm_walker_intf> m_spFsmWalker;

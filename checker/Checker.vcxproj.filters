@@ -27,6 +27,9 @@
     <ClCompile Include="sa_cfg_builder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="configurable_fsm_factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="checker.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sa_cfg_builder_intf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="configurable_fsm_factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

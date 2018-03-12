@@ -26,6 +26,7 @@ public:
 	virtual bool process_step(const pda::token_id& input) override;
 	virtual void reset() override;
 	virtual void commit() override;
+	virtual bool is_accepted() const override;
 
 private:
 	std::shared_ptr<pda::walker_impl> m_spWalker;

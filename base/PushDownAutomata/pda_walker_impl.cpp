@@ -35,6 +35,20 @@ void walker_impl::commit()
 }
 
 
+bool walker_impl::is_accepted() const
+{
+	for (const auto& i : m_configurations)
+	{
+		if (i.empty())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
 std::list<std::vector<stack_item>> walker_impl::process_step_in_config(const std::vector<stack_item>& cfg, const std::map<std::vector<stack_item>, std::list<std::vector<stack_item>>>& rules)
 {
 	std::list<std::vector<stack_item>> ret;

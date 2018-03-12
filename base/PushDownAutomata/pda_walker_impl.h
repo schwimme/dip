@@ -25,6 +25,7 @@ public:
 	virtual bool process_step(const pda::token_id& input);
 	virtual void reset();
 	virtual void commit();
+	virtual bool is_accepted() const;
 
 protected:
 	std::list<std::vector<stack_item>> process_step_in_config(const std::vector<stack_item>& cfg, const std::map<std::vector<stack_item>, std::list<std::vector<stack_item>>>& rules);

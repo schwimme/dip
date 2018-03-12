@@ -1,6 +1,8 @@
 #include "checker.h"
 #include <iostream> // KTTODO - probably remove
-
+#include "configurable_fsm_factory.h"
+#include "crossmodule\adapters\basestring.h"
+#include "crossmodule\adapters\vector.h"
 
 namespace checker
 {
@@ -17,10 +19,11 @@ void checker_impl::check(const std::list<base::string>& files)
 {
 	for (const base::string& f : files)
 	{
-		m_threadPool.push([&, file = f]
-		{	
-			worker_procedure(file); 
-		});
+		// KTTODO do not use in UT.
+//		m_threadPool.push([&, file = f]
+//		{	
+			worker_procedure(f); 
+//		});
 	}
 }
 
@@ -45,13 +48,22 @@ void checker_impl::configure_fsm(const base::string& la_cfg_path)
 	std::shared_ptr<la_cfg_builder_intf> spCfgBuilder = create_la_cfg_builder();
 	std::shared_ptr<la_cfg> spCfg = spCfgBuilder->build(la_cfg_path);
 
+	std::shared_ptr<configurable_fsm_ctx_factory> spCtxFactory 
+		= std::make_shared<configurable_fsm_ctx_factory>(spCfg->m_priorityGroups);
+
 	std::shared_ptr<base::fsm_intf> spFsm;
-	if (m_spBase->create_fsm(spFsm /*, factory*/) != 0) // KTTODO errors
+	if (m_spBase->create_fsm(spFsm, spCtxFactory) != 0) // KTTODO errors
 	{
 		throw "KTTODO - error";
 	}
 
-	// KTTODO build fsm:
+	base::fsm::state_id idleState = spFsm->generate_state(configurable_fsm_ctx_factory::INVALID_CTX);
+	spFsm->set_start(idleState);
+
+	for (const auto& it : spCfg->m_tokens)
+	{
+		spFsm->add_regex(idleState, crossmodule::base_string_on_string_ref(it.second), it.first, configurable_fsm_ctx_factory::INVALID_CTX);
+	}
 
 	m_spFsm = spFsm;
 }
@@ -69,7 +81,13 @@ void checker_impl::configure_pda(const base::string& sa_cfg_path)
 	}
 	std::shared_ptr<base::pda_intf> spPda(pPda); // KTTODO - sp attacher
 
-	// KTTODO build pda:
+	for (const auto& it : spCfg->m_rules)
+	{
+		spPda->add_rule(
+			it.m_token,
+			crossmodule::std_vector_on_enumerator<sa_rule::stack_item>(it.m_stackTop),
+			crossmodule::std_vector_on_enumerator<sa_rule::stack_item>(it.m_stackReplace));
+	}
 
 	m_spPda = spPda;
 }

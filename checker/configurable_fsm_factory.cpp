@@ -34,6 +34,11 @@ base::fsm::context_id configurable_fsm_ctx_factory::select_context(crossmodule::
 		return all_ctxs_without_invalid[0];
 	}
 
+	if (m_priorities.size() == 0)
+	{
+		throw "No priorities given";
+	}
+
 	// Identify priority group:
 	for (const auto& oneGroup : m_priorities)
 	{

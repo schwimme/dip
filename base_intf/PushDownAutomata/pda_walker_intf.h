@@ -17,6 +17,7 @@ struct pda_walker_intf:
 	virtual bool process_step(const pda::token_id& input) = 0;
 	virtual void reset() = 0;
 	virtual void commit() = 0;
+	virtual bool is_accepted() const = 0;
 };
 
 

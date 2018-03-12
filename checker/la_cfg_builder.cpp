@@ -11,21 +11,13 @@ namespace checker
 // KTTODO move else
 using token_id = uint32_t;
 
-void la_cfg_builder::build(const base::string& path, std::shared_ptr<la_cfg>& spCfg, std::shared_ptr<base::fsm_context_factory_intf>& spFsmFactory) const
+std::shared_ptr<la_cfg> la_cfg_builder::build(const base::string& path) const
 {
-	base::scope_guard commit_point([&] 
-	{
-		spCfg.reset();
-		spFsmFactory.reset();
-	});
+	std::shared_ptr<la_cfg> spCfg = std::make_shared<la_cfg>();
 
-	spCfg = std::make_shared<la_cfg>();	
+	// KTTODO fill
 
-	// Fill
-	std::vector<std::vector<token_id>> priorityGroup;
-
-	spFsmFactory = std::make_shared<base::fsm_context_factory_intf>(priorityGroup);
-	commit_point.dismiss();
+	return spCfg;
 }
 
 

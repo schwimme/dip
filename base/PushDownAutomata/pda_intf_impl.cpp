@@ -25,6 +25,12 @@ void walker_intf_impl::commit()
 }
 
 
+bool walker_intf_impl::is_accepted() const
+{
+	return m_spWalker->is_accepted();
+}
+
+
 void intf_impl::add_rule(const pda::token_id& input, const crossmodule::enumerator<pda::stack_item>& stackTop, const crossmodule::enumerator<pda::stack_item>& stackRewrite)
 {
 	m_impl.add_rule(input, enumerator_to_vector(stackTop), enumerator_to_vector(stackRewrite));

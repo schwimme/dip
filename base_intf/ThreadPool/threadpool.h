@@ -22,7 +22,7 @@ public:
 	{
 		for (size_t i = 0; i < N; ++i)
 		{
-			m_workers[i] = thread_procedure;
+			m_workers[i] = std::thread([&] { thread_procedure(); });
 		}
 	}
 

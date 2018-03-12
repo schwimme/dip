@@ -1,9 +1,9 @@
 #pragma once
 
-#include <base_intf/FiniteStateMachine/fsmcontextfactory_intf.h>
 
 #include <types/string.h>
 #include <memory>
+#include "configurable_fsm_factory.h"
 
 
 namespace checker
@@ -12,13 +12,15 @@ namespace checker
 
 struct la_cfg
 {
-
+	using token_id = uint32_t;
+	std::vector<std::pair<token_id, base::string>> m_tokens; // token id mapped to their regular expression
+	std::vector<std::vector<token_id>>  m_priorityGroups;
 };
 
 
 struct la_cfg_builder_intf
 {
-	virtual void build(const base::string& path, std::shared_ptr<la_cfg>& cfg, std::shared_ptr<base::fsm_context_factory_intf>& fsmFactory) const = 0;
+	virtual std::shared_ptr<la_cfg> build(const base::string& path) const = 0;
 };
 
 

@@ -17,6 +17,8 @@ void worker::check(const base::string& file)
 	base::string content = read_file_content();
 
 	std::vector<token> t = parse(content);
+
+	check_syntax_analysis(t);
 }
 
 
@@ -89,21 +91,38 @@ std::vector<worker::token> worker::parse(const base::string& content)
 }
 
 
-void worker::check_syntax_analysis(std::vector<worker::token>& tokens)
+void worker::check_syntax_analysis(const std::vector<worker::token>& tokens)
 {
-	for (const auto& i : tokens)
+	size_t tokens_size = tokens.size();
+
+	std::vector<worker::token>::const_iterator it = tokens.begin();
+	for (size_t i = 0; i < tokens_size - 1; ++i)
 	{
-		bool success = m_spPdaWalker->process_step(i.id);
-		if (success)
+		bool is_cfg_empty = !m_spPdaWalker->process_step(it->id);
+
+		if (is_cfg_empty)
 		{
-			m_spPdaWalker->commit();
+			accident_info ai{ it->line, it->col, m_file, base::string(TEXT("Unexpected token '")) + it->value + TEXT("' - skipped") };
+			m_pHandler->on_accident(ai);
 		}
 		else
 		{
-			accident_info ai{ i.line, i.col, m_file, base::string(TEXT("Unexpected token '")) + i.value + TEXT("' - skipped") };
-			m_pHandler->on_accident(ai);
+			m_spPdaWalker->commit();
 		}
+
+		it++;
 	}
+
+	m_spPdaWalker->process_step(it->id);
+	m_spPdaWalker->commit();
+
+	if (m_spPdaWalker->is_accepted() == false)
+	{
+		accident_info ai{ it->line, it->col, m_file, base::string(TEXT("more tokens expected'")) };
+		m_pHandler->on_accident(ai);
+	}
+
+	return;
 }
 
 }

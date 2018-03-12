@@ -21,7 +21,7 @@ public:
 	};
 
 public:
-	virtual void build(const base::string& path, std::shared_ptr<la_cfg>& cfg, std::shared_ptr<base::fsm_context_factory_intf>& fsmFactory) const override;
+	virtual std::shared_ptr<la_cfg> build(const base::string& path) const override;
 };
 
 

@@ -26,6 +26,7 @@
   <ItemGroup>
     <ClCompile Include="checker.cpp" />
     <ClCompile Include="checker_worker.cpp" />
+    <ClCompile Include="configurable_fsm_factory.cpp" />
     <ClCompile Include="la_cfg_builder.cpp" />
     <ClCompile Include="sa_cfg_builder.cpp" />
   </ItemGroup>
@@ -33,6 +34,7 @@
     <ClInclude Include="checker.h" />
     <ClInclude Include="checker_worker.h" />
     <ClInclude Include="checker_worker_intf.h" />
+    <ClInclude Include="configurable_fsm_factory.h" />
     <ClInclude Include="la_cfg_builder.h" />
     <ClInclude Include="la_cfg_builder_intf.h" />
     <ClInclude Include="sa_cfg_builder.h" />
