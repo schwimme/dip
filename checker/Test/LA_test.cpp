@@ -15,9 +15,20 @@ public:
 
 enum TOKEN
 {
-	NUM,
 	SPACE,
-	OP
+	CLASS,
+	ID,
+	CLASS_ID,
+	FUNC_ID,
+	COLON,
+	OPEN,
+	CLOSE,
+	VISIBILITY,
+	NEW_LINE,
+	TAB,
+
+	CLASS_IMPL,
+	FUNC
 };
 
 struct la_builder_fake:
@@ -29,13 +40,24 @@ struct la_builder_fake:
 
 		cfg->m_tokens =
 		{
-			{ NUM, TEXT("[1-9]([0-9])*")},
-			{ SPACE, TEXT(" ") },
-			{ OP, TEXT("+") },
-			{ OP, TEXT("-") },
-			{ OP, TEXT("*") },
-			{ OP, TEXT("/") },
-			{ OP, TEXT("=") },
+			{ CLASS,      TEXT("class") },
+			{ CLASS,      TEXT("struct") },
+			{ ID,         TEXT("([A-Z])+") },
+			{ CLASS_ID,   TEXT("C([A-Z])+") },
+			{ SPACE,      TEXT(" ") },
+			{ NEW_LINE,   TEXT("\n") },
+			{ TAB,        TEXT("\t") },
+			{ OPEN,       TEXT("{") },
+			{ CLOSE,      TEXT("};") },
+			{ FUNC_ID,    TEXT("([A-Z])+\\(\\);\n")},
+			{ VISIBILITY, TEXT("public:\n") },
+			{ VISIBILITY, TEXT("protected:\n") },
+			{ VISIBILITY, TEXT("private:\n") },
+		};
+
+		cfg->m_priorityGroups =
+		{
+			{CLASS_ID, ID}
 		};
 
 		return cfg;
@@ -51,10 +73,16 @@ struct sa_builder_fake:
 
 		cfg->m_rules =
 		{
-			{NUM, {}, {SPACE, OP, SPACE, NUM}},
-			{NUM, {NUM}, {}},
-			{SPACE, {SPACE}, {}},
-			{OP, {OP}, {}}
+			{ CLASS,{},{ SPACE, CLASS_ID, NEW_LINE, OPEN, NEW_LINE, CLASS_IMPL, NEW_LINE, CLOSE } },
+			
+			{ SPACE, {SPACE}, {} },
+			{ CLASS_ID,{ CLASS_ID },{} },
+			{ NEW_LINE,{ NEW_LINE },{} },
+			{ OPEN,{ OPEN },{} },
+			{ CLOSE,{ CLASS_IMPL, CLOSE },{} },
+			{ VISIBILITY, {CLASS_IMPL}, { CLASS_IMPL }},
+			{ TAB,{ CLASS_IMPL },{ FUNC, CLASS_IMPL }},
+			{ ID, {FUNC}, {SPACE, FUNC_ID}}
 		};
 
 		return cfg;
@@ -70,7 +98,7 @@ struct checker_worker_fake:
 
 	virtual base::string read_file_content() const override
 	{
-		return TEXT("1 + 2 ");
+		return TEXT("class MANAGER\n{\nprotected:\n\tABC FUNC();\n};");
 	}
 };
 
@@ -96,9 +124,9 @@ struct test_checker :
 TEST_METHOD(KTTODO_ALL_UT)
 {
 	test_checker c;
-	c.configure(TEXT("2"), TEXT("3"));
+	c.configure(TEXT(""), TEXT(""));
 
-	c.check({ TEXT("123") });
+	c.check({ TEXT("") });
 }
 
 };

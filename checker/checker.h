@@ -29,6 +29,7 @@ public:
 	void check(const std::list<base::string>& files);
 
 public:
+	// KTTODO - automaticka naprava
 	virtual void on_accident(const accident_info& info) override;
 
 private:
