@@ -46,9 +46,10 @@ error_t base_impl::create_pda(cross::versioned_intf_ref<base::pda_intf> pPda) no
 		{
 			// Successfully attached, do not delete object:
 			up.release();
+			return 0; // KTTODO - no error
 		}
 
-		return 0; // KTTODO - no error
+		return 1; // KTTODO - error;
 	}
 	catch (...)
 	{

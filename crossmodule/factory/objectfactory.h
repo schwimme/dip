@@ -1,29 +1,28 @@
 #pragma once
 
 
-#include <cstdint>
-
-
-
-// KTTODO - move else.
-using error_t = int32_t;
-
+#include "object_factory_intf.h"
+#include <memory>
 
 
 namespace cross
 {
 
-// KTTODO - move else and make as string.
-using guid_t = uint32_t;
-
-static const guid_t GUID_BASE_V1 = 0x1;
-
-
 
 // KTTODO this must have interface because of di.
-struct object_factory
+struct object_factory:
+	public object_factory_intf
 {
-	error_t get_object(const guid_t& id, void ** ppObject) const;
+public:
+	struct factory
+	{
+		virtual std::shared_ptr<object_factory_intf> create_object_factory() const
+		{
+			return std::make_shared<object_factory>();
+		}
+	};
+
+	virtual error_t get_object(const guid_t& id, void ** ppObject) const override;
 };
 
 

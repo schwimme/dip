@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\base\Base.vcxproj">
-      <Project>{222fcebf-90bc-49c1-87ce-12829b04c9e3}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\crossmodule\crossmodule.vcxproj">
       <Project>{d27cb579-1006-4814-adca-85d2f8f10580}</Project>
     </ProjectReference>

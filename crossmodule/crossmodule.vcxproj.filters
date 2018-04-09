@@ -48,6 +48,12 @@
     <ClInclude Include="counter\countable.h">
       <Filter>counter</Filter>
     </ClInclude>
+    <ClInclude Include="factory\object_factory_intf.h">
+      <Filter>factory</Filter>
+    </ClInclude>
+    <ClInclude Include="factory\detail\build_checker.h">
+      <Filter>factory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="factory\objectfactory.cpp">

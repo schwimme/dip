@@ -11,6 +11,7 @@ namespace
 	const std::map<std::vector<stack_item>, std::list<std::vector<stack_item>>> g_emptyRule;
 }
 
+
 void impl::add_rule(const pda::token_id& input, const std::vector<stack_item>& stackTop, const std::vector<stack_item>& stackRewrite)
 {
 	auto& pos = m_rules[input][stackTop];

@@ -94,8 +94,7 @@ void checker_impl::configure_pda(const sys::string& sa_cfg_path)
 
 void checker_impl::prepare_base()
 {
-	// KTTODO injection:
-	m_spFactory = std::make_shared<cross::object_factory>();
+	m_spFactory = create_object_factory();
 
 	void* pBase;
 	if (m_spFactory->get_object(cross::GUID_BASE_V1, &pBase) != 0) // KTTODO error

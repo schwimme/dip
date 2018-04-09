@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="types">
+      <UniqueIdentifier>{41da401d-bd23-47ba-b855-ea18e77b5dee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="debugging">
+      <UniqueIdentifier>{40daa48c-a26f-4320-91e7-bb621be47554}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="threadpool">
+      <UniqueIdentifier>{b2b3a4f8-d807-4674-afef-314d4075bfde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scopeguard">
+      <UniqueIdentifier>{c7f19672-7812-4342-bb3b-03fed44ff667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="algorithm">
+      <UniqueIdentifier>{f89322e3-eaa4-4ec1-a7dc-dd4d8c845824}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="types\string.h">
+      <Filter>types</Filter>
+    </ClInclude>
+    <ClInclude Include="types\chartype.h">
+      <Filter>types</Filter>
+    </ClInclude>
+    <ClInclude Include="debugging\debug_impl.h">
+      <Filter>debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="debugging\debug.h">
+      <Filter>debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="threadpool\threadpool.h">
+      <Filter>threadpool</Filter>
+    </ClInclude>
+    <ClInclude Include="scopeguard\scopeguard.h">
+      <Filter>scopeguard</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm\algorithm.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="debugging\win_debug_impl.cpp">
+      <Filter>debugging</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

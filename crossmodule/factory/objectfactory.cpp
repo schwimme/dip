@@ -1,11 +1,12 @@
 #include "objectfactory.h"
+#include "detail/build_checker.h"
 
 
 // Exported interfaces:
 #include <base/base_intf.h>
 
-
-#ifndef DYNAMIC_LINK_BASE
+// Exported implementations for static linkage
+#ifdef BASE_LIB
 #	include <base/base.h>
 #endif
 
@@ -18,9 +19,9 @@ error_t object_factory::get_object(const guid_t& id, void ** ppObject) const
 {
 	if (id == GUID_BASE_V1)
 	{
-#ifdef DYNAMIC_LINK_BASE
+#if defined BASE_DLL
 		// KTTODO
-#else
+#elif defined BASE_LIB
 		base::base_intf* pIntf = new (std::nothrow) base::base_impl();
 		if (pIntf == nullptr)
 		{
@@ -29,6 +30,8 @@ error_t object_factory::get_object(const guid_t& id, void ** ppObject) const
 
 		*ppObject = (void*)pIntf;
 		return 0; // KTTODO - no error
+#else /*BASE_NONE*/
+		return 3; // KTTODO - not implemented
 #endif
 	}
 

@@ -20,6 +20,7 @@ namespace checker
 
 class checker_impl: // KTTODO - checker_intf
 	public accident_handler,
+	protected cross::object_factory::factory,
 	protected la_cfg_builder::factory,
 	protected sa_cfg_builder::factory,
 	protected worker::factory
@@ -39,7 +40,7 @@ private:
 	void worker_procedure(const sys::string& file);
 
 private:
-	std::shared_ptr<cross::object_factory> m_spFactory;
+	std::shared_ptr<cross::object_factory_intf>  m_spFactory;
 	std::shared_ptr<base::base_intf>             m_spBase;
 	std::shared_ptr<base::fsm_intf>              m_spFsm;
 	std::shared_ptr<base::pda_intf>              m_spPda;
