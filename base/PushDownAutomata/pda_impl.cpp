@@ -1,5 +1,5 @@
 #include "pda_impl.h"
-#include <base_intf/Algorithm/algorithm.h>
+#include <sys/algorithm/algorithm.h>
 
 
 namespace base
@@ -14,7 +14,7 @@ namespace
 void impl::add_rule(const pda::token_id& input, const std::vector<stack_item>& stackTop, const std::vector<stack_item>& stackRewrite)
 {
 	auto& pos = m_rules[input][stackTop];
-	if (base::find(pos, stackRewrite))
+	if (sys::find(pos, stackRewrite))
 	{
 		// Multiple rule registration:
 		return;

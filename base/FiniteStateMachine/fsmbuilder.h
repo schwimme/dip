@@ -3,12 +3,14 @@
 
 #include <vector>
 #include <base_intf/FiniteStateMachine/fsmdefs.h>
-#include <types/string.h>
+#include <sys/types/string.h>
 
 namespace base
 {
 
+
 class fsm_impl;
+
 
 namespace fsm
 {
@@ -34,23 +36,23 @@ protected:
 			NUMERIC_ITERATION,	// For x{2}
 		};
 
-		char_t char1 = 0;
-		char_t char2 = 0;
-		size_t iteration_begin	= 0;
-		size_t iteration_count	= 0;
-		type_t type				= type_t::NORMAL;
+		sys::char_t char1 = 0;
+		sys::char_t char2 = 0;
+		size_t      iteration_begin	= 0;
+		size_t      iteration_count	= 0;
+		type_t      type			= type_t::NORMAL;
 	};
 
 	using regex = std::vector<regex_item>;
 
 public:
-	void build_fsm_from_regex(fsm_impl& f, const base::string& rgx, context_id valid, context_id invalid) const;
+	void build_fsm_from_regex(fsm_impl& f, const sys::string& rgx, context_id valid, context_id invalid) const;
 
 protected:
 	// KTTODO - other class and remove virtual
-	virtual regex parse_regex(const base::char_t*& rgx) const;
+	virtual regex parse_regex(const sys::char_t*& rgx) const;
 
-	void CheckEnd(const base::char_t* rest) const
+	void CheckEnd(const sys::char_t* rest) const
 	{
 		if (*rest == 0)
 		{
@@ -58,7 +60,7 @@ protected:
 		}
 	}
 
-	void CheckIs(const base::char_t* rest, base::char_t expected) const
+	void CheckIs(const sys::char_t* rest, sys::char_t expected) const
 	{
 		if (*rest != expected)
 		{
@@ -66,14 +68,14 @@ protected:
 		}
 	}
 
-	void ThrowParsingException(const base::char_t* rest) const
+	void ThrowParsingException(const sys::char_t* rest) const
 	{
 		throw "KTTODO";
 	}
 
-	base::char_t parse_character(const base::char_t*& rest, builder::regex& out) const;
+	sys::char_t parse_character(const sys::char_t*& rest, builder::regex& out) const;
 
-	regex_item parse_range(const base::char_t*& rest) const;
+	regex_item parse_range(const sys::char_t*& rest) const;
 
 };
 

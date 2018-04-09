@@ -2,7 +2,7 @@
 
 
 #include "la_cfg_builder_intf.h"
-#include <types/string.h>
+#include <sys/types/string.h>
 #include <memory>
 
 
@@ -27,7 +27,7 @@ struct sa_cfg
 
 struct sa_cfg_builder_intf
 {
-	virtual std::shared_ptr<sa_cfg> build(const base::string& path) const = 0;
+	virtual std::shared_ptr<sa_cfg> build(const sys::string& path) const = 0;
 };
 
 

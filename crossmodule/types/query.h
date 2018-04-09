@@ -4,13 +4,15 @@
 #include <type_traits>
 
 
-namespace crossmodule
+namespace cross
 {
-namespace detail {
+namespace detail
+{
 
 struct queryable_tag {};
 
 }
+
 
 template <uint64_t _iid>
 struct queryable
@@ -22,28 +24,37 @@ struct queryable
 	virtual void * query(uint64_t iid, uint32_t min_version, uint32_t & real_version) = 0;
 };
 
+
 template <typename... Tn>
 struct query_impl;
+
 
 template <typename T, typename U>
 T * iid_cast(U * u) noexcept;
 
+
 template <typename T, typename U>
 T & iid_cast(U & u);
 
-namespace detail {
+
+namespace detail
+{
+
 
 template <typename Intf, typename = void>
 struct is_queryable:
 	std::false_type
 {};
 
+
 template <typename Intf>
 struct is_queryable<Intf, std::enable_if_t<std::is_same<typename Intf::queryable_t, detail::queryable_tag>::value>>:
 	std::true_type
 {};
 
+
 }
+
 
 template <typename Intf >
 constexpr bool is_queryable_v = detail::is_queryable<Intf>::value;
@@ -58,9 +69,10 @@ struct query_impl<>
 	}
 };
 
+
 template <typename T0, typename... Tn>
-struct query_impl<T0, Tn...>
-	: T0, query_impl<Tn...>
+struct query_impl<T0, Tn...>:
+	T0, query_impl<Tn...>
 {
 	void * query(uint64_t iid_, uint32_t min_version, uint32_t & real_version) override
 	{
@@ -74,12 +86,14 @@ struct query_impl<T0, Tn...>
 	}
 };
 
+
 template <typename T, typename U>
 T * iid_cast(U * u) noexcept
 {
 	uint32_t real_version;
 	return static_cast<T *>(u->query(T::iid, T::version, real_version));
 }
+
 
 template <typename T, typename U>
 T & iid_cast(U & u)
@@ -89,5 +103,6 @@ T & iid_cast(U & u)
 
 	throw std::bad_cast();
 }
+
 
 }

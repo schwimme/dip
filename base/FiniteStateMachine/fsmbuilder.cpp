@@ -2,7 +2,7 @@
 #include "fsm.h"
 #include "regexcontextfactory.h"
 
-#include <base/Debugging/debug.h>
+#include <sys/debugging/debug.h>
 
 
 namespace base
@@ -11,10 +11,10 @@ namespace fsm
 {
 
 
-void builder::build_fsm_from_regex(fsm_impl& fsm, const base::string& rgx, context_id valid, context_id invalid) const
+void builder::build_fsm_from_regex(fsm_impl& fsm, const sys::string& rgx, context_id valid, context_id invalid) const
 {
 	// Parse regex to internal structure:
-	const base::char_t* t = rgx.c_str();
+	const sys::char_t* t = rgx.c_str();
 	regex parsedRegex = parse_regex(t);
 
 	// Prepare output fsm:
@@ -100,7 +100,7 @@ void builder::build_fsm_from_regex(fsm_impl& fsm, const base::string& rgx, conte
 
 		case regex_item::type_t::NUMERIC_ITERATION:
 		{
-
+			// KTTODO
 		}
 		break;
 
@@ -117,13 +117,13 @@ void builder::build_fsm_from_regex(fsm_impl& fsm, const base::string& rgx, conte
 }
 
 
-builder::regex builder::parse_regex(const base::char_t*& rgx) const
+builder::regex builder::parse_regex(const sys::char_t*& rgx) const
 {
 	regex outputStack;
 
 	while (*rgx)
 	{
-		base::char_t c = parse_character(rgx, outputStack);
+		sys::char_t c = parse_character(rgx, outputStack);
 
 		switch (c)
 		{
@@ -197,7 +197,7 @@ builder::regex builder::parse_regex(const base::char_t*& rgx) const
 }
 
 
-base::char_t builder::parse_character(const base::char_t*& rest, builder::regex& out) const
+sys::char_t builder::parse_character(const sys::char_t*& rest, builder::regex& out) const
 {
 	while (*rest == TEXT('\\'))
 	{
@@ -233,7 +233,7 @@ base::char_t builder::parse_character(const base::char_t*& rest, builder::regex&
 }
 
 
-builder::regex_item builder::parse_range(const base::char_t*& rest) const
+builder::regex_item builder::parse_range(const sys::char_t*& rest) const
 {
 	builder::regex_item item;
 	item.type = regex_item::type_t::RANGE;

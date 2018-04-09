@@ -2,7 +2,7 @@
 
 
 #include <base_intf/FiniteStateMachine/fsmcontextfactory_intf.h>
-#include <base_intf/Algorithm/algorithm.h>
+#include <sys/algorithm/algorithm.h>
 
 
 namespace base
@@ -21,7 +21,7 @@ struct regex_context_factory:
 	{}
 
 
-	virtual fsm::context_id select_context(crossmodule::enumerator<fsm::context_id>* const allContexts) const override
+	virtual fsm::context_id select_context(cross::enumerator<fsm::context_id>* const allContexts) const override
 	{
 		fsm::context_id const* id = nullptr;
 		while (id = allContexts->get())

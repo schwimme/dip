@@ -24,7 +24,7 @@ struct base_intf
 {
 	virtual error_t create_fsm(std::shared_ptr<fsm_intf>& spFsm) noexcept = 0;
 	virtual error_t create_fsm(std::shared_ptr<fsm_intf>& spFsm, std::shared_ptr<fsm_context_factory_intf> spFactory) noexcept = 0;
-	virtual error_t create_pda(crossmodule::versioned_intf_ref<base::pda_intf> pPda) noexcept = 0;
+	virtual error_t create_pda(cross::versioned_intf_ref<base::pda_intf> pPda) noexcept = 0;
 };
 
 

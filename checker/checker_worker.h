@@ -31,24 +31,24 @@ public:
 	{}
 
 public:
-	virtual void check(const base::string& file) override;
+	virtual void check(const sys::string& file) override;
 
 protected:
 	virtual // KTTODO - virtual because of tests - use base::file_intf
-	base::string read_file_content() const;
+	sys::string read_file_content() const;
 
 // KTTODO - move else:
 	using token_id = uint32_t;
 	struct token
 	{
 		token_id id;
-		base::string value;
+		sys::string value;
 		uint32_t col;
 		uint32_t line;
 	};
 
-	std::vector<token> parse(const base::string& content);
-	token create_token(const base::string& value, token_id id);
+	std::vector<token> parse(const sys::string& content);
+	token create_token(const sys::string& value, token_id id);
 
 	void check_syntax_analysis(const std::vector<token>& tokens);
 
@@ -56,7 +56,7 @@ private:
 	std::shared_ptr<base::fsm_walker_intf> m_spFsmWalker;
 	std::shared_ptr<base::pda_walker_intf> m_spPdaWalker;
 	accident_handler* m_pHandler = nullptr;
-	base::string m_file;
+	sys::string m_file;
 
 	// position:
 	std::uint32_t m_col = 1;

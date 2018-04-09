@@ -1,7 +1,7 @@
 #include "fsmwalker.h"
-#include <base_intf/Algorithm/algorithm.h>
+#include <sys/algorithm/algorithm.h>
 #include <crossmodule/adapters/vector.h>
-#include <types/string.h>
+#include <sys/types/string.h>
 
 
 namespace base
@@ -18,13 +18,13 @@ walker::walker(fsm::walkable_intf& walkable, std::shared_ptr<fsm_context_factory
 }
 
 
-bool walker::process_step(base::char_t ch)
+bool walker::process_step(sys::char_t ch)
 {
 	std::vector<fsm::state_id> newState;
 	for (const auto& s : m_actualState)
 	{
 		std::vector<fsm::state_id> tmp = m_pWalkable->get_next_states(s, ch);
-		newState = base::make_union(newState, tmp);
+		newState = sys::make_union(newState, tmp);
 	}
 
 	if (newState.size() == 0)
@@ -39,11 +39,11 @@ bool walker::process_step(base::char_t ch)
 }
 
 
-bool walker::verify_literal(crossmodule::string_ref literal)
+bool walker::verify_literal(cross::string_ref literal)
 {
-	base::string literal_no_crossmodule = base::string(literal.m_data, literal.m_size);
+	sys::string literal_no_crossmodule = sys::string(literal.m_data, literal.m_size);
 
-	for (base::char_t c : literal_no_crossmodule)
+	for (sys::char_t c : literal_no_crossmodule)
 	{
 		if (process_step(c) == false)
 		{
@@ -70,14 +70,14 @@ fsm::context_id walker::get_context() const
 	for (const auto& s : m_actualState)
 	{
 		fsm::context_id c = m_pWalkable->get_context(s);
-		if (base::find(ctxs, c) == false)
+		if (sys::find(ctxs, c) == false)
 		{
 			ctxs.push_back(c);
 		}
 	}
 
 	// Return most priorited context by factory:
-	return m_spCtxFactory->select_context(&crossmodule::std_vector_on_enumerator<fsm::context_id>(ctxs));
+	return m_spCtxFactory->select_context(&cross::std_vector_on_enumerator<fsm::context_id>(ctxs));
 }
 
 

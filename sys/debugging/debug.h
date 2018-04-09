@@ -19,9 +19,9 @@
 #	define BREAK_POINTS_DISABLED false
 #endif
 
-namespace Base
+namespace sys
 {
-namespace Debugging
+namespace debug
 {
 
 
@@ -55,7 +55,7 @@ static void BreakPointImpl<false>()
 	do { \
 		if ((condition) == false) \
 		{\
-			Base::Debugging::Assert<ASSERTS_DISABLED>(__FILE__, __LINE__, "[ASSERT FAILED] ("#condition ")");\
+			sys::debug::Assert<ASSERTS_DISABLED>(__FILE__, __LINE__, "[ASSERT FAILED] ("#condition ")");\
 		}\
 	} while (0)
 

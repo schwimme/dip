@@ -1,9 +1,9 @@
 #pragma once
 
 
-namespace Base
+namespace sys
 {
-namespace Debugging
+namespace debug
 {
 namespace detail
 {

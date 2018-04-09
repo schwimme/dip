@@ -4,7 +4,7 @@
 #include <crossmodule/types/pointer.h>
 
 
-namespace crossmodule
+namespace cross
 {
 
 template<typename base_intf_t>

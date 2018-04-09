@@ -3,7 +3,7 @@
 #include <atomic>
 
 
-namespace crossmodule
+namespace cross
 {
 
 struct instance_counter

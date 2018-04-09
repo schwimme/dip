@@ -15,7 +15,7 @@ namespace pda
 
 
 class walker_intf_impl:
-	public crossmodule::query_impl<pda_walker_intf>
+	public cross::query_impl<pda_walker_intf>
 {
 public:
 	walker_intf_impl(std::shared_ptr<pda::walker_impl> spWalker):
@@ -34,11 +34,11 @@ private:
 
 
 class intf_impl:
-	public crossmodule::query_impl<pda_intf>
+	public cross::query_impl<pda_intf>
 {
 public:
-	virtual void add_rule(const pda::token_id& input, const crossmodule::enumerator<pda::stack_item>& stackTop, const crossmodule::enumerator<pda::stack_item>& stackRewrite) override;
-	virtual void create_walker(crossmodule::versioned_intf_ref<pda_walker_intf> walker) override;
+	virtual void add_rule(const pda::token_id& input, const cross::enumerator<pda::stack_item>& stackTop, const cross::enumerator<pda::stack_item>& stackRewrite) override;
+	virtual void create_walker(cross::versioned_intf_ref<pda_walker_intf> walker) override;
 
 private:
 	impl m_impl;

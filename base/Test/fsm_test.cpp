@@ -22,7 +22,7 @@ public:
 		{}
 
 
-		base::string dump() const
+		sys::string dump() const
 		{
 			return __super::dump();
 		}
@@ -40,7 +40,7 @@ TEST_METHOD(KTTODO_All_UT)
 
 	std::shared_ptr<base::fsm_walker_intf> w = fsm.create_walker();
 
-	base::string dump = fsm.dump();
+	sys::string dump = fsm.dump();
 
 	Assert::IsTrue(w->verify_literal(TEXT("c")));
 	Assert::IsTrue(w->get_context() == 0);

@@ -21,7 +21,7 @@ public:
 	};
 
 public:
-	virtual std::shared_ptr<sa_cfg> build(const base::string& path) const override;
+	virtual std::shared_ptr<sa_cfg> build(const sys::string& path) const override;
 };
 
 

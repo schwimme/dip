@@ -4,6 +4,7 @@
 #include "fsmdefs.h"
 #include <crossmodule/types/enumerator.h>
 
+
 namespace base
 {
 	
@@ -11,7 +12,7 @@ namespace base
 struct fsm_context_factory_intf
 {
 	//!	\brief	Select most priorited context from all given contexts.
-	virtual fsm::context_id select_context(crossmodule::enumerator<fsm::context_id>* const allContexts) const = 0;
+	virtual fsm::context_id select_context(cross::enumerator<fsm::context_id>* const allContexts) const = 0;
 };
 
 

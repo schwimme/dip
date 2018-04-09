@@ -1,8 +1,9 @@
 #pragma once
 
 
-namespace crossmodule
+namespace cross
 {
+
 
 template<typename T>
 struct enumerator

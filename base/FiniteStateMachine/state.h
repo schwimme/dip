@@ -25,7 +25,7 @@ struct state
 	{}
 
 	//! \brief	Add simple rule this->'ch'->'to'
-	void add_rule(const state_id& to, base::char_t ch);
+	void add_rule(const state_id& to, sys::char_t ch);
 
 	/*!
 		\brief	Convert this->epsilon->to->character->other
@@ -34,12 +34,12 @@ struct state
 	void add_optimized_epsilon_rule(const state& to);
 
 	//! \brief	Remove all rules using given character.
-	void remove_rules(base::char_t ch);
+	void remove_rules(sys::char_t ch);
 
 	//! \brief	Get all rules using given character.
-	const std::vector<state_id>& get_rules(base::char_t ch) const;
+	const std::vector<state_id>& get_rules(sys::char_t ch) const;
 
-	std::unordered_map<base::char_t, std::vector<state_id>>	m_rules;
+	std::unordered_map<sys::char_t, std::vector<state_id>>	m_rules;
 	context_id	m_context;
 	bool		m_epsVisited = false;
 };

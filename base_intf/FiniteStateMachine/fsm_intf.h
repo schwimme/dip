@@ -16,13 +16,13 @@ struct fsm_intf
 	virtual void add_rule(const fsm::state_id& from, const fsm::state_id& to) = 0;
 
 	//! \brief 'from'->'ch'->'to'.
-	virtual void add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t ch) = 0;
+	virtual void add_rule(const fsm::state_id& from, const fsm::state_id& to, sys::char_t ch) = 0;
 
 	//! \brief 'from'->[a, b]->'to'.
-	virtual void add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t a, base::char_t b) = 0;
+	virtual void add_rule(const fsm::state_id& from, const fsm::state_id& to, sys::char_t a, sys::char_t b) = 0;
 
 	//! \brief 'from'->epsilon->regex.
-	virtual void add_regex(const fsm::state_id& from, crossmodule::string_ref regex, fsm::context_id valid, fsm::context_id invalid) = 0;
+	virtual void add_regex(const fsm::state_id& from, cross::string_ref regex, fsm::context_id valid, fsm::context_id invalid) = 0;
 
 	//! \brief Mark state as starting state.
 	virtual void set_start(const fsm::state_id& state) = 0;

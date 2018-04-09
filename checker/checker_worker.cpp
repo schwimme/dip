@@ -3,18 +3,18 @@
 namespace checker
 {
 
-base::string worker::read_file_content() const
+sys::string worker::read_file_content() const
 {
 	//KTTODO  - impl : currently just faked:
 	throw "Not implemented";
-	return base::string();
+	return sys::string();
 }
 
 
-void worker::check(const base::string& file)
+void worker::check(const sys::string& file)
 {
 	m_file = file;
-	base::string content = read_file_content();
+	sys::string content = read_file_content();
 
 	std::vector<token> t = parse(content);
 
@@ -22,11 +22,11 @@ void worker::check(const base::string& file)
 }
 
 
-worker::token worker::create_token(const base::string& value, token_id id)
+worker::token worker::create_token(const sys::string& value, token_id id)
 {
 	if (id == 0) // KTTODO token id
 	{
-		accident_info i{m_line, m_col, m_file, base::string(TEXT("Invalid token - '")) + value + TEXT("'") };
+		accident_info i{m_line, m_col, m_file, sys::string(TEXT("Invalid token - '")) + value + TEXT("'") };
 		m_pHandler->on_accident(i);
 	}
 
@@ -34,13 +34,13 @@ worker::token worker::create_token(const base::string& value, token_id id)
 }
 
 
-std::vector<worker::token> worker::parse(const base::string& content)
+std::vector<worker::token> worker::parse(const sys::string& content)
 {
 	std::vector<worker::token> tokens;
 
 	// Help iterators:
-	base::string::const_iterator actualPosition = content.begin();
-	base::string::const_iterator actualTokenBegin = content.begin();
+	sys::string::const_iterator actualPosition = content.begin();
+	sys::string::const_iterator actualTokenBegin = content.begin();
 
 	while (actualPosition != content.end())
 	{
@@ -65,7 +65,7 @@ std::vector<worker::token> worker::parse(const base::string& content)
 			// End of known token:
 			token t{
 				m_spFsmWalker->get_context(),
-				base::string(actualTokenBegin, actualPosition), 
+				sys::string(actualTokenBegin, actualPosition), 
 				m_col,
 				m_line
 			};
@@ -81,7 +81,7 @@ std::vector<worker::token> worker::parse(const base::string& content)
 
 	token t{
 		m_spFsmWalker->get_context(),
-		base::string(actualTokenBegin, actualPosition),
+		sys::string(actualTokenBegin, actualPosition),
 		m_col,
 		m_line
 	};
@@ -102,7 +102,7 @@ void worker::check_syntax_analysis(const std::vector<worker::token>& tokens)
 
 		if (is_cfg_empty)
 		{
-			accident_info ai{ it->line, it->col, m_file, base::string(TEXT("Unexpected token '")) + it->value + TEXT("' - skipped") };
+			accident_info ai{ it->line, it->col, m_file, sys::string(TEXT("Unexpected token '")) + it->value + TEXT("' - skipped") };
 			m_pHandler->on_accident(ai);
 		}
 		else
@@ -118,7 +118,7 @@ void worker::check_syntax_analysis(const std::vector<worker::token>& tokens)
 
 	if (m_spPdaWalker->is_accepted() == false)
 	{
-		accident_info ai{ it->line, it->col, m_file, base::string(TEXT("more tokens expected'")) };
+		accident_info ai{ it->line, it->col, m_file, sys::string(TEXT("more tokens expected'")) };
 		m_pHandler->on_accident(ai);
 	}
 

@@ -2,11 +2,12 @@
 
 #include "fsmwalker.h"
 
-#include <base/Debugging/debug.h>
-#include <base_intf/Algorithm/algorithm.h>
+#include <sys/debugging/debug.h>
+#include <sys/algorithm/algorithm.h>
 #include "regexcontextfactory.h"
-#include <types/string.h>
+#include <sys/types/string.h>
 #include <crossmodule/adapters/vector.h>
+
 
 namespace base
 {
@@ -27,8 +28,8 @@ void fsm_impl::initialize()
 void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to)
 {
 	ASSERT_NO_EVAL(m_optimized == false);
-	ASSERT_NO_EVAL(m_states.find(from) != m_states.end());
-	ASSERT_NO_EVAL(m_states.find(to) != m_states.end());
+	ASSERT_NO_EVAL(sys::find(m_states, from));
+	ASSERT_NO_EVAL(sys::find(m_states, to));
 
 	if (from != to)
 	{
@@ -37,20 +38,20 @@ void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to)
 }
 
 
-void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t ch)
+void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to, sys::char_t ch)
 {
 	ASSERT_NO_EVAL(m_optimized == false);
 	ASSERT_NO_EVAL(ch != Fsm::detail::EPSILON);
-	ASSERT_NO_EVAL(m_states.find(from) != m_states.end());
-	ASSERT_NO_EVAL(m_states.find(to) != m_states.end());
+	ASSERT_NO_EVAL(sys::find(m_states, from));
+	ASSERT_NO_EVAL(sys::find(m_states, to));
 
 	m_states[from]->add_rule(to, ch);
 }
 
 
-void fsm_impl::add_regex(const fsm::state_id& from, crossmodule::string_ref regex, fsm::context_id valid, fsm::context_id invalid)
+void fsm_impl::add_regex(const fsm::state_id& from, cross::string_ref regex, fsm::context_id valid, fsm::context_id invalid)
 {
-	base::string regex_non_crossmodule(regex.m_data, regex.m_size);
+	sys::string regex_non_crossmodule(regex.m_data, regex.m_size);
 	std::shared_ptr<fsm_context_factory_intf> spCtxFactory = std::make_shared<fsm::regex_context_factory>(valid, invalid);
 	fsm_impl regexFsm(spCtxFactory);
 
@@ -69,7 +70,7 @@ void fsm_impl::add_regex(const fsm::state_id& from, crossmodule::string_ref rege
 }
 
 
-void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t a, base::char_t b)
+void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to, sys::char_t a, sys::char_t b)
 {
 	// KTTODO - optimize this using ranges (should be done after UT to be sure, optimization doesnt break anything).
 	do
@@ -138,7 +139,7 @@ bool fsm_impl::remove_epsilon_rules_impl(fsm::state::holder& pState)
 	{
 		remove_epsilon_rules_impl(m_states[r]);
 		pState->add_optimized_epsilon_rule(*(m_states[r]));
-		pState->m_context = m_spContextFactory->select_context(&crossmodule::std_vector_on_enumerator<fsm::context_id>(std::vector<fsm::context_id>{ pState->m_context, m_states[r]->m_context }));
+		pState->m_context = m_spContextFactory->select_context(&cross::std_vector_on_enumerator<fsm::context_id>(std::vector<fsm::context_id>{ pState->m_context, m_states[r]->m_context }));
 	}
 
 	pState->remove_rules(fsm::detail::EPSILON);
@@ -167,12 +168,12 @@ void fsm_impl::remove_unreachable_states()
 		std::vector<fsm::state_id> allNextStates;
 		for (const auto& p : allStateRules)
 		{
-			allNextStates = base::make_union(allNextStates, p.second);
+			allNextStates = sys::make_union(allNextStates, p.second);
 		}
 
 		for (auto& i : allNextStates)
 		{
-			if (base::find(reachableStates, i) == false)
+			if (sys::find(reachableStates, i) == false)
 			{
 				reachableStates.push_back(std::move(i));
 			}
@@ -205,11 +206,10 @@ void fsm_impl::minimize()
 }
 
 
-const std::vector<fsm::state_id>& fsm_impl::get_next_states(const fsm::state_id& currentState, base::char_t ch) const
+const std::vector<fsm::state_id>& fsm_impl::get_next_states(const fsm::state_id& currentState, sys::char_t ch) const
 {
 	auto it = m_states.find(currentState);
 	ASSERT(it != m_states.end());
-
 	return it->second->get_rules(ch);
 }
 
@@ -218,7 +218,6 @@ fsm::context_id fsm_impl::get_context(const fsm::state_id& state) const
 {
 	auto it = m_states.find(state);
 	ASSERT(it != m_states.end());
-
 	return it->second->m_context;
 }
 
@@ -241,9 +240,9 @@ std::shared_ptr<fsm_walker_intf> fsm_impl::create_walker()
 }
 
 
-base::string fsm_impl::dump() const
+sys::string fsm_impl::dump() const
 {
-	base::string out;
+	sys::string out;
 
 	// KTTODO
 //	// For all states:

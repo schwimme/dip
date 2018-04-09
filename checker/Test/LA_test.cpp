@@ -2,7 +2,7 @@
 #include "CppUnitTest.h"
 
 #include "../checker.h"
-#include <types/string.h>
+#include <sys/types/string.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -34,7 +34,7 @@ enum TOKEN
 struct la_builder_fake:
 	checker::la_cfg_builder_intf
 {
-	virtual std::shared_ptr<checker::la_cfg> build(const base::string& path) const override
+	virtual std::shared_ptr<checker::la_cfg> build(const sys::string& path) const override
 	{
 		auto cfg = std::make_shared<checker::la_cfg>();
 
@@ -67,7 +67,7 @@ struct la_builder_fake:
 struct sa_builder_fake:
 	checker::sa_cfg_builder_intf
 {
-	virtual std::shared_ptr<checker::sa_cfg> build(const base::string& path) const override
+	virtual std::shared_ptr<checker::sa_cfg> build(const sys::string& path) const override
 	{
 		auto cfg = std::make_shared<checker::sa_cfg>();
 
@@ -96,7 +96,7 @@ struct checker_worker_fake:
 		checker::worker(spFsmWalker, spPdaWalker, handler)
 	{}
 
-	virtual base::string read_file_content() const override
+	virtual sys::string read_file_content() const override
 	{
 		return TEXT("class MANAGER\n{\nprotected:\n\tABC FUNC();\n};");
 	}

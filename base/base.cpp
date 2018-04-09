@@ -37,7 +37,7 @@ error_t base_impl::create_fsm(std::shared_ptr<fsm_intf>& spFsm, std::shared_ptr<
 }
 
 
-error_t base_impl::create_pda(crossmodule::versioned_intf_ref<base::pda_intf> pPda) noexcept
+error_t base_impl::create_pda(cross::versioned_intf_ref<base::pda_intf> pPda) noexcept
 {
 	try
 	{
@@ -55,5 +55,6 @@ error_t base_impl::create_pda(crossmodule::versioned_intf_ref<base::pda_intf> pP
 		return 1; // KTTODO - failed
 	}
 }
+
 
 }

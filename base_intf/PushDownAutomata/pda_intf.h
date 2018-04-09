@@ -13,12 +13,12 @@ namespace base
 
 
 struct pda_intf:
-	crossmodule::queryable<0xf8d06fc9>
+	cross::queryable<0xf8d06fc9>
 {
 	static constexpr uint32_t version = 1;
 
-	virtual void add_rule(const pda::token_id& input, const crossmodule::enumerator<pda::stack_item>& stackTop, const crossmodule::enumerator<pda::stack_item>& stackRewrite) = 0;
-	virtual void create_walker(crossmodule::versioned_intf_ref<pda_walker_intf> walker) = 0;
+	virtual void add_rule(const pda::token_id& input, const cross::enumerator<pda::stack_item>& stackTop, const cross::enumerator<pda::stack_item>& stackRewrite) = 0;
+	virtual void create_walker(cross::versioned_intf_ref<pda_walker_intf> walker) = 0;
 };
 
 

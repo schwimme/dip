@@ -26,9 +26,9 @@ TEST_METHOD(KTTODO_All_UT)
 	Assert::IsTrue(w->process_step(2));
 	Assert::IsTrue(w->process_step(2));
 
-	Assert::IsFalse(w->accepted());
+	Assert::IsFalse(w->is_accepted());
 	Assert::IsTrue(w->process_step(2));
-	Assert::IsTrue(w->accepted());
+	Assert::IsTrue(w->is_accepted());
 
 	Assert::IsFalse(w->process_step(2));
 }

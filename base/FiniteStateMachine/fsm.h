@@ -51,13 +51,13 @@ public:
 	virtual void add_rule(const fsm::state_id& from, const fsm::state_id& to) override;
 
 	//! \copydoc IFsm::add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t& ch)
-	virtual void add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t ch) override;
+	virtual void add_rule(const fsm::state_id& from, const fsm::state_id& to, sys::char_t ch) override;
 
 	//! \copydoc IFsm::add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t& a, base::char_t b)
-	virtual void add_rule(const fsm::state_id& from, const fsm::state_id& to, base::char_t a, base::char_t b) override;
+	virtual void add_rule(const fsm::state_id& from, const fsm::state_id& to, sys::char_t a, sys::char_t b) override;
 
 	//! \copydoc IFsm::add_regex
-	virtual void add_regex(const fsm::state_id& from, crossmodule::string_ref regex, fsm::context_id valid, fsm::context_id invalid) override;
+	virtual void add_regex(const fsm::state_id& from, cross::string_ref regex, fsm::context_id valid, fsm::context_id invalid) override;
 
 	//! \copydoc IFsm::set_start
 	virtual void set_start(const fsm::state_id& state) override;
@@ -70,7 +70,7 @@ public:
 
 public:
 	//! \copydoc Fsm::IWalkable::GetNextStates
-	virtual const std::vector<fsm::state_id>& get_next_states(const fsm::state_id& currentState, base::char_t ch) const override;
+	virtual const std::vector<fsm::state_id>& get_next_states(const fsm::state_id& currentState, sys::char_t ch) const override;
 	
 	//! \copydoc Fsm::IWalkable::GetContext
 	virtual fsm::context_id get_context(const fsm::state_id& state) const override;
@@ -79,7 +79,7 @@ public:
 	virtual const fsm::state_id& get_start() const override;
 
 protected:
-	base::string dump() const;
+	sys::string dump() const;
 
 private:
 	void initialize();

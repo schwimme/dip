@@ -9,8 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Base", "Base.vcxproj", "{22
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test\Test.vcxproj", "{26580A45-1C6E-46A7-9920-7538EDA3F8EB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crossmodule", "..\crossmodule\crossmodule.vcxproj", "{D27CB579-1006-4814-ADCA-85D2F8F10580}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PushDownAutomata", "PushDownAutomata\PushDownAutomata.vcxproj", "{B7526AEA-BAA3-4604-B804-8052FB025375}"
 EndProject
 Global
@@ -45,14 +43,6 @@ Global
 		{26580A45-1C6E-46A7-9920-7538EDA3F8EB}.Release|x64.Build.0 = Release|x64
 		{26580A45-1C6E-46A7-9920-7538EDA3F8EB}.Release|x86.ActiveCfg = Release|Win32
 		{26580A45-1C6E-46A7-9920-7538EDA3F8EB}.Release|x86.Build.0 = Release|Win32
-		{D27CB579-1006-4814-ADCA-85D2F8F10580}.Debug|x64.ActiveCfg = Debug|x64
-		{D27CB579-1006-4814-ADCA-85D2F8F10580}.Debug|x64.Build.0 = Debug|x64
-		{D27CB579-1006-4814-ADCA-85D2F8F10580}.Debug|x86.ActiveCfg = Debug|Win32
-		{D27CB579-1006-4814-ADCA-85D2F8F10580}.Debug|x86.Build.0 = Debug|Win32
-		{D27CB579-1006-4814-ADCA-85D2F8F10580}.Release|x64.ActiveCfg = Release|x64
-		{D27CB579-1006-4814-ADCA-85D2F8F10580}.Release|x64.Build.0 = Release|x64
-		{D27CB579-1006-4814-ADCA-85D2F8F10580}.Release|x86.ActiveCfg = Release|Win32
-		{D27CB579-1006-4814-ADCA-85D2F8F10580}.Release|x86.Build.0 = Release|Win32
 		{B7526AEA-BAA3-4604-B804-8052FB025375}.Debug|x64.ActiveCfg = Debug|x64
 		{B7526AEA-BAA3-4604-B804-8052FB025375}.Debug|x64.Build.0 = Debug|x64
 		{B7526AEA-BAA3-4604-B804-8052FB025375}.Debug|x86.ActiveCfg = Debug|Win32

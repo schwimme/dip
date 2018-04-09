@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace crossmodule
+namespace cross
 {
 
 
@@ -27,6 +27,7 @@ versioned_intf_ref<intf_base_t>::versioned_intf_ref(intf_requested_t*& pIntf) :
 {
 	static_assert(intf_base_t::iid == intf_requested_t::iid, "Interface iid mismatch");
 }
+
 
 template<typename intf_base_t>
 bool versioned_intf_ref<intf_base_t>::attach(intf_base_t* pIntf)

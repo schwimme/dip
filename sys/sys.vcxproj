@@ -19,34 +19,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\base\Base.vcxproj">
-      <Project>{222fcebf-90bc-49c1-87ce-12829b04c9e3}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\crossmodule\crossmodule.vcxproj">
-      <Project>{d27cb579-1006-4814-adca-85d2f8f10580}</Project>
-    </ProjectReference>
+    <ClInclude Include="algorithm\algorithm.h" />
+    <ClInclude Include="debugging\debug.h" />
+    <ClInclude Include="debugging\debug_impl.h" />
+    <ClInclude Include="scopeguard\scopeguard.h" />
+    <ClInclude Include="threadpool\threadpool.h" />
+    <ClInclude Include="types\chartype.h" />
+    <ClInclude Include="types\string.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="checker.cpp" />
-    <ClCompile Include="checker_worker.cpp" />
-    <ClCompile Include="configurable_fsm_factory.cpp" />
-    <ClCompile Include="la_cfg_builder.cpp" />
-    <ClCompile Include="sa_cfg_builder.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="checker.h" />
-    <ClInclude Include="checker_worker.h" />
-    <ClInclude Include="checker_worker_intf.h" />
-    <ClInclude Include="configurable_fsm_factory.h" />
-    <ClInclude Include="la_cfg_builder.h" />
-    <ClInclude Include="la_cfg_builder_intf.h" />
-    <ClInclude Include="sa_cfg_builder.h" />
-    <ClInclude Include="sa_cfg_builder_intf.h" />
+    <ClCompile Include="debugging\win_debug_impl.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A7BCAE97-6347-4F2E-B5A5-E854E219B47F}</ProjectGuid>
+    <ProjectGuid>{80F766C7-C4A6-4AF4-87D3-6AD2454E2FBB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Checker</RootNamespace>
+    <RootNamespace>sys</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -94,15 +81,11 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..;</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..;</IncludePath>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -113,7 +96,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -125,7 +109,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -140,7 +125,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

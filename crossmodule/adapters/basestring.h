@@ -1,18 +1,18 @@
 #pragma once
 
 
-#include <types/string.h>				// base::string
-#include <crossmodule/types/string.h>	// string_ref, settable_string_ref
+#include <sys/types/string.h>
+#include <crossmodule/types/string.h>
 
 
-namespace crossmodule
+namespace cross
 {
 
 
 struct base_string_on_string_ref:
 	string_ref
 {
-	base_string_on_string_ref(const base::string& s):
+	base_string_on_string_ref(const sys::string& s):
 		string_ref(s.data(), s.size())
 	{}
 };
@@ -21,17 +21,17 @@ struct base_string_on_string_ref:
 struct base_string_settable_string_ref:
 	settable_string_ref
 {
-	base_string_settable_string_ref(base::string& s):
+	base_string_settable_string_ref(sys::string& s):
 		m_string(&s)
 	{}
 
-	virtual bool set(base::char_t const* data, size_t size) noexcept override
+	virtual bool set(sys::char_t const* data, size_t size) noexcept override
 	{
-		*m_string = base::string(data, size);
+		*m_string = sys::string(data, size);
 	}
 	
 private:
-	base::string* m_string;
+	sys::string* m_string;
 };
 
 

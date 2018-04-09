@@ -2,10 +2,10 @@
 
 
 #include <list>
-#include <types/string.h>
+#include <sys/types/string.h>
 #include <crossmodule/factory/objectfactory.h>
 #include <base/base.h>
-#include <base_intf/ThreadPool/threadpool.h>
+#include <sys/threadpool/threadpool.h>
 
 #include "la_cfg_builder.h"
 #include "sa_cfg_builder.h"
@@ -25,8 +25,8 @@ class checker_impl: // KTTODO - checker_intf
 	protected worker::factory
 {
 public:
-	void configure(const base::string& la_cfg_path, const base::string& sa_cfg_path);
-	void check(const std::list<base::string>& files);
+	void configure(const sys::string& la_cfg_path, const sys::string& sa_cfg_path);
+	void check(const std::list<sys::string>& files);
 
 public:
 	// KTTODO - automaticka naprava
@@ -34,17 +34,17 @@ public:
 
 private:
 	void prepare_base();
-	void configure_fsm(const base::string& la_cfg_path);
-	void configure_pda(const base::string& sa_cfg_path);
-	void worker_procedure(const base::string& file);
+	void configure_fsm(const sys::string& la_cfg_path);
+	void configure_pda(const sys::string& sa_cfg_path);
+	void worker_procedure(const sys::string& file);
 
 private:
-	std::shared_ptr<crossmodule::object_factory> m_spFactory;
+	std::shared_ptr<cross::object_factory> m_spFactory;
 	std::shared_ptr<base::base_intf>             m_spBase;
 	std::shared_ptr<base::fsm_intf>              m_spFsm;
 	std::shared_ptr<base::pda_intf>              m_spPda;
 
-	mutable base::thread_pool<8> m_threadPool;
+	mutable sys::thread_pool<8> m_threadPool;
 
 	std::mutex m_print_mutex;
 };

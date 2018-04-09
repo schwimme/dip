@@ -10,7 +10,7 @@ namespace base
 
 
 struct pda_walker_intf:
-	crossmodule::queryable<0x4c95508c>
+	cross::queryable<0x4c95508c>
 {
 	static constexpr uint32_t version = 1;
 

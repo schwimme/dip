@@ -4,12 +4,13 @@
 // Exported interfaces:
 #include <base/base_intf.h>
 
+
 #ifndef DYNAMIC_LINK_BASE
 #	include <base/base.h>
 #endif
 
 
-namespace crossmodule
+namespace cross
 {
 
 

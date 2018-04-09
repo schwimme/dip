@@ -1,51 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="types">
-      <UniqueIdentifier>{b91b78dd-87c5-4e88-a3ff-6069e99661a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="scope_guard">
-      <UniqueIdentifier>{9e30f4c4-8c5d-4401-ac22-83c20536834a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="debugging">
-      <UniqueIdentifier>{51c28523-c880-4897-ba79-c26f22037c07}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="algorithm">
-      <UniqueIdentifier>{f2428e43-0dc1-4b7d-83ae-67d4161e6b5c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="thread_pool">
-      <UniqueIdentifier>{ee021c12-a1e8-4a0d-a802-83f2c371fa05}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Debugging\debug.h">
-      <Filter>debugging</Filter>
-    </ClInclude>
-    <ClInclude Include="Debugging\debug_impl.h">
-      <Filter>debugging</Filter>
-    </ClInclude>
-    <ClInclude Include="..\base_intf\Algorithm\algorithm.h">
-      <Filter>algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\base_intf\ScopeGuard\ScopeGuard.h">
-      <Filter>scope_guard</Filter>
-    </ClInclude>
-    <ClInclude Include="..\types\chartype.h">
-      <Filter>types</Filter>
-    </ClInclude>
-    <ClInclude Include="..\types\string.h">
-      <Filter>types</Filter>
-    </ClInclude>
     <ClInclude Include="base.h" />
     <ClInclude Include="base_intf.h" />
-    <ClInclude Include="..\base_intf\ThreadPool\threadpool.h">
-      <Filter>thread_pool</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Debugging\win_debug_impl.cpp">
-      <Filter>debugging</Filter>
-    </ClCompile>
     <ClCompile Include="base.cpp" />
   </ItemGroup>
 </Project>

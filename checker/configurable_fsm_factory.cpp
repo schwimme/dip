@@ -1,14 +1,14 @@
 #pragma once
 
 #include "configurable_fsm_factory.h"
-#include <base_intf/Algorithm/algorithm.h>
+#include <sys/algorithm/algorithm.h>
 
 
 namespace checker
 {
 
 
-base::fsm::context_id configurable_fsm_ctx_factory::select_context(crossmodule::enumerator<base::fsm::context_id>* const allContexts) const
+base::fsm::context_id configurable_fsm_ctx_factory::select_context(cross::enumerator<base::fsm::context_id>* const allContexts) const
 {
 	// Extract vector from cross module safe type:
 	std::vector<base::fsm::context_id> all_ctxs_without_invalid;
@@ -48,7 +48,7 @@ base::fsm::context_id configurable_fsm_ctx_factory::select_context(crossmodule::
 			auto ctxIter = oneGroup.begin();
 			while (ctxIter != oneGroup.end())
 			{
-				if (base::find(all_ctxs_without_invalid, *ctxIter))
+				if (sys::find(all_ctxs_without_invalid, *ctxIter))
 				{
 					return *ctxIter;
 				}
@@ -68,7 +68,7 @@ bool configurable_fsm_ctx_factory::verify_priority_group(const std::vector<token
 	// oneGroup is group where all priorities must be - verify:
 	for (const auto& ctx : ctxToVerify)
 	{
-		if (base::find(priorityGroup, ctx) == false)
+		if (sys::find(priorityGroup, ctx) == false)
 		{
 			return false;
 		}

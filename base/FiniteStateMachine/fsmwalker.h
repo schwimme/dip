@@ -24,10 +24,10 @@ public:
 	walker(walkable_intf& walkable, std::shared_ptr<fsm_context_factory_intf>& spCtxFactory);
 
 	//! \copydoc IFsmWalker::ProcessStep
-	virtual bool process_step(base::char_t ch) override;
+	virtual bool process_step(sys::char_t ch) override;
 
 	//! \copydoc IFsmWalker::VerifyLiteral
-	virtual bool verify_literal(crossmodule::string_ref literal) override;
+	virtual bool verify_literal(cross::string_ref literal) override;
 
 	//! \copydoc IFsmWalker::Reset
 	virtual void reset() override;

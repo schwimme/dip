@@ -7,7 +7,7 @@
 namespace checker
 {
 
-void checker_impl::configure(const base::string& la_cfg_path, const base::string& sa_cfg_path)
+void checker_impl::configure(const sys::string& la_cfg_path, const sys::string& sa_cfg_path)
 {
 	prepare_base();
 	configure_fsm(la_cfg_path);
@@ -15,20 +15,19 @@ void checker_impl::configure(const base::string& la_cfg_path, const base::string
 }
 
 
-void checker_impl::check(const std::list<base::string>& files)
+void checker_impl::check(const std::list<sys::string>& files)
 {
-	for (const base::string& f : files)
+	for (const sys::string& f : files)
 	{
-		// KTTODO do not use in UT.
-//		m_threadPool.push([&, file = f]
-//		{	
+		m_threadPool.push([&, file = f]
+		{	
 			worker_procedure(f); 
-//		});
+		});
 	}
 }
 
 
-void checker_impl::worker_procedure(const base::string& file)
+void checker_impl::worker_procedure(const sys::string& file)
 {
 	// KTTODO crossmodule!
 	std::shared_ptr<base::fsm_walker_intf> spFsmWalker = m_spFsm->create_walker();
@@ -43,7 +42,7 @@ void checker_impl::worker_procedure(const base::string& file)
 }
 
 
-void checker_impl::configure_fsm(const base::string& la_cfg_path)
+void checker_impl::configure_fsm(const sys::string& la_cfg_path)
 {
 	std::shared_ptr<la_cfg_builder_intf> spCfgBuilder = create_la_cfg_builder();
 	std::shared_ptr<la_cfg> spCfg = spCfgBuilder->build(la_cfg_path);
@@ -62,14 +61,14 @@ void checker_impl::configure_fsm(const base::string& la_cfg_path)
 
 	for (const auto& it : spCfg->m_tokens)
 	{
-		spFsm->add_regex(idleState, crossmodule::base_string_on_string_ref(it.second), it.first, configurable_fsm_ctx_factory::INVALID_CTX);
+		spFsm->add_regex(idleState, cross::base_string_on_string_ref(it.second), it.first, configurable_fsm_ctx_factory::INVALID_CTX);
 	}
 
 	m_spFsm = spFsm;
 }
 
 
-void checker_impl::configure_pda(const base::string& sa_cfg_path)
+void checker_impl::configure_pda(const sys::string& sa_cfg_path)
 {
 	std::shared_ptr<sa_cfg_builder_intf> spCfgBuilder = create_sa_cfg_builder();
 	std::shared_ptr<sa_cfg> spCfg = spCfgBuilder->build(sa_cfg_path);
@@ -85,8 +84,8 @@ void checker_impl::configure_pda(const base::string& sa_cfg_path)
 	{
 		spPda->add_rule(
 			it.m_token,
-			crossmodule::std_vector_on_enumerator<sa_rule::stack_item>(it.m_stackTop),
-			crossmodule::std_vector_on_enumerator<sa_rule::stack_item>(it.m_stackReplace));
+			cross::std_vector_on_enumerator<sa_rule::stack_item>(it.m_stackTop),
+			cross::std_vector_on_enumerator<sa_rule::stack_item>(it.m_stackReplace));
 	}
 
 	m_spPda = spPda;
@@ -96,10 +95,10 @@ void checker_impl::configure_pda(const base::string& sa_cfg_path)
 void checker_impl::prepare_base()
 {
 	// KTTODO injection:
-	m_spFactory = std::make_shared<crossmodule::object_factory>();
+	m_spFactory = std::make_shared<cross::object_factory>();
 
 	void* pBase;
-	if (m_spFactory->get_object(GUID_BASE_V1, &pBase) != 0) // KTTODO error
+	if (m_spFactory->get_object(cross::GUID_BASE_V1, &pBase) != 0) // KTTODO error
 	{
 		throw ""; // KTTODO exception
 	}

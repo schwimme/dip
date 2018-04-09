@@ -2,8 +2,9 @@
 
 #include "counter.h"
 
-namespace crossmodule
+namespace cross
 {
+
 
 struct instance_countable
 {

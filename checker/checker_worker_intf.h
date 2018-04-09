@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <types/string.h>
+#include <sys/types/string.h>
 
 
 namespace checker
@@ -11,8 +11,8 @@ struct accident_info
 {
 	std::uint32_t line;
 	std::uint32_t col;
-	base::string file;
-	base::string errDesc;
+	sys::string file;
+	sys::string errDesc;
 };
 
 struct accident_handler
@@ -22,7 +22,7 @@ struct accident_handler
 
 struct worker_intf
 {
-	virtual void check(const base::string& file) = 0;
+	virtual void check(const sys::string& file) = 0;
 };
 
 }

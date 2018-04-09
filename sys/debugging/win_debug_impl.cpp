@@ -2,9 +2,9 @@
 #include <Windows.h>
 
 
-namespace Base
+namespace sys
 {
-namespace Debugging
+namespace debug
 {
 namespace detail
 {

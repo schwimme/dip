@@ -7,8 +7,9 @@
 #include <vector>
 
 
-namespace crossmodule
+namespace cross
 {
+
 
 template<typename T>
 struct std_vector_on_enumerator:
@@ -45,6 +46,7 @@ private:
 	const std::vector<T>&					m_vector;
 	typename std::vector<T>::const_iterator	m_pos;
 };
+
 
 template<typename T>
 struct std_vector_on_back_inserter:

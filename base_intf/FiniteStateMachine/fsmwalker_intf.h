@@ -12,14 +12,14 @@ namespace base
 struct fsm_walker_intf
 {
 	//! \brief Process step in automat by given character.
-	virtual bool process_step(base::char_t ch) = 0;
+	virtual bool process_step(sys::char_t ch) = 0;
 
 	/*!
 		\brief	Verify entire literal.
 		\return	true if literal was readed successfuly,
 		\return	false otherwise.
 	*/
-	virtual bool verify_literal(crossmodule::string_ref literal) = 0;
+	virtual bool verify_literal(cross::string_ref literal) = 0;
 
 	//! \brief	Reset to initial state.
 	virtual void reset() = 0;

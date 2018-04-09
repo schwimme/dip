@@ -22,7 +22,7 @@ public:
 		m_priorities(priorities)
 	{}
 
-	virtual base::fsm::context_id select_context(crossmodule::enumerator<base::fsm::context_id>* const allContexts) const override;
+	virtual base::fsm::context_id select_context(cross::enumerator<base::fsm::context_id>* const allContexts) const override;
 
 protected:
 	bool verify_priority_group(const std::vector<token_id>& priorityGroup, const std::vector<base::fsm::context_id>& ctxToVerify) const;
