@@ -11,258 +11,208 @@ namespace fsm
 {
 
 
-void builder::build_fsm_from_regex(fsm_impl& fsm, const sys::string& rgx, context_id valid, context_id invalid) const
+void builder::add_character(fsm_impl& fsm, state_id& actual_position, context_id invalid, const sys::char_t*& p_rgx) const
 {
-	// Parse regex to internal structure:
-	const sys::char_t* t = rgx.c_str();
-	regex parsedRegex = parse_regex(t);
+	// - Generate new state and make rule from actual to new one:
+	state_id new_state = fsm.generate_state(invalid);
+	fsm.add_rule(actual_position, new_state, *p_rgx);
 
-	// Prepare output fsm:
-	state_id fsmStart = fsm.generate_state(invalid);
-	fsm.set_start(fsmStart);
+	// - update actual_state
+	actual_position = new_state;
 
-	state_id fsmEnd = fsm.generate_state(valid);
+	// - Continue with next character:
+	++p_rgx;
+}
 
-	// Prepare mapping from parsed regex to fsm states:
-	std::vector<fsm_impl::states_storage_t::iterator> newStates = { fsm.m_states.find(fsmStart) };
 
-	// Generate:
-	size_t regexSize = parsedRegex.size();
-	for (size_t it = 0; it < regexSize; ++it)
+void builder::add_sequence(fsm_impl& fsm, state_id& actual_position, context_id invalid, const sys::char_t*& p_rgx, bool iteration, bool optional) const
+{
+	// Check opening brace:
+	check_is(p_rgx, TEXT('('));
+	++p_rgx;
+	check_end(p_rgx);
+
+	// Mark significant states:
+	state_id it_begin = actual_position;
+	state_id it_end = fsm.generate_state(invalid);
+
+	// process everithing until closing brace
+	while (*p_rgx != TEXT(')'))
 	{
-		const auto& currentParsedRegex = parsedRegex[it];
-		switch (currentParsedRegex.type)
-		{
-		case regex_item::type_t::NORMAL:
-		{
-			// Generate state:
-			state_id s = fsm.generate_state(invalid);
-
-			// Current end:
-			const state_id& b = newStates.at(newStates.size() - 1)->first;
-
-			// Store reference to new states:
-			newStates.push_back(fsm.m_states.find(s));
-
-			// Add rule from starting position to newly generated state via character
-			fsm.add_rule(b, s, currentParsedRegex.char1);
-		}
-		break;
-
-		case regex_item::type_t::RANGE:
-		{
-			// Generate state:
-			state_id s = fsm.generate_state(invalid);
-
-			// Current end:
-			const state_id& b = newStates.at(newStates.size() - 1)->first;
-
-			// Store reference to new states:
-			newStates.push_back(fsm.m_states.find(s));
-
-			// Add rule from starting position to newly generated state via character
-			fsm.add_rule(b, s, currentParsedRegex.char1, currentParsedRegex.char2);
-		}
-		break;
-
-		case regex_item::type_t::ITERATION:
-		{
-			// Cannot iterate nothing:
-			ASSERT_NO_EVAL(it != 0);
-
-			// Insert last->epsilon->empty to not harm processing:
-			state_id s = fsm.generate_state(invalid);
-			fsm.add_rule(newStates.at(newStates.size() - 1)->first, s);
-			newStates.push_back(fsm.m_states.find(s));
-
-			// Register loop:
-			fsm.add_rule(s, newStates[currentParsedRegex.iteration_begin]->first);
-
-			// Register epsilon rule from begin iteration to here to allow skip all the loop:
-			fsm.add_rule(newStates[currentParsedRegex.iteration_begin]->first, s);
-		}
-		break;
-
-		case regex_item::type_t::POSITIVE_ITERATION:
-		{
-			// Cannot iterate nothing:
-			ASSERT_NO_EVAL(it != 0);
-
-			// Insert last->epsilon->empty to not harm processing:
-			state_id s = fsm.generate_state(invalid);
-			fsm.add_rule(newStates.at(newStates.size() - 1)->first, s);
-			newStates.push_back(fsm.m_states.find(s));
-
-			// Register loop:
-			fsm.add_rule(s, newStates[currentParsedRegex.iteration_begin]->first);
-		}
-		break;
-
-		case regex_item::type_t::NUMERIC_ITERATION:
-		{
-			// KTTODO
-		}
-		break;
-
-		default:
-			break;
-		}
+		add_regex(fsm, actual_position, invalid, p_rgx);
 	}
 
-	// Add end rule:
-	fsm.add_rule(newStates.at(newStates.size() - 1)->first, fsmEnd);
+	++p_rgx;
+
+	fsm.add_rule(actual_position, it_end);
+
+	if (iteration)
+	{
+		fsm.add_rule(it_end, it_begin);
+	}
+
+	if (optional)
+	{
+		fsm.add_rule(it_begin, it_end);
+	}
+
+	actual_position = it_end;
+}
+
+
+void builder::add_range(fsm_impl& fsm, state_id& actual_position, context_id invalid, const sys::char_t*& p_rgx) const
+{
+	check_is(p_rgx, TEXT('('));
+
+	++p_rgx;
+	check_end(p_rgx);
+	sys::char_t a = *p_rgx;
+
+	++p_rgx;
+	check_end(p_rgx);
+	sys::char_t b = *p_rgx;
+
+	++p_rgx;
+	check_is(p_rgx, TEXT(')'));
+
+	++p_rgx;
+
+	state_id dest = fsm.generate_state(invalid);
+	fsm.add_rule(actual_position, dest, a, b);
+
+	actual_position = dest;
+}
+
+
+void builder::add_selection(fsm_impl& fsm, state_id& actual_position, context_id invalid, const sys::char_t*& p_rgx) const
+{
+	check_is(p_rgx, TEXT('('));
+	++p_rgx;
+	check_end(p_rgx);
+
+	state_id destination_state = fsm.generate_state(invalid);
+
+	while (*p_rgx != TEXT(')'))
+	{
+		state_id new_state = fsm.generate_state(invalid);
+
+		fsm.add_rule(actual_position, new_state);
+		add_regex(fsm, new_state, invalid, p_rgx);
+		fsm.add_rule(new_state, destination_state);
+	}
+
+	++p_rgx;
+	actual_position = destination_state;
+}
+
+
+void builder::add_regex(fsm_impl& fsm, state_id& actual_position, context_id invalid, const sys::char_t*& p_rgx) const
+{
+	if (get_character(p_rgx))
+	{
+		// Escaped character:
+		add_character(fsm, actual_position, invalid, p_rgx);
+		return;
+	}
+
+	// Handle non escaped character:
+	switch (*p_rgx)
+	{
+	case TEXT('*'): // Iteration
+	{
+		++p_rgx;
+		add_sequence(fsm, actual_position, invalid, p_rgx, /*iteration*/ true, /*optional*/ true);
+		break;
+	}
+
+	case TEXT('+'): // Positive iteration
+	{
+		++p_rgx;
+		add_sequence(fsm, actual_position, invalid, p_rgx, /*iteration*/ true, /*optional*/ false);
+		break;
+	}
+
+	case TEXT('!'): // Optional sequence
+	{
+		++p_rgx;
+		add_sequence(fsm, actual_position, invalid, p_rgx, /*iteration*/ false, /*optional*/ true);
+		break;
+	}
+
+	case TEXT('.'): // Sequence
+	{
+		++p_rgx;
+		add_sequence(fsm, actual_position, invalid, p_rgx, /*iteration*/ false, /*optional*/ false);
+
+		break;
+	}
+
+	case TEXT('?'): // Selection
+	{
+		++p_rgx;
+		add_selection(fsm, actual_position, invalid, p_rgx);
+		break;
+	}
+
+	case TEXT('-'): // Range
+	{
+		++p_rgx;
+		add_range(fsm, actual_position, invalid, p_rgx);
+		break;
+	}
+
+	case TEXT(')'): // Return from recursion:
+	{
+		return;
+	}
+
+	default: // standard character:
+	{
+		add_character(fsm, actual_position, invalid, p_rgx);
+		break;
+	}
+
+	}
+}
+
+void builder::build_fsm_from_regex(fsm_impl& fsm, const sys::string& rgx, context_id valid, context_id invalid) const
+{
+	// Prepare output fsm:
+	state_id fsm_start = fsm.generate_state(invalid);
+	state_id fsm_end = fsm.generate_state(valid);
+	fsm.set_start(fsm_start);
+
+	// Helpers:
+	state_id actual_position = fsm_start;
+
+	// C-string:
+	const sys::char_t* p_rgx = rgx.c_str();
+
+	while (*p_rgx)
+	{
+		add_regex(fsm, actual_position, invalid, p_rgx);
+	}
+
+	fsm.add_rule(actual_position, fsm_end);
 
 	// This fsm can be fully optimized because all generated states are just internal:
 	fsm.optimize(fsm_impl::optimization_level_t::MINIMIZE);
 }
 
 
-builder::regex builder::parse_regex(const sys::char_t*& rgx) const
+bool builder::get_character(const sys::char_t*& ch) const
 {
-	regex outputStack;
-
-	while (*rgx)
+	if (*ch != TEXT('\\'))
 	{
-		sys::char_t c = parse_character(rgx, outputStack);
-
-		switch (c)
-		{
-		case TEXT('['):
-			outputStack.push_back(std::move(parse_range(rgx)));
-			break;
-
-		case TEXT('('):
-		{
-			// KTTODO - comment:
-			regex tmp = parse_regex(++rgx);
-			size_t oldPosition = outputStack.size();
-			outputStack.insert(outputStack.end(), tmp.begin(), tmp.end());
-			size_t newPosition = outputStack.size() - 1;
-			outputStack[newPosition].iteration_begin = oldPosition;
-			break;
-		}
-
-		case TEXT(')'):
-		{
-			++rgx;
-			CheckEnd(rgx);
-			
-			regex_item i;
-			switch (*rgx)
-			{
-			case TEXT('*'):
-				i.type = regex_item::type_t::ITERATION;
-				break;
-
-			case TEXT('+'):
-				i.type = regex_item::type_t::POSITIVE_ITERATION;
-				break;
-			
-			case TEXT('{'):
-				i.type = regex_item::type_t::NUMERIC_ITERATION;
-
-				++rgx;
-				CheckEnd(rgx);
-				i.iteration_count = (*rgx - TEXT('0')); // KTTODO - more numbers
-
-				++rgx;
-				CheckIs(rgx, TEXT('}'));
-				break;
-
-			default:
-				ThrowParsingException(rgx);
-			}
-			++rgx;
-
-			outputStack.push_back(std::move(i));
-
-			return outputStack;
-		}
-
-		default:
-		{
-			regex_item i;
-			i.type = regex_item::type_t::NORMAL;
-			i.char1 = *rgx;
-			outputStack.push_back(std::move(i));
-
-			++rgx;
-			break;
-		}
-
-		}
+		// Simple char:
+		return false;
 	}
 
-	return outputStack;
-}
+	// Escaped character preceded by '\'.
+	++ch;
+	check_end(ch);
 
-
-sys::char_t builder::parse_character(const sys::char_t*& rest, builder::regex& out) const
-{
-	while (*rest == TEXT('\\'))
-	{
-		++rest;
-		CheckEnd(rest);
-
-		// Special character:
-		switch (*rest)
-		{
-		case TEXT('['):
-		case TEXT(']'):
-		case TEXT('('):
-		case TEXT(')'):
-		case TEXT('{'):
-		case TEXT('}'):
-		case TEXT('*'):
-		{
-			regex_item i;
-			i.type = regex_item::type_t::NORMAL;
-			i.char1 = *rest;
-			out.push_back(std::move(i));
-			++rest;
-		}
-		break;
-
-		default:
-			// Wrong special character:
-			ThrowParsingException(rest);
-		}
-	}
-
-	return *rest;
-}
-
-
-builder::regex_item builder::parse_range(const sys::char_t*& rest) const
-{
-	builder::regex_item item;
-	item.type = regex_item::type_t::RANGE;
-
-	// [a-b]
-	ASSERT_NO_EVAL(*rest == TEXT('['));
-
-	++rest;
-	// a-b]
-	CheckEnd(rest);
-	item.char1 = *rest;
-
-	++rest;
-	// -b]
-	CheckIs(rest, TEXT('-'));
-
-	++rest;
-	// b]
-	CheckEnd(rest);
-	item.char2 = *rest;
-
-	++rest;
-	// ]
-	CheckIs(rest, TEXT(']'));
-
-	// 
-	++rest;
-
-	return item;
+	return true;
 }
 
 

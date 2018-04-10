@@ -1,7 +1,8 @@
 *Debug
 *Release
-*.VC.db
+*.db
 *x64
 *x86
 *.vs
 *.ipch
+*.user

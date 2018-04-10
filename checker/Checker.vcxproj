@@ -27,14 +27,18 @@
     <ClCompile Include="checker.cpp" />
     <ClCompile Include="checker_worker.cpp" />
     <ClCompile Include="configurable_fsm_factory.cpp" />
+    <ClCompile Include="intf_impl.cpp" />
     <ClCompile Include="la_cfg_builder.cpp" />
     <ClCompile Include="sa_cfg_builder.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\checker_intf\checker_errors.h" />
+    <ClInclude Include="..\checker_intf\checker_intf.h" />
     <ClInclude Include="checker.h" />
     <ClInclude Include="checker_worker.h" />
     <ClInclude Include="checker_worker_intf.h" />
     <ClInclude Include="configurable_fsm_factory.h" />
+    <ClInclude Include="intf_impl.h" />
     <ClInclude Include="la_cfg_builder.h" />
     <ClInclude Include="la_cfg_builder_intf.h" />
     <ClInclude Include="sa_cfg_builder.h" />

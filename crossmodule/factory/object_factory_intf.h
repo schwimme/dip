@@ -1,10 +1,7 @@
 #pragma once
 
 #include <cstdint>
-
-
-// KTTODO - move else.
-using error_t = int32_t;
+#include <error/error_code_base.h>
 
 
 namespace cross

@@ -55,7 +55,6 @@ void fsm_impl::add_regex(const fsm::state_id& from, cross::string_ref regex, fsm
 	std::shared_ptr<fsm_context_factory_intf> spCtxFactory = std::make_shared<fsm::regex_context_factory>(valid, invalid);
 	fsm_impl regexFsm(spCtxFactory);
 
-	// KTTODO use intf and injection
 	fsm::builder b;
 	b.build_fsm_from_regex(regexFsm, regex_non_crossmodule, valid, invalid);
 

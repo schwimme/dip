@@ -4,6 +4,8 @@
 #include <crossmodule/types/enumerator.h>
 #include <crossmodule/types/backinserter.h>
 
+#include <error/base_error_code.h>
+
 #include <vector>
 
 
@@ -60,10 +62,10 @@ struct std_vector_on_back_inserter:
 		}
 		catch (...)
 		{
-			return 1; // KTTODO - error
+			return E_COMMON;
 		}
 
-		return 0; // KTTODO - no error
+		return E_NO_ERROR;
 	}
 
 	virtual error_t push_back(T&& o) override
@@ -74,10 +76,10 @@ struct std_vector_on_back_inserter:
 		}
 		catch (...)
 		{
-			return 1; // KTTODO - error
+			return E_COMMON;
 		}
 
-		return 0; // KTTODO - no error
+		return E_NO_ERROR;
 	}
 
 	virtual error_t reserve(size_t count) override
@@ -88,10 +90,10 @@ struct std_vector_on_back_inserter:
 		}
 		catch (...)
 		{
-			return 1; // KTTODO - error
+			return E_COMMON;
 		}
 
-		return 0; // KTTODO - no error
+		return E_NO_ERROR;
 	}
 
 private:

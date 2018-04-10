@@ -9,7 +9,6 @@ namespace cross
 {
 
 
-// KTTODO this must have interface because of di.
 struct object_factory:
 	public object_factory_intf
 {

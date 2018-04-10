@@ -20,22 +20,23 @@ error_t object_factory::get_object(const guid_t& id, void ** ppObject) const
 	if (id == GUID_BASE_V1)
 	{
 #if defined BASE_DLL
-		// KTTODO
+		return E_NOT_IMPLEMETED;
 #elif defined BASE_LIB
 		base::base_intf* pIntf = new (std::nothrow) base::base_impl();
 		if (pIntf == nullptr)
 		{
-			return 2; // KTTODO - no memory
+			return E_MEMORY;
 		}
 
 		*ppObject = (void*)pIntf;
-		return 0; // KTTODO - no error
+		return E_NO_ERROR;
 #else /*BASE_NONE*/
-		return 3; // KTTODO - not implemented
+		return E_NOT_IMPLEMENTED;
+
 #endif
 	}
 
-	return 1; // KTTODO - unknown guid
+	return E_NOT_IMPLEMENTED;
 }
 
 

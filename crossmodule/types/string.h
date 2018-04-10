@@ -15,7 +15,7 @@ struct string_ref
 	template<size_t N>
 	string_ref(const sys::char_t (&data)[N]):
 		m_data(data),
-		m_size(N)
+		m_size(N - 1)
 	{}
 
 	string_ref(const sys::char_t * const data, size_t size):

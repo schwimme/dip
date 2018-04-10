@@ -1,8 +1,9 @@
 #include "checker.h"
 #include <iostream> // KTTODO - probably remove
 #include "configurable_fsm_factory.h"
-#include "crossmodule\adapters\basestring.h"
-#include "crossmodule\adapters\vector.h"
+#include <crossmodule/adapters/basestring.h>
+#include <crossmodule/adapters/vector.h>
+#include <checker_intf/checker_errors.h>
 
 namespace checker
 {
@@ -51,9 +52,10 @@ void checker_impl::configure_fsm(const sys::string& la_cfg_path)
 		= std::make_shared<configurable_fsm_ctx_factory>(spCfg->m_priorityGroups);
 
 	std::shared_ptr<base::fsm_intf> spFsm;
-	if (m_spBase->create_fsm(spFsm, spCtxFactory) != 0) // KTTODO errors
+	error_t errorCode = m_spBase->create_fsm(spFsm, spCtxFactory);
+	if (FAILED(errorCode))
 	{
-		throw "KTTODO - error";
+		throw checker::exception("Failed to get fsm from base", errorCode);
 	}
 
 	base::fsm::state_id idleState = spFsm->generate_state(configurable_fsm_ctx_factory::INVALID_CTX);
@@ -74,9 +76,10 @@ void checker_impl::configure_pda(const sys::string& sa_cfg_path)
 	std::shared_ptr<sa_cfg> spCfg = spCfgBuilder->build(sa_cfg_path);
 
 	base::pda_intf* pPda = nullptr;
-	if (m_spBase->create_pda(pPda) != 0) // KTTODO errors
+	error_t errorCode = m_spBase->create_pda(pPda);
+	if (FAILED(errorCode))
 	{
-		throw "KTTODO - error";
+		throw checker::exception("Failed to get pda from base", errorCode);
 	}
 	std::shared_ptr<base::pda_intf> spPda(pPda); // KTTODO - sp attacher
 
@@ -97,9 +100,10 @@ void checker_impl::prepare_base()
 	m_spFactory = create_object_factory();
 
 	void* pBase;
-	if (m_spFactory->get_object(cross::GUID_BASE_V1, &pBase) != 0) // KTTODO error
+	error_t errorCode = m_spFactory->get_object(cross::GUID_BASE_V1, &pBase);
+	if (FAILED(errorCode))
 	{
-		throw ""; // KTTODO exception
+		throw checker::exception("Failed to get base", errorCode);
 	}
 	m_spBase.reset((base::base_intf*)pBase);
 }

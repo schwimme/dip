@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Header Files\intf">
+      <UniqueIdentifier>{75fd7fbd-1d5e-42b3-8673-e96461a85045}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="checker.cpp">
@@ -24,6 +27,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="configurable_fsm_factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intf_impl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,6 +56,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="configurable_fsm_factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\checker_intf\checker_intf.h">
+      <Filter>Header Files\intf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\checker_intf\checker_errors.h">
+      <Filter>Header Files\intf</Filter>
+    </ClInclude>
+    <ClInclude Include="intf_impl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

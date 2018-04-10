@@ -18,7 +18,7 @@ namespace checker
 {
 
 
-class checker_impl: // KTTODO - checker_intf
+class checker_impl:
 	public accident_handler,
 	protected cross::object_factory::factory,
 	protected la_cfg_builder::factory,

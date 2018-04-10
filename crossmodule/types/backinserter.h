@@ -1,13 +1,12 @@
 #pragma once
 
 #include <cstdint>
+#include <error/error_code_base.h>
+
 
 namespace cross
 {
 
-
-// KTTODO - move else.
-using error_t = int32_t;
 
 template<typename T>
 struct back_inserter
