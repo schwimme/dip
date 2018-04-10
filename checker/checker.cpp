@@ -5,6 +5,9 @@
 #include <crossmodule/adapters/vector.h>
 #include <checker_intf/checker_errors.h>
 
+#include <error/exceptions.h>
+
+
 namespace checker
 {
 
@@ -55,7 +58,7 @@ void checker_impl::configure_fsm(const sys::string& la_cfg_path)
 	error_t errorCode = m_spBase->create_fsm(spFsm, spCtxFactory);
 	if (FAILED(errorCode))
 	{
-		throw checker::exception("Failed to get fsm from base", errorCode);
+		throw exception_t("Failed to get fsm from base", errorCode);
 	}
 
 	base::fsm::state_id idleState = spFsm->generate_state(configurable_fsm_ctx_factory::INVALID_CTX);
@@ -79,7 +82,7 @@ void checker_impl::configure_pda(const sys::string& sa_cfg_path)
 	error_t errorCode = m_spBase->create_pda(pPda);
 	if (FAILED(errorCode))
 	{
-		throw checker::exception("Failed to get pda from base", errorCode);
+		throw exception_t("Failed to get pda from base", errorCode);
 	}
 	std::shared_ptr<base::pda_intf> spPda(pPda); // KTTODO - sp attacher
 
@@ -103,7 +106,7 @@ void checker_impl::prepare_base()
 	error_t errorCode = m_spFactory->get_object(cross::GUID_BASE_V1, &pBase);
 	if (FAILED(errorCode))
 	{
-		throw checker::exception("Failed to get base", errorCode);
+		throw exception_t("Failed to get base", errorCode);
 	}
 	m_spBase.reset((base::base_intf*)pBase);
 }

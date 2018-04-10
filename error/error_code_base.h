@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 
 using error_t = int32_t;
 
@@ -32,5 +33,8 @@ static const error_t E_MEMORY_ERROR          = detail::mask::severity::ERROR | 0
 static const error_t E_NOT_IMPLEMENTED_ERROR = detail::mask::severity::ERROR | 0x00000003;
 
 
-bool FAILED(error_t e) { return (e & detail::mask::severity::ERROR) == detail::mask::severity::ERROR; }
-bool SUCCEEDED(error_t e) { return !FAILED(e); }
+namespace
+{
+	bool FAILED(error_t e) { return (e & detail::mask::severity::ERROR) == detail::mask::severity::ERROR; }
+	bool SUCCEEDED(error_t e) { return !FAILED(e); }
+}

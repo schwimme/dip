@@ -4,7 +4,7 @@
 #include <crossmodule/types/enumerator.h>
 #include <crossmodule/types/backinserter.h>
 
-#include <error/base_error_code.h>
+#include <error/error_code_base.h>
 
 #include <vector>
 
