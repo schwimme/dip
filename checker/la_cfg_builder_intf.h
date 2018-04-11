@@ -6,7 +6,7 @@
 #include "configurable_fsm_factory.h"
 
 
-namespace checker
+namespace checklib
 {
 
 

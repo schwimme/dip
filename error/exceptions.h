@@ -1,6 +1,8 @@
 #pragma once
 
 
+#include "error_code_base.h"
+
 #include <sys/types/string.h>
 
 

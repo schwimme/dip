@@ -21,7 +21,11 @@ public:
 		}
 	};
 
-	virtual error_t get_object(const guid_t& id, void ** ppObject) const override;
+	virtual error_t get_object(const guid_t& id, void ** ppObject) override;
+
+private:
+	error_t get_base(void** ppObject, uint32_t version);
+	error_t get_checker(void** ppObject, uint32_t version);
 };
 
 

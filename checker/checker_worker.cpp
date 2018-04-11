@@ -1,6 +1,6 @@
 #include "checker_worker.h"
 
-namespace checker
+namespace checklib
 {
 
 sys::string worker::read_file_content() const

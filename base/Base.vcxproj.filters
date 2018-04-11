@@ -3,6 +3,7 @@
   <ItemGroup>
     <ClInclude Include="base.h" />
     <ClInclude Include="base_intf.h" />
+    <ClInclude Include="..\base_intf\base_errors.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base.cpp" />

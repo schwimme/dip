@@ -1,7 +1,7 @@
 #include "sa_cfg_builder.h"
 #include <sys/debugging/debug.h>
 
-namespace checker
+namespace checklib
 {
 
 

@@ -1,9 +1,9 @@
 #pragma once
 
-
-#include <cstdint>
-
 #include <crossmodule/types/pointer.h>
+#include <crossmodule/types/query.h>
+
+#include <error/error_code_base.h>
 
 
 // Interfaces:
@@ -12,15 +12,13 @@
 #include <base_intf/PushDownAutomata/pda_intf.h>
 
 
-// KTTODO - move else.
-using error_t = int32_t;
 
 
 namespace base
 {
 
 
-struct base_intf
+struct base_intf // KTTODO - query
 {
 	virtual error_t create_fsm(std::shared_ptr<fsm_intf>& spFsm) noexcept = 0;
 	virtual error_t create_fsm(std::shared_ptr<fsm_intf>& spFsm, std::shared_ptr<fsm_context_factory_intf> spFactory) noexcept = 0;

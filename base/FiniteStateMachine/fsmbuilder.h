@@ -5,6 +5,11 @@
 #include <base_intf/FiniteStateMachine/fsmdefs.h>
 #include <sys/types/string.h>
 
+
+#include <error/exceptions.h>
+#include <base_intf/base_errors.h>
+
+
 namespace base
 {
 
@@ -15,12 +20,6 @@ class fsm_impl;
 namespace fsm
 {
 
-/*
-	KTTODO - for start only simple regex is supported:
-	e.g.
-	[a-z]{3}(ab)*
-	Completly adding unix regex has to be implemented in future.
-*/
 
 class builder
 {
@@ -32,7 +31,7 @@ protected:
 	{
 		if (*rest == 0)
 		{
-			throw "KTTODO";
+			throw exception_t(E_BASE_UNEXPECTED_END_OF_FILE_ERROR);
 		}
 	}
 
@@ -40,13 +39,8 @@ protected:
 	{
 		if (*rest != expected)
 		{
-			throw "KTTODO";
+			throw exception_t(E_BASE_UNEXPECTED_TOKEN_ERROR);
 		}
-	}
-
-	void throw_parse_error(const sys::char_t* rest) const
-	{
-		throw "KTTODO";
 	}
 
 	bool get_character(const sys::char_t*& ch) const;

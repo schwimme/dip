@@ -7,7 +7,7 @@
 #include <memory>
 #include <vector>
 
-namespace checker
+namespace checklib
 {
 
 

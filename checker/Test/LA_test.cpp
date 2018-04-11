@@ -32,11 +32,11 @@ enum TOKEN
 };
 
 struct la_builder_fake:
-	checker::la_cfg_builder_intf
+	checklib::la_cfg_builder_intf
 {
-	virtual std::shared_ptr<checker::la_cfg> build(const sys::string& path) const override
+	virtual std::shared_ptr<checklib::la_cfg> build(const sys::string& path) const override
 	{
-		auto cfg = std::make_shared<checker::la_cfg>();
+		auto cfg = std::make_shared<checklib::la_cfg>();
 
 		cfg->m_tokens =
 		{
@@ -65,11 +65,11 @@ struct la_builder_fake:
 };
 
 struct sa_builder_fake:
-	checker::sa_cfg_builder_intf
+	checklib::sa_cfg_builder_intf
 {
-	virtual std::shared_ptr<checker::sa_cfg> build(const sys::string& path) const override
+	virtual std::shared_ptr<checklib::sa_cfg> build(const sys::string& path) const override
 	{
-		auto cfg = std::make_shared<checker::sa_cfg>();
+		auto cfg = std::make_shared<checklib::sa_cfg>();
 
 		cfg->m_rules =
 		{
@@ -90,10 +90,10 @@ struct sa_builder_fake:
 };
 
 struct checker_worker_fake:
-	checker::worker
+	checklib::worker
 {
-	checker_worker_fake(std::shared_ptr<base::fsm_walker_intf> spFsmWalker, std::shared_ptr<base::pda_walker_intf> spPdaWalker, checker::accident_handler& handler) :
-		checker::worker(spFsmWalker, spPdaWalker, handler)
+	checker_worker_fake(std::shared_ptr<base::fsm_walker_intf> spFsmWalker, std::shared_ptr<base::pda_walker_intf> spPdaWalker, checklib::accident_handler& handler) :
+		checklib::worker(spFsmWalker, spPdaWalker, handler)
 	{}
 
 	virtual sys::string read_file_content() const override
@@ -103,19 +103,19 @@ struct checker_worker_fake:
 };
 
 struct test_checker :
-	public checker::checker_impl
+	public checklib::checker_impl
 {
-	virtual std::shared_ptr<checker::la_cfg_builder_intf> create_la_cfg_builder() const override
+	virtual std::shared_ptr<checklib::la_cfg_builder_intf> create_la_cfg_builder() const override
 	{
 		return std::make_shared<la_builder_fake>();
 	}
 
-	virtual std::shared_ptr<checker::sa_cfg_builder_intf> create_sa_cfg_builder() const override
+	virtual std::shared_ptr<checklib::sa_cfg_builder_intf> create_sa_cfg_builder() const override
 	{
 		return std::make_shared<sa_builder_fake>();
 	}
 
-	virtual std::shared_ptr<checker::worker_intf> create_worker(std::shared_ptr<base::fsm_walker_intf> spFsmWalker, std::shared_ptr<base::pda_walker_intf> spPdaWalker, accident_handler& handler) const override
+	virtual std::shared_ptr<checklib::worker_intf> create_worker(std::shared_ptr<base::fsm_walker_intf> spFsmWalker, std::shared_ptr<base::pda_walker_intf> spPdaWalker, accident_handler& handler) const override
 	{
 		return std::make_shared<checker_worker_fake>(spFsmWalker, spPdaWalker, handler);
 	}

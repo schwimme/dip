@@ -4,7 +4,7 @@
 #include "la_cfg_builder_intf.h"
 
 
-namespace checker
+namespace checklib
 {
 
 

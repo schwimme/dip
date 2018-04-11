@@ -4,7 +4,7 @@
 #include <sys/algorithm/algorithm.h>
 
 
-namespace checker
+namespace checklib
 {
 
 

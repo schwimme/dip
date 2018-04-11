@@ -6,7 +6,7 @@
 #include <memory>
 
 
-namespace checker
+namespace checklib
 {
 
 

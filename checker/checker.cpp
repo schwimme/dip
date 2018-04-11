@@ -8,7 +8,7 @@
 #include <error/exceptions.h>
 
 
-namespace checker
+namespace checklib
 {
 
 void checker_impl::configure(const sys::string& la_cfg_path, const sys::string& sa_cfg_path)

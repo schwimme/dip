@@ -4,7 +4,7 @@
 #include <sys/types/string.h>
 
 
-namespace checker
+namespace checklib
 {
 
 struct accident_info

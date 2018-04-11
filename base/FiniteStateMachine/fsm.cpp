@@ -71,11 +71,11 @@ void fsm_impl::add_regex(const fsm::state_id& from, cross::string_ref regex, fsm
 
 void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to, sys::char_t a, sys::char_t b)
 {
-	// KTTODO - optimize this using ranges (should be done after UT to be sure, optimization doesnt break anything).
 	do
 	{
 		add_rule(from, to, a);
-	} while (a++ != b);
+	}
+	while (a++ != b);
 }
 
 
@@ -244,26 +244,6 @@ sys::string fsm_impl::dump() const
 	sys::string out;
 
 	// KTTODO
-//	// For all states:
-//	for (const auto& state : m_states)
-//	{
-//		const base::string& beginState = (state.first + TEXT('(') + base::to_string(get_context(state.first)) + TEXT(')'));
-//
-//		// For all characters in rule:
-//		for (const auto& character : state.second->m_rules)
-//		{
-//			// For all destination states:
-//			for (const auto& destState : character.second)
-//			{
-//				out += beginState;
-//				out += TEXT("--");
-//				out += ((character.first == fsm::detail::EPSILON) ? TEXT('_') : character.first);
-//				out += TEXT("->");
-//				out += (destState + TEXT('(') + base::to_string(get_context(destState)) + TEXT(')'));
-//				out += TEXT('\n');
-//			}
-//		}
-//	}
 
 	return out;
 }

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\base_intf\base_errors.h" />
     <ClInclude Include="base.h" />
     <ClInclude Include="base_intf.h" />
   </ItemGroup>

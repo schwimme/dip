@@ -1,5 +1,7 @@
 #include "base.h"
 
+#include <error/exceptions.h>
+
 // Implementations:
 #include <base/FiniteStateMachine/fsm.h>
 #include <base/PushDownAutomata/pda_intf_impl.h>
@@ -14,11 +16,15 @@ error_t base_impl::create_fsm(std::shared_ptr<fsm_intf>& spFsm) noexcept
 	try
 	{
 		spFsm = fsm_impl::factory().create_finite_state_machine();
-		return 0; // KTTODO - no error
+		return E_NO_ERROR;
+	}
+	catch (const exception_t& e)
+	{
+		return e.m_code;
 	}
 	catch (...)
 	{
-		return 1; // KTTODO - failed
+		return E_COMMON_ERROR;
 	}
 }
 
@@ -28,11 +34,15 @@ error_t base_impl::create_fsm(std::shared_ptr<fsm_intf>& spFsm, std::shared_ptr<
 	try
 	{
 		spFsm = fsm_impl::factory().create_finite_state_machine(spFactory);
-		return 0; // KTTODO - no error
+		return E_NO_ERROR;
+	}
+	catch (const exception_t& e)
+	{
+		return e.m_code;
 	}
 	catch (...)
 	{
-		return 1; // KTTODO - failed
+		return E_COMMON_ERROR;
 	}
 }
 
@@ -46,14 +56,18 @@ error_t base_impl::create_pda(cross::versioned_intf_ref<base::pda_intf> pPda) no
 		{
 			// Successfully attached, do not delete object:
 			up.release();
-			return 0; // KTTODO - no error
+			return E_NO_ERROR;
 		}
 
-		return 1; // KTTODO - error;
+		return E_NOT_IMPLEMENTED_ERROR;
+	}
+	catch (const exception_t& e)
+	{
+		return e.m_code;
 	}
 	catch (...)
 	{
-		return 1; // KTTODO - failed
+		return E_COMMON_ERROR;
 	}
 }
 

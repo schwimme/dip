@@ -4,7 +4,7 @@
 #include <base_intf/FiniteStateMachine/fsmcontextfactory_intf.h>
 #include <vector>
 
-namespace checker
+namespace checklib
 {
 
 // KTTODO move else:

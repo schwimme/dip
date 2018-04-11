@@ -31,6 +31,7 @@ static const error_t E_NO_ERROR                                              = 0
 static const error_t E_COMMON_ERROR          = detail::mask::severity::ERROR | 0x00000001;
 static const error_t E_MEMORY_ERROR          = detail::mask::severity::ERROR | 0x00000002;
 static const error_t E_NOT_IMPLEMENTED_ERROR = detail::mask::severity::ERROR | 0x00000003;
+static const error_t E_INTF_NOT_FOUND_ERROR  = detail::mask::severity::ERROR | 0x00000004; // KTTODO - cross error?
 
 
 namespace

@@ -84,7 +84,6 @@ protected:
 private:
 	void initialize();
 
-	// KTTODO - move to fsm optimizier:
 	void optimize(optimization_level_t level);
 	void remove_epsilon_rules();
 	bool remove_epsilon_rules_impl(fsm::state::holder& pState);
@@ -96,7 +95,7 @@ private:
 	states_storage_t							m_states;			// All states in fsm.
 	std::shared_ptr<fsm_context_factory_intf>	m_spContextFactory;	// Injected ctx factory.
 
-	bool			m_optimized;	// After optimization fsm became readonly. KTTODO - Use local optimized copy to remove readonly property.
+	bool			m_optimized;
 	fsm::state_id	m_start;		// Id of start state.
 
 // All FSM manipulators:

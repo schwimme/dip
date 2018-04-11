@@ -14,7 +14,7 @@
 #include <mutex>
 
 
-namespace checker
+namespace checklib
 {
 
 
