@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="debug_dynamic|Win32">
+      <Configuration>debug_dynamic</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug_dynamic|x64">
+      <Configuration>debug_dynamic</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug_static|Win32">
+      <Configuration>debug_static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug_static|x64">
+      <Configuration>debug_static</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_dynamic|Win32">
+      <Configuration>release_dynamic</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_dynamic|x64">
+      <Configuration>release_dynamic</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_static|Win32">
+      <Configuration>release_static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_static|x64">
+      <Configuration>release_static</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="base_loader.h" />
+    <ClInclude Include="base_loader_intf.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="base_loader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\base\Base.vcxproj" Condition="'$(Configuration)'=='debug_static'">
+      <Project>{222fcebf-90bc-49c1-87ce-12829b04c9e3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\base\Base.vcxproj" Condition="'$(Configuration)'=='release_static'">
+      <Project>{222fcebf-90bc-49c1-87ce-12829b04c9e3}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7C6F1A0E-43FA-4F46-8625-992B3AD1E85F}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>base_loader</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='debug_static|Win32'">
+    <PlatformToolset>v140</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='debug_static|x64'">
+    <PlatformToolset>v140</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='debug_dynamic|Win32'">
+    <PlatformToolset>v140</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_dynamic|Win32'" Label="Configuration">
+    <PlatformToolset>v140</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_static|Win32'" Label="Configuration">
+    <PlatformToolset>v140</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='debug_dynamic|x64'">
+    <PlatformToolset>v140</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_dynamic|x64'" Label="Configuration">
+    <PlatformToolset>v140</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_static|x64'" Label="Configuration">
+    <PlatformToolset>v140</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_dynamic|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions);BASE_DLL</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_dynamic|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions);BASE_DLL</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_static|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions);BASE_LIB</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_static|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions);BASE_LIB</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_dynamic|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions);BASE_DLL</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_static|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions);BASE_LIB</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_dynamic|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions);BASE_DLL</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_static|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions);BASE_LIB</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

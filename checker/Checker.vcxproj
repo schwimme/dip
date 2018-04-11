@@ -19,11 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\crossmodule\crossmodule.vcxproj">
-      <Project>{d27cb579-1006-4814-adca-85d2f8f10580}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="checker.cpp" />
     <ClCompile Include="checker_worker.cpp" />
     <ClCompile Include="checklib.cpp" />
@@ -46,6 +41,11 @@
     <ClInclude Include="la_cfg_builder_intf.h" />
     <ClInclude Include="sa_cfg_builder.h" />
     <ClInclude Include="sa_cfg_builder_intf.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\base_loader\base_loader.vcxproj">
+      <Project>{7c6f1a0e-43fa-4f46-8625-992b3ad1e85f}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A7BCAE97-6347-4F2E-B5A5-E854E219B47F}</ProjectGuid>
@@ -107,7 +107,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;BASE_LIB;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
@@ -122,6 +122,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -129,7 +130,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -151,6 +152,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

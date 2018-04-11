@@ -100,15 +100,12 @@ void checker_impl::configure_pda(const sys::string& sa_cfg_path)
 
 void checker_impl::prepare_base()
 {
-	m_spFactory = create_object_factory();
+	m_spBaseLoader = create_base_loader();
 
-	void* pBase;
-	error_t errorCode = m_spFactory->get_object(cross::GUID_BASE_V1, &pBase);
-	if (FAILED(errorCode))
-	{
-		throw exception_t("Failed to get base", errorCode);
-	}
-	m_spBase.reset((base::base_intf*)pBase);
+	base::base_intf* pBase = nullptr;
+	m_spBaseLoader->get_base(pBase);
+
+	m_spBase.reset(pBase);
 }
 
 

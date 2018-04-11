@@ -13,7 +13,7 @@ base::fsm::context_id configurable_fsm_ctx_factory::select_context(cross::enumer
 	// Extract vector from cross module safe type:
 	std::vector<base::fsm::context_id> all_ctxs_without_invalid;
 	const base::fsm::context_id* iter = nullptr;
-	while (iter = allContexts->get())
+	while ((iter = allContexts->get()) != nullptr)
 	{
 		if (*iter != INVALID_CTX)
 		{

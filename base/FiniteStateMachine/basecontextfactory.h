@@ -22,7 +22,7 @@ public:
 	virtual fsm::context_id select_context(cross::enumerator<fsm::context_id>* const allContexts) const override
 	{
 		fsm::context_id const* pCtx = nullptr;
-		while (pCtx = allContexts->get())
+		while ((pCtx = allContexts->get()) != nullptr)
 		{
 			if (*pCtx == VALID)
 			{

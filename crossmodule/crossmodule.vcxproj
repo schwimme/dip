@@ -24,17 +24,11 @@
     <ClInclude Include="adapters\vector.h" />
     <ClInclude Include="counter\countable.h" />
     <ClInclude Include="counter\counter.h" />
-    <ClInclude Include="factory\detail\build_checker.h" />
-    <ClInclude Include="factory\objectfactory.h" />
-    <ClInclude Include="factory\object_factory_intf.h" />
     <ClInclude Include="types\backinserter.h" />
     <ClInclude Include="types\enumerator.h" />
     <ClInclude Include="types\pointer.h" />
     <ClInclude Include="types\query.h" />
     <ClInclude Include="types\string.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="factory\objectfactory.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D27CB579-1006-4814-ADCA-85D2F8F10580}</ProjectGuid>
@@ -94,9 +88,9 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;BASE_NONE;CHECKER_NONE;CCC_NONE;CCC_NONE_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;CCC_NONE_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -110,6 +104,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -117,13 +112,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;BASE_NONE;CHECKER_NONE;CCC_NONE;CCC_NONENDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;CCC_NONENDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -141,6 +136,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(DIP_SOURCE_DIR)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

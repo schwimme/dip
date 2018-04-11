@@ -35,7 +35,7 @@ error_t intf_impl::check(cross::enumerator<cross::string_ref>* pFiles)
 		std::list<sys::string> v;
 
 		const cross::string_ref* p_str;
-		while (p_str = pFiles->get())
+		while ((p_str = pFiles->get()) != nullptr)
 		{
 			sys::string s(p_str->m_data, p_str->m_size);
 			v.push_back(std::move(s));

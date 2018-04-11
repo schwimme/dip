@@ -36,6 +36,7 @@ struct la_builder_fake:
 {
 	virtual std::shared_ptr<checklib::la_cfg> build(const sys::string& path) const override
 	{
+		m_build_path = path;
 		auto cfg = std::make_shared<checklib::la_cfg>();
 
 		cfg->m_tokens =
@@ -62,6 +63,9 @@ struct la_builder_fake:
 
 		return cfg;
 	}
+
+	mutable sys::string m_build_path;
+	std::shared_ptr<checklib::la_cfg> m_build_rv;
 };
 
 struct sa_builder_fake:

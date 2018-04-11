@@ -15,7 +15,7 @@ class configurable_fsm_ctx_factory :
 	public base::fsm_context_factory_intf
 {
 public:
-	static const base::fsm::context_id INVALID_CTX = -1;
+	static const base::fsm::context_id INVALID_CTX = (base::fsm::context_id)-1;
 
 public:
 	configurable_fsm_ctx_factory(const std::vector<std::vector<token_id>>& priorities):

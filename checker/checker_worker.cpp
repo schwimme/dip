@@ -7,7 +7,6 @@ sys::string worker::read_file_content() const
 {
 	//KTTODO  - impl : currently just faked:
 	throw "Not implemented";
-	return sys::string();
 }
 
 

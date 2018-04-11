@@ -7,9 +7,6 @@
     <Filter Include="adapters">
       <UniqueIdentifier>{679cfe90-6a35-4593-9dcd-bc0f40671ce1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="factory">
-      <UniqueIdentifier>{1d493ad0-7544-4165-a2c1-b712b20c2318}</UniqueIdentifier>
-    </Filter>
     <Filter Include="counter">
       <UniqueIdentifier>{fbec6c48-db55-4930-a8b5-389eb8def86a}</UniqueIdentifier>
     </Filter>
@@ -20,9 +17,6 @@
     </ClInclude>
     <ClInclude Include="adapters\basestring.h">
       <Filter>adapters</Filter>
-    </ClInclude>
-    <ClInclude Include="factory\objectfactory.h">
-      <Filter>factory</Filter>
     </ClInclude>
     <ClInclude Include="types\enumerator.h">
       <Filter>types</Filter>
@@ -48,16 +42,5 @@
     <ClInclude Include="counter\countable.h">
       <Filter>counter</Filter>
     </ClInclude>
-    <ClInclude Include="factory\object_factory_intf.h">
-      <Filter>factory</Filter>
-    </ClInclude>
-    <ClInclude Include="factory\detail\build_checker.h">
-      <Filter>factory</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="factory\objectfactory.cpp">
-      <Filter>factory</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
