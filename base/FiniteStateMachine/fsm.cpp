@@ -28,8 +28,8 @@ void fsm_impl::initialize()
 void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to)
 {
 	ASSERT_NO_EVAL(m_optimized == false);
-	ASSERT_NO_EVAL(sys::find(m_states, from));
-	ASSERT_NO_EVAL(sys::find(m_states, to));
+	ASSERT_NO_EVAL(m_states.find(from) != m_states.end());
+	ASSERT_NO_EVAL(m_states.find(to) != m_states.end());
 
 	if (from != to)
 	{
@@ -41,9 +41,9 @@ void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to)
 void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to, sys::char_t ch)
 {
 	ASSERT_NO_EVAL(m_optimized == false);
-	ASSERT_NO_EVAL(ch != Fsm::detail::EPSILON);
-	ASSERT_NO_EVAL(sys::find(m_states, from));
-	ASSERT_NO_EVAL(sys::find(m_states, to));
+	ASSERT_NO_EVAL(ch != fsm::detail::EPSILON);
+	ASSERT_NO_EVAL(m_states.find(from) != m_states.end());
+	ASSERT_NO_EVAL(m_states.find(to) != m_states.end());
 
 	m_states[from]->add_rule(to, ch);
 }
@@ -82,7 +82,7 @@ void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to, sys:
 void fsm_impl::set_start(const fsm::state_id& state)
 {
 	ASSERT_NO_EVAL(m_optimized == false);
-	ASSERT_NO_EVAL(m_start.empty());
+	ASSERT_NO_EVAL(m_start != -1);
 
 	m_start = state;
 }

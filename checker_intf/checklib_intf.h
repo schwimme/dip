@@ -3,7 +3,7 @@
 #include <crossmodule/types/pointer.h>
 #include <crossmodule/types/query.h>
 
-#include <error/error_code_base.h>
+#include "checker_errors.h"
 
 // Interfaces:
 #include <checker_intf/checker_intf.h>

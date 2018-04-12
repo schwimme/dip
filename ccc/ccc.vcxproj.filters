@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="intf">
+      <UniqueIdentifier>{78cf1ab9-547a-4faa-84ca-2183ae9bf4b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="checking_module">
+      <UniqueIdentifier>{3079765c-8f92-4cba-a625-88a2926fef26}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\ccc_intf\ccc_errors.h">
+      <Filter>intf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ccc_intf\ccc_intf.h">
+      <Filter>intf</Filter>
+    </ClInclude>
+    <ClInclude Include="ccc_impl.h" />
+    <ClInclude Include="..\ccc_intf\ccc_accident_handler.h">
+      <Filter>intf</Filter>
+    </ClInclude>
+    <ClInclude Include="checking_module\intf_impl.h">
+      <Filter>checking_module</Filter>
+    </ClInclude>
+    <ClInclude Include="checking_module\impl.h">
+      <Filter>checking_module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ccc_intf\ccc_checking_module_intf.h">
+      <Filter>intf</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ccc_impl.cpp" />
+    <ClCompile Include="checking_module\intf_impl.cpp">
+      <Filter>checking_module</Filter>
+    </ClCompile>
+    <ClCompile Include="checking_module\impl.cpp">
+      <Filter>checking_module</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

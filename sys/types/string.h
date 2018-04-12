@@ -14,7 +14,7 @@ using string = std::basic_string<char_t>;
 template<typename T>
 string to_string(const T& e)
 {
-#ifdef USING_UNICODE
+#ifdef USING_WIDE_CHAR
 	return std::to_wstring(e);
 #else
 	return std::to_string(e);

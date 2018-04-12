@@ -9,19 +9,19 @@ namespace cross
 {
 
 
-struct base_string_on_string_ref:
+struct sys_string_on_string_ref:
 	string_ref
 {
-	base_string_on_string_ref(const sys::string& s):
+	sys_string_on_string_ref(const sys::string& s):
 		string_ref(s.data(), s.size())
 	{}
 };
 
 
-struct base_string_settable_string_ref:
+struct sys_string_settable_string_ref:
 	settable_string_ref
 {
-	base_string_settable_string_ref(sys::string& s):
+	sys_string_settable_string_ref(sys::string& s):
 		m_string(&s)
 	{}
 
@@ -34,5 +34,10 @@ private:
 	sys::string* m_string;
 };
 
+
+sys::string to_sys_string(string_ref r)
+{
+	return sys::string(r.m_data, r.m_size);
+}
 
 }

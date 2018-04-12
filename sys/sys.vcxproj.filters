@@ -16,6 +16,9 @@
     <Filter Include="algorithm">
       <UniqueIdentifier>{f89322e3-eaa4-4ec1-a7dc-dd4d8c845824}</UniqueIdentifier>
     </Filter>
+    <Filter Include="event_distributor">
+      <UniqueIdentifier>{fb790bb1-47f9-4291-8006-6cb68d12ba0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="types\string.h">
@@ -38,6 +41,12 @@
     </ClInclude>
     <ClInclude Include="algorithm\algorithm.h">
       <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="event_distributor\registrator_intf.h">
+      <Filter>event_distributor</Filter>
+    </ClInclude>
+    <ClInclude Include="event_distributor\event_distributor.h">
+      <Filter>event_distributor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

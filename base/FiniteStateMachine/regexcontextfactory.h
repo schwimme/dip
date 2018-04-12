@@ -24,7 +24,7 @@ struct regex_context_factory:
 	virtual fsm::context_id select_context(cross::enumerator<fsm::context_id>* const allContexts) const override
 	{
 		fsm::context_id const* id = nullptr;
-		while (id = allContexts->get())
+		while ((id = allContexts->get()) != nullptr)
 		{
 			if (*id == m_valid)
 			{

@@ -96,7 +96,7 @@ private:
 	std::shared_ptr<fsm_context_factory_intf>	m_spContextFactory;	// Injected ctx factory.
 
 	bool			m_optimized;
-	fsm::state_id	m_start;		// Id of start state.
+	fsm::state_id	m_start = (fsm::state_id)-1;		// Id of start state.
 
 // All FSM manipulators:
 	friend class fsm::builder;

@@ -1,5 +1,4 @@
 #include "checker.h"
-#include <iostream> // KTTODO - probably remove
 #include "configurable_fsm_factory.h"
 #include <crossmodule/adapters/basestring.h>
 #include <crossmodule/adapters/vector.h>
@@ -58,7 +57,7 @@ void checker_impl::configure_fsm(const sys::string& la_cfg_path)
 	error_t errorCode = m_spBase->create_fsm(spFsm, spCtxFactory);
 	if (FAILED(errorCode))
 	{
-		throw exception_t("Failed to get fsm from base", errorCode);
+		throw exception_t(TEXT("Failed to get fsm from base"), errorCode);
 	}
 
 	base::fsm::state_id idleState = spFsm->generate_state(configurable_fsm_ctx_factory::INVALID_CTX);
@@ -82,7 +81,7 @@ void checker_impl::configure_pda(const sys::string& sa_cfg_path)
 	error_t errorCode = m_spBase->create_pda(pPda);
 	if (FAILED(errorCode))
 	{
-		throw exception_t("Failed to get pda from base", errorCode);
+		throw exception_t(TEXT("Failed to get pda from base"), errorCode);
 	}
 	std::shared_ptr<base::pda_intf> spPda(pPda); // KTTODO - sp attacher
 
@@ -112,7 +111,7 @@ void checker_impl::prepare_base()
 void checker_impl::on_accident(const accident_info& info)
 {
 	std::lock_guard<std::mutex> l(m_print_mutex);
-	std::cout << "[ACCIDENT] " << info.file << " " << info.line << ":" << info.col << " - " << info.errDesc << "\n";
+	// KTTODO
 }
 
 
