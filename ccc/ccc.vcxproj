@@ -42,11 +42,19 @@
     <ClInclude Include="ccc_impl.h" />
     <ClInclude Include="checking_module\impl.h" />
     <ClInclude Include="checking_module\intf_impl.h" />
+    <ClInclude Include="configuration_builder\configuration_builder.h" />
+    <ClInclude Include="configuration_builder\configuration_builder_intf.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ccc_impl.cpp" />
     <ClCompile Include="checking_module\impl.cpp" />
     <ClCompile Include="checking_module\intf_impl.cpp" />
+    <ClCompile Include="configuration_builder\configuration_builder.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\checklib_loader\checklib_loader.vcxproj">
+      <Project>{22c943b3-a1c2-415e-bdb6-deee0b96d477}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{48AC2ADE-4399-4E0B-B3AD-2A03C174CE73}</ProjectGuid>

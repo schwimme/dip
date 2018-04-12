@@ -11,7 +11,7 @@ namespace checklib
 {
 
 // KTTODO - path param is ignored and behavior is as set to true
-error_t intf_impl::configure(cross::string_ref la_config, cross::string_ref sa_config, bool path)
+error_t intf_impl::configure(cross::string_ref la_config, cross::string_ref sa_config)
 {
 	try
 	{

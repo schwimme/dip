@@ -19,6 +19,9 @@
     <Filter Include="event_distributor">
       <UniqueIdentifier>{fb790bb1-47f9-4291-8006-6cb68d12ba0b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="parsing">
+      <UniqueIdentifier>{79b9eadd-e371-4ef6-9bc1-f69179bf479b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="types\string.h">
@@ -47,6 +50,9 @@
     </ClInclude>
     <ClInclude Include="event_distributor\event_distributor.h">
       <Filter>event_distributor</Filter>
+    </ClInclude>
+    <ClInclude Include="parsing\parsing.h">
+      <Filter>parsing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

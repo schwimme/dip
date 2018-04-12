@@ -26,7 +26,7 @@ class checker_impl:
 	protected worker::factory
 {
 public:
-	void configure(const sys::string& la_cfg_path, const sys::string& sa_cfg_path);
+	void configure(const sys::string& la_config, const sys::string& sa_config);
 	void check(const std::list<sys::string>& files);
 
 public:
@@ -35,8 +35,8 @@ public:
 
 private:
 	void prepare_base();
-	void configure_fsm(const sys::string& la_cfg_path);
-	void configure_pda(const sys::string& sa_cfg_path);
+	void configure_fsm(const sys::string& configuration);
+	void configure_pda(const sys::string& configuration);
 	void worker_procedure(const sys::string& file);
 
 private:

@@ -7,6 +7,9 @@
     <Filter Include="checking_module">
       <UniqueIdentifier>{3079765c-8f92-4cba-a625-88a2926fef26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="configuration_builder">
+      <UniqueIdentifier>{6e2cd175-0007-4f3e-b1ae-0718d889897c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ccc_intf\ccc_errors.h">
@@ -28,6 +31,12 @@
     <ClInclude Include="..\ccc_intf\ccc_checking_module_intf.h">
       <Filter>intf</Filter>
     </ClInclude>
+    <ClInclude Include="configuration_builder\configuration_builder_intf.h">
+      <Filter>configuration_builder</Filter>
+    </ClInclude>
+    <ClInclude Include="configuration_builder\configuration_builder.h">
+      <Filter>configuration_builder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ccc_impl.cpp" />
@@ -36,6 +45,9 @@
     </ClCompile>
     <ClCompile Include="checking_module\impl.cpp">
       <Filter>checking_module</Filter>
+    </ClCompile>
+    <ClCompile Include="configuration_builder\configuration_builder.cpp">
+      <Filter>configuration_builder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

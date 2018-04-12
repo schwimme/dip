@@ -35,7 +35,7 @@ private:
 };
 
 
-sys::string to_sys_string(string_ref r)
+static sys::string to_sys_string(string_ref r)
 {
 	return sys::string(r.m_data, r.m_size);
 }

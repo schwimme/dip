@@ -18,9 +18,9 @@ namespace severity
 
 namespace product
 {
-	static const error_t BASE    = 0x08000000;
-	static const error_t CHECKER = 0x04000000;
-	static const error_t CCC     = 0x02000000;
+	static const error_t BASE     = 0x08000000;
+	static const error_t CHECKLIB = 0x04000000;
+	static const error_t CCC      = 0x02000000;
 }
 }
 

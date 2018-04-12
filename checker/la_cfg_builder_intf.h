@@ -20,7 +20,7 @@ struct la_cfg
 
 struct la_cfg_builder_intf
 {
-	virtual std::shared_ptr<la_cfg> build(const sys::string& path) const = 0;
+	virtual std::shared_ptr<la_cfg> build(const sys::string& configuration) const = 0;
 };
 
 

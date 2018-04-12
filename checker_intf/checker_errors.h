@@ -5,19 +5,19 @@
 #include <sys/types/string.h>
 
 
-#define MAKE_CHECKER_ERROR_CODE(name, code) \
-static const error_t E_CHECKER_##name##_ERROR = detail::mask::severity::ERROR |detail::mask::product::CHECKER | code
+#define MAKE_CHECKLIB_ERROR_CODE(name, code) \
+static const error_t E_CHECKLIB_##name##_ERROR = detail::mask::severity::ERROR |detail::mask::product::CHECKLIB | code
 
-#define MAKE_CHECKER_WARINING_CODE(name, code) \
-static const error_t E_CHECKER_##name##_WARN = detail::mask::severity::WARNING |detail::mask::product::CHECKER | code
+#define MAKE_CHECKLIB_WARINING_CODE(name, code) \
+static const error_t E_CHECKLIB_##name##_WARN = detail::mask::severity::WARNING |detail::mask::product::CHECKLIB | code
 
-#define MAKE_CHECKER_INFO_CODE(name, code) \
-static const error_t E_CHECKER_##name##_INFO = detail::mask::severity::INFO |detail::mask::product::CHECKER | code
-
-
-MAKE_CHECKER_ERROR_CODE(SOME_TEST, 0x00000000);
+#define MAKE_CHECKLIB_INFO_CODE(name, code) \
+static const error_t E_CHECKLIB_##name##_INFO = detail::mask::severity::INFO |detail::mask::product::CHECKLIB | code
 
 
-#undef MAKE_CHECKER_INFO_CODE
-#undef MAKE_CHECKER_WARINING_CODE
-#undef MAKE_CHECKER_ERROR_CODE
+MAKE_CHECKLIB_ERROR_CODE(PARSING, 0x00000001);
+
+
+#undef MAKE_CHECKLIB_INFO_CODE
+#undef MAKE_CHECKLIB_WARINING_CODE
+#undef MAKE_CHECKLIB_ERROR_CODE
