@@ -28,7 +28,9 @@ public:
 
 protected:
 	std::pair<token_id, sys::string> parse_token_pair(const sys::char_t*& p_cfg) const;
+
 	token_id parse_token_id(const sys::char_t*& p_cfg) const;
+
 	sys::string parse_token_regex(const sys::char_t*& p_cfg) const;
 
 	std::vector<token_id> parse_priority_group(const sys::char_t*& p_cfg) const;

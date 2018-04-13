@@ -3,6 +3,7 @@
 
 #include <sys/scopeguard/scopeguard.h>
 #include <vector>
+#include <cctype>
 
 
 namespace checklib
@@ -18,12 +19,13 @@ std::shared_ptr<la_cfg> la_cfg_builder::build(const sys::string& configuration) 
 	check_is(p_cfg, TEXT('{'));
 	++p_cfg;
 	check_is(p_cfg, TEXT('['));
-	++p_cfg;
-	check_end(p_cfg);
 
 	std::vector<std::pair<token_id, sys::string>> tokens;
 	while (*p_cfg != TEXT(']'))
 	{
+		++p_cfg;
+		check_end(p_cfg);
+
 		std::pair<token_id, sys::string> p = parse_token_pair(p_cfg);
 		check_is(p_cfg, TEXT(','), TEXT(']'));
 		tokens.push_back(std::move(p));
@@ -33,16 +35,19 @@ std::shared_ptr<la_cfg> la_cfg_builder::build(const sys::string& configuration) 
 	check_is(p_cfg, TEXT(','));
 	++p_cfg;
 	check_is(p_cfg, TEXT('['));
-	++p_cfg;
-	check_end(p_cfg);
 
 	std::vector<std::vector<token_id>> priorities;
 	while (*p_cfg != TEXT(']'))
 	{
+		++p_cfg;
+		check_end(p_cfg);
+
 		std::vector<token_id> p = parse_priority_group(p_cfg);
 		check_is(p_cfg, TEXT(','), TEXT(']'));
 		priorities.push_back(std::move(p));
 	}
+
+	++p_cfg;
 
 	check_is(p_cfg, TEXT('}'));
 
@@ -61,6 +66,10 @@ std::pair<token_id, sys::string> la_cfg_builder::parse_token_pair(const sys::cha
 	check_end(p_cfg);
 
 	token_id tid = parse_token_id(p_cfg);
+
+	check_is(p_cfg, TEXT(','));
+	++p_cfg;
+
 	sys::string rgx = parse_token_regex(p_cfg);
 
 	check_is(p_cfg, TEXT('}'));
@@ -72,12 +81,16 @@ std::pair<token_id, sys::string> la_cfg_builder::parse_token_pair(const sys::cha
 
 token_id la_cfg_builder::parse_token_id(const sys::char_t*& p_cfg) const
 {
-	// 1,
-	const sys::char_t* p_end = find_next_of(p_cfg, TEXT(','));
+	// 132
+	const sys::char_t* p_end = p_cfg;
+	while (std::isdigit(*p_end))
+	{
+		++p_end;
+	}
 
-	sys::string id(p_cfg, p_end - 1);
+	sys::string id(p_cfg, p_end);
 
-	p_cfg = p_end + 1;
+	p_cfg = p_end;
 
 	return std::stoul(id);
 }
@@ -117,14 +130,19 @@ std::vector<token_id> la_cfg_builder::parse_priority_group(const sys::char_t*& p
 	std::vector<token_id> rv;
 
 	check_is(p_cfg, TEXT('['));
-	++p_cfg;
-	check_end(p_cfg);
 
 	while (*p_cfg != TEXT(']'))
 	{
+		++p_cfg;
+		check_end(p_cfg);
+
 		token_id tid = parse_token_id(p_cfg);
 		rv.push_back(tid);
+
+		check_is(p_cfg, TEXT(','), TEXT(']'));
 	}
+
+	++p_cfg;
 
 	return rv;
 }

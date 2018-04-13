@@ -12,9 +12,11 @@
 #ifdef USING_WIDE_CHAR
 #	define CHAR_TYPE wchar_t
 #	define TEXT(txt) L##txt
+#	define RAW_TEXT(txt) LR##txt
 #else
 #	define CHAR_TYPE char
 #	define TEXT(txt) txt
+#	define RAW_TEXT(txt) R##txt
 #endif
 
 

@@ -82,7 +82,7 @@ void fsm_impl::add_rule(const fsm::state_id& from, const fsm::state_id& to, sys:
 void fsm_impl::set_start(const fsm::state_id& state)
 {
 	ASSERT_NO_EVAL(m_optimized == false);
-	ASSERT_NO_EVAL(m_start != -1);
+	ASSERT_NO_EVAL(m_start == -1);
 
 	m_start = state;
 }
@@ -229,6 +229,7 @@ const fsm::state_id& fsm_impl::get_start() const
 
 std::shared_ptr<fsm_walker_intf> fsm_impl::create_walker()
 {
+	ASSERT_NO_EVAL(m_start != -1);
 	if (m_optimized == false)
 	{
 		// Cannot determine fsm, because may context lose here.

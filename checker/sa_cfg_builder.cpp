@@ -1,6 +1,7 @@
 #include "sa_cfg_builder.h"
 #include <sys/debugging/debug.h>
 #include <error/exceptions.h>
+#include <cctype>
 
 
 namespace checklib
@@ -19,13 +20,16 @@ std::shared_ptr<sa_cfg> sa_cfg_builder::build(const sys::string& configuration) 
 	const sys::char_t* p_cfg = configuration.c_str();
 
 	check_is(p_cfg, TEXT('['));
-	++p_cfg;
 	
 	while (*p_cfg != TEXT(']'))
 	{
-		sa_rule r = parse_one_rule(p_cfg);
+		++p_cfg;
 		check_end(p_cfg);
+
+		sa_rule r = parse_one_rule(p_cfg);
 		cfg->m_rules.push_back(std::move(r));
+
+		check_is(p_cfg, TEXT(','), TEXT(']'));
 	}
 
 	return cfg;
@@ -62,12 +66,16 @@ sa_rule sa_cfg_builder::parse_one_rule(const sys::char_t*& p_cfg) const
 
 la_cfg::token_id sa_cfg_builder::parse_token_id(const sys::char_t*& p_cfg) const
 {
-	// 0,
-	const sys::char_t* p_end = find_next_of(p_cfg, TEXT(','));
+	// 132
+	const sys::char_t* p_end = p_cfg;
+	while (std::isdigit(*p_end))
+	{
+		++p_end;
+	}
 
-	sys::string id(p_cfg, p_end - 1);
+	sys::string id(p_cfg, p_end);
 
-	p_cfg = p_end + 1;
+	p_cfg = p_end;
 
 	return std::stoul(id);
 }
@@ -81,7 +89,7 @@ std::vector<sa_rule::stack_item> sa_cfg_builder::parse_stack_item_list(const sys
 	check_is(p_cfg, TEXT('['));
 	++p_cfg;
 
-	const sys::char_t* b = p_cfg, *e = p_cfg + 1;
+	const sys::char_t* b = p_cfg, *e = p_cfg;
 
 	while (*e != TEXT(']'))
 	{
@@ -94,7 +102,7 @@ std::vector<sa_rule::stack_item> sa_cfg_builder::parse_stack_item_list(const sys
 		b = e + 1;
 	}
 
-	p_cfg = b;
+	p_cfg = e + 1;
 	return rv;
 }
 
