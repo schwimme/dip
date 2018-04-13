@@ -175,6 +175,7 @@ void builder::add_regex(fsm_impl& fsm, state_id& actual_position, context_id inv
 	}
 }
 
+
 void builder::build_fsm_from_regex(fsm_impl& fsm, const sys::string& rgx, context_id valid, context_id invalid) const
 {
 	// Prepare output fsm:

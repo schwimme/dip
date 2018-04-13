@@ -37,6 +37,18 @@
     <ClInclude Include="configuration_builder\configuration_builder.h">
       <Filter>configuration_builder</Filter>
     </ClInclude>
+    <ClInclude Include="configuration_builder\token_specifier_intf.h">
+      <Filter>configuration_builder</Filter>
+    </ClInclude>
+    <ClInclude Include="configuration_builder\token_specifier.h">
+      <Filter>configuration_builder</Filter>
+    </ClInclude>
+    <ClInclude Include="configuration_builder\cfa_specifier_intf.h">
+      <Filter>configuration_builder</Filter>
+    </ClInclude>
+    <ClInclude Include="configuration_builder\cfa_specifier.h">
+      <Filter>configuration_builder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ccc_impl.cpp" />
@@ -47,6 +59,12 @@
       <Filter>checking_module</Filter>
     </ClCompile>
     <ClCompile Include="configuration_builder\configuration_builder.cpp">
+      <Filter>configuration_builder</Filter>
+    </ClCompile>
+    <ClCompile Include="configuration_builder\token_specifier.cpp">
+      <Filter>configuration_builder</Filter>
+    </ClCompile>
+    <ClCompile Include="configuration_builder\cfa_specifier.cpp">
       <Filter>configuration_builder</Filter>
     </ClCompile>
   </ItemGroup>

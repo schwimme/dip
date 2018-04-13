@@ -3,12 +3,15 @@
 #include "configuration_builder_intf.h"
 #include <memory>
 
+#include "token_specifier.h"
+
 
 namespace ccc
 {
 
 class configuration_builder:
-	public configuration_builder_intf
+	public configuration_builder_intf,
+	protected token_specifier::factory
 {
 public:
 	struct factory
@@ -20,7 +23,7 @@ public:
 	};
 
 public:
-	virtual void build_configuration(sys::string& la_cfg, sys::string& sa_cfg, const sys::string& input) const override;
+	virtual void build_configuration(sys::string& la_cfg, sys::string& sa_cfg, const sys::string& input_config) const override;
 };
 
 }

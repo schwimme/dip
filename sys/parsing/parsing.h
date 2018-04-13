@@ -21,46 +21,52 @@ protected:
 		}
 	}
 
-	void check_is(const sys::char_t* rest, sys::char_t e1) const
+	template<typename ... _Chr>
+	void check_is(const sys::char_t* rest, sys::char_t c, _Chr ... cp) const
 	{
-		if (*rest != e1)
+		if (*rest != c)
 		{
-			throw exception_t("unexpected character", _ExCheckIs);
+			check_is(rest, cp...);
 		}
 	}
 
-	void check_is(const sys::char_t* rest, sys::char_t e1, sys::char_t e2) const
+	void check_is(const sys::char_t*) const
 	{
-		if (*rest != e1 && *rest != e2)
-		{
-			throw exception_t("unexpected character", _ExCheckIs);
-		}
+		throw exception_t("unexpected character", _ExCheckIs);
 	}
 
-	const sys::char_t* find_next_of(const sys::char_t* rest, sys::char_t ch1) const
-	{
-		const sys::char_t* p = rest;
-		while (*p != ch1)
-		{
-			check_end(p);
-			++p;
-		}
-
-		return p;
-	}
-
-	const sys::char_t* find_next_of(const sys::char_t* rest, sys::char_t ch1, sys::char_t ch2) const
+	template<typename ... _Chr>
+	const char* find_next_of(const sys::char_t* rest, sys::char_t c, _Chr ... cp) const
 	{
 		const sys::char_t* p = rest;
-		while (*p != ch1 && *p != ch2)
+		while (true)
 		{
 			check_end(p);
+			const sys::char_t* r = find_next_of_impl(p, c, cp...);
+			if (r != nullptr)
+			{
+				return r;
+			}
 			++p;
 		}
-
-		return p;
 	}
 
+private:
+	template<typename ... _Chr>
+	const char* find_next_of_impl(const sys::char_t* rest, sys::char_t c, _Chr ... cp) const
+	{
+		if (*rest == c)
+		{
+			return rest;
+		}
+
+		return find_next_of_impl(rest, cp...);
+	}
+
+	const char* find_next_of_impl(const char*) const
+	{
+		return nullptr;
+	}
 };
 
 

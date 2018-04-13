@@ -42,14 +42,20 @@
     <ClInclude Include="ccc_impl.h" />
     <ClInclude Include="checking_module\impl.h" />
     <ClInclude Include="checking_module\intf_impl.h" />
+    <ClInclude Include="configuration_builder\cfa_specifier.h" />
+    <ClInclude Include="configuration_builder\cfa_specifier_intf.h" />
     <ClInclude Include="configuration_builder\configuration_builder.h" />
     <ClInclude Include="configuration_builder\configuration_builder_intf.h" />
+    <ClInclude Include="configuration_builder\token_specifier.h" />
+    <ClInclude Include="configuration_builder\token_specifier_intf.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ccc_impl.cpp" />
     <ClCompile Include="checking_module\impl.cpp" />
     <ClCompile Include="checking_module\intf_impl.cpp" />
+    <ClCompile Include="configuration_builder\cfa_specifier.cpp" />
     <ClCompile Include="configuration_builder\configuration_builder.cpp" />
+    <ClCompile Include="configuration_builder\token_specifier.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\checklib_loader\checklib_loader.vcxproj">
