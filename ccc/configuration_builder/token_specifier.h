@@ -32,6 +32,7 @@ private:
 	void build_numbers();
 	void build_identificators();
 	void build_whitespaces();
+	void build_parenthesis();
 
 	void build_priorities();
 

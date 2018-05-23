@@ -11,11 +11,16 @@ namespace checklib
 {
 
 // KTTODO - path param is ignored and behavior is as set to true
-error_t intf_impl::configure(cross::string_ref la_config, cross::string_ref sa_config)
+error_t intf_impl::configure(incident_handler_intf* pHandler, cross::string_ref la_config, cross::string_ref sa_config)
 {
 	try
 	{
-		m_impl.configure(cross::to_sys_string(la_config), cross::to_sys_string(sa_config));
+		if (pHandler == nullptr)
+		{
+			return E_INVALID_PARAMETER;
+		}
+
+		m_impl.configure(*pHandler, cross::to_sys_string(la_config), cross::to_sys_string(sa_config));
 		return E_NO_ERROR;
 	}
 	catch (const exception_t& e)
@@ -40,6 +45,8 @@ error_t intf_impl::check(cross::enumerator<cross::string_ref>* pFiles)
 		{
 			sys::string s(p_str->m_data, p_str->m_size);
 			v.push_back(std::move(s));
+
+			pFiles->next();
 		}
 
 		m_impl.check(v);

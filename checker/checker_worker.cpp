@@ -1,4 +1,5 @@
 #include "checker_worker.h"
+#include "crossmodule\adapters\basestring.h"
 
 namespace checklib
 {
@@ -6,6 +7,15 @@ namespace checklib
 sys::string worker::read_file_content() const
 {
 	//KTTODO  - impl : currently just faked:
+	sys::string content;
+
+	content = TEXT(R"code(struct abcd:
+	public ab,
+	public cd
+{};
+)code");
+
+	return content;
 	throw "Not implemented";
 }
 
@@ -25,8 +35,7 @@ worker::token worker::create_token(const sys::string& value, token_id id)
 {
 	if (id == 0) // KTTODO token id
 	{
-		accident_info i{m_line, m_col, m_file, sys::string(TEXT("Invalid token - '")) + value + TEXT("'") };
-		m_pHandler->on_accident(i);
+		report_incident(incident_handler_intf::incident_type::unrecognized_token);
 	}
 
 	return token{ id, value, m_col, m_line };
@@ -64,7 +73,7 @@ std::vector<worker::token> worker::parse(const sys::string& content)
 			// End of known token:
 			token t{
 				m_spFsmWalker->get_context(),
-				sys::string(actualTokenBegin, actualPosition), 
+				sys::string(actualTokenBegin, actualPosition),
 				m_col,
 				m_line
 			};
@@ -101,8 +110,7 @@ void worker::check_syntax_analysis(const std::vector<worker::token>& tokens)
 
 		if (is_cfg_empty)
 		{
-			accident_info ai{ it->line, it->col, m_file, sys::string(TEXT("Unexpected token '")) + it->value + TEXT("' - skipped") };
-			m_pHandler->on_accident(ai);
+			report_incident(incident_handler_intf::incident_type::no_rule);
 		}
 		else
 		{
@@ -117,10 +125,10 @@ void worker::check_syntax_analysis(const std::vector<worker::token>& tokens)
 
 	if (m_spPdaWalker->is_accepted() == false)
 	{
-		accident_info ai{ it->line, it->col, m_file, sys::string(TEXT("more tokens expected'")) };
-		m_pHandler->on_accident(ai);
+		report_incident(incident_handler_intf::incident_type::unexpected_end_of_file);
 	}
 
+	m_pHandler->on_finish(cross::string_ref(m_file.data(), m_file.size()), E_NO_ERROR);
 	return;
 }
 

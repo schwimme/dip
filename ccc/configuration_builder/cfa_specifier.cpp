@@ -50,82 +50,117 @@ sys::string cfa_specifier::serialize() const
 void cfa_specifier::initialize(const sys::string& configuration)
 {
 	(void)(configuration);
+
+	build_consume_symbols();
+
 	build_class();
 	build_inheritance();
+	build_cascaded_id();
+}
+
+
+void cfa_specifier::build_consume_symbols()
+{
+	m_rules.push_back(std::move(rule{ token_descriptor_e::w_space,       { stack_item_e::si_space},        {} }));
+	m_rules.push_back(std::move(rule{ token_descriptor_e::o_semicolon,   { stack_item_e::si_semicolon },   {} }));
+	m_rules.push_back(std::move(rule{ token_descriptor_e::w_tab,         { stack_item_e::si_tab },         {} }));
+	m_rules.push_back(std::move(rule{ token_descriptor_e::p_brace_close, { stack_item_e::si_brace_close }, {} }));
+	m_rules.push_back(std::move(rule{ token_descriptor_e::k_public,      { stack_item_e::si_visibility },  {} }));
+	m_rules.push_back(std::move(rule{ token_descriptor_e::k_protected,   { stack_item_e::si_visibility },  {} }));
+	m_rules.push_back(std::move(rule{ token_descriptor_e::k_private,     { stack_item_e::si_visibility },  {} }));
+	m_rules.push_back(std::move(rule{ token_descriptor_e::i_basic,       { stack_item_e::si_id },          {} }));
+	m_rules.push_back(std::move(rule{ token_descriptor_e::w_enter,       { stack_item_e::si_enter },       {} }));
+	m_rules.push_back(std::move(rule{ token_descriptor_e::o_colon,       { stack_item_e::si_colon },       {} }));
 }
 
 
 void cfa_specifier::build_class()
 {
-	// Expected class:
-	rule without_inheritance
-	{
-		token_descriptor_e::k_class,
-		{ stack_item_e::si_class },
-		{ stack_item_e::si_space, stack_item_e::si_id, stack_item_e::si_enter, stack_item_e::si_class_impl }
-	};
-
-	rule with_inheritance
+	m_rules.push_back(std::move(rule
 	{
 		token_descriptor_e::k_class,
 		{ stack_item_e::si_class },
 		{ stack_item_e::si_space, stack_item_e::si_id, stack_item_e::si_inheritance, stack_item_e::si_class_impl }
-	};
+	}));
 
-	// Unexpected class:
-	rule without_inheritance_unex
-	{
-		token_descriptor_e::k_class,
-		{},
-		{ stack_item_e::si_space, stack_item_e::si_id, stack_item_e::si_enter, stack_item_e::si_class_impl }
-	};
-
-	rule with_inheritance_unex
+	m_rules.push_back(std::move(rule
 	{
 		token_descriptor_e::k_class,
 		{ },
 		{ stack_item_e::si_space, stack_item_e::si_id, stack_item_e::si_inheritance, stack_item_e::si_class_impl }
-	};
+	}));
 
-
-	m_rules.push_back(std::move(without_inheritance));
-	m_rules.push_back(std::move(with_inheritance));
-
-	m_rules.push_back(std::move(without_inheritance_unex));
-	m_rules.push_back(std::move(with_inheritance_unex));
+	m_rules.push_back(std::move(rule
+	{
+		token_descriptor_e::p_brace_open,
+		{ stack_item_e::si_class_impl },
+		{ stack_item_e::si_brace_close, stack_item_e::si_semicolon, stack_item_e::si_enter }
+	}));
 }
 
 
 void cfa_specifier::build_inheritance()
 {
-	// Expected inheritance:
-	rule inheritance
+	m_rules.push_back(std::move(rule
 	{
 		token_descriptor_e::o_colon,
 		{ stack_item_e::si_inheritance },
-		{ stack_item_e::si_inheritance_impl}
-	};
+		{ stack_item_e::si_enter, stack_item_e::si_tab, stack_item_e::si_visibility, stack_item_e::si_space, stack_item_e::si_cascaded_id, stack_item_e::si_inheritance_optional }
+	}));
 
-	rule inheritance_impl
-	{
-		token_descriptor_e::w_enter,
-		{ stack_item_e::si_inheritance_impl },
-		{ stack_item_e::si_enter, stack_item_e::si_tab, stack_item_e::si_visibility, stack_item_e::si_cascaded_id, stack_item_e::si_inheritance_optional }
-	};
-
-	rule inheritance_optional_continue
+	m_rules.push_back(std::move(rule
 	{
 		token_descriptor_e::o_comma,
 		{ stack_item_e::si_inheritance_optional },
-		{ stack_item_e::si_inheritance_impl }
-	};
+		{ stack_item_e::si_enter, stack_item_e::si_tab, stack_item_e::si_visibility, stack_item_e::si_space, stack_item_e::si_cascaded_id, stack_item_e::si_inheritance_optional }
+	}));
 
-	rule inheritance_optional_break
+	m_rules.push_back(std::move(rule
 	{
 		token_descriptor_e::w_enter,
 		{ stack_item_e::si_inheritance_optional },
 		{ }
-	};
+	}));
 }
+
+
+void cfa_specifier::build_cascaded_id()
+{
+	m_rules.push_back(std::move(rule
+	{
+		token_descriptor_e::i_basic,
+		{ stack_item_e::si_cascaded_id },
+		{ stack_item_e::si_cascaded_id_optional }
+	}));
+
+	m_rules.push_back(std::move(rule
+	{
+		token_descriptor_e::o_colon,
+		{ stack_item_e::si_cascaded_id_optional },
+		{ stack_item_e::si_colon, stack_item_e::si_cascaded_id }
+	}));
+
+	m_rules.push_back(std::move(rule
+	{
+		token_descriptor_e::w_enter,
+		{ stack_item_e::si_cascaded_id_optional },
+		{ }
+	}));
+
+	m_rules.push_back(std::move(rule
+	{
+		token_descriptor_e::w_enter,
+		{ stack_item_e::si_cascaded_id_optional, stack_item_e::si_inheritance_optional },
+		{}
+	}));
+	
+	m_rules.push_back(std::move(rule
+	{
+		token_descriptor_e::o_comma,
+		{ stack_item_e::si_cascaded_id_optional, stack_item_e::si_inheritance_optional },
+		{ stack_item_e::si_enter, stack_item_e::si_tab, stack_item_e::si_visibility, stack_item_e::si_space, stack_item_e::si_cascaded_id, stack_item_e::si_inheritance_optional }
+	}));
+}
+
 
 }

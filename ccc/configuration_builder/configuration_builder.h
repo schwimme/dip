@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "token_specifier.h"
+#include "cfa_specifier.h"
 
 
 namespace ccc
@@ -11,7 +12,8 @@ namespace ccc
 
 class configuration_builder:
 	public configuration_builder_intf,
-	protected token_specifier::factory
+	protected token_specifier::factory,
+	protected cfa_specifier::factory
 {
 public:
 	struct factory

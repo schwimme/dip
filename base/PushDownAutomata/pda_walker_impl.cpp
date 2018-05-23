@@ -91,8 +91,8 @@ std::list<std::vector<stack_item>> walker_impl::expand_by_one_stack_top(const st
 
 	for (const auto& r: rules)
 	{
-		std::vector<stack_item> concatenate = stackRest;
-		concatenate.insert(concatenate.end(), r.begin(), r.end());
+		std::vector<stack_item> concatenate = r;
+		concatenate.insert(concatenate.end(), stackRest.begin(), stackRest.end());
 		ret.push_back(std::move(concatenate));
 	}
 

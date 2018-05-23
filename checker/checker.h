@@ -12,6 +12,8 @@
 #include "checker_worker.h"
 
 #include <mutex>
+#include "checker_intf/checker_intf.h"
+#include <sys/event_distributor/event_distributor.h>
 
 
 namespace checklib
@@ -19,19 +21,14 @@ namespace checklib
 
 
 class checker_impl:
-	public accident_handler,
 	protected base::base_loader::factory,
 	protected la_cfg_builder::factory,
 	protected sa_cfg_builder::factory,
 	protected worker::factory
 {
 public:
-	void configure(const sys::string& la_config, const sys::string& sa_config);
+	void configure(incident_handler_intf& pHandler, const sys::string& la_config, const sys::string& sa_config);
 	void check(const std::list<sys::string>& files);
-
-public:
-	// KTTODO - automaticka naprava
-	virtual void on_accident(const accident_info& info) override;
 
 private:
 	void prepare_base();
@@ -47,7 +44,7 @@ private:
 
 	mutable sys::thread_pool<8> m_threadPool;
 
-	std::mutex m_print_mutex;
+	incident_handler_intf* m_p_handler = nullptr;
 };
 
 

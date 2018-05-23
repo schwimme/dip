@@ -8,8 +8,9 @@ namespace ccc
 {
 
 class ccc_impl:
-	public ccc_intf
+	public cross::query_impl<ccc_intf>
 {
+public:
 	virtual error_t get_checking_module(cross::versioned_intf_ref<checking_module_intf> pModule) override;
 };
 

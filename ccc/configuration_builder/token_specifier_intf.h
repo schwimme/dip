@@ -15,48 +15,56 @@ enum class token_descriptor_e:
 	uint32_t
 {
 	// Keywords:
-	k_do,
-	k_while,
-	k_if,
-	k_else,
-	k_for,
-	k_class,
-	k_enum,
-	k_namespace,
-	k_virtual,
-	k_const,
-	k_override,
-	k_public,
-	k_protected,
-	k_private,
+	/* 0*/ k_do,
+	/* 1*/ k_while,
+	/* 2*/ k_if,
+	/* 3*/ k_else,
+	/* 4*/ k_for,
+	/* 5*/ k_class,
+	/* 6*/ k_enum,
+	/* 7*/ k_namespace,
+	/* 8*/ k_virtual,
+	/* 9*/ k_const,
+	/* a*/ k_override,
+	/* b*/ k_public,
+	/* c*/ k_protected,
+	/* d*/ k_private,
 
-	// Operators
-	o_less,
-	o_greater,
-	o_plus,
-	o_minus,
-	o_star,
-	o_slash,
-	o_back_slash,
-	o_comma,
-	o_dot,
-	o_colon,
-	o_semicolon,
-	o_equal,
-	o_question,
-	o_exclamation,
+	     // Operators
+	/* e*/ o_less,
+	/* f*/ o_greater,
+	/*10*/ o_plus,
+	/*11*/ o_minus,
+	/*12*/ o_star,
+	/*13*/ o_slash,
+	/*14*/ o_back_slash,
+	/*15*/ o_comma,
+	/*16*/ o_dot,
+	/*17*/ o_colon,
+	/*18*/ o_semicolon,
+	/*19*/ o_equal,
+	/*1a*/ o_question,
+	/*1b*/ o_exclamation,
 
-	// Numbers
-	n_numeric,
+	       // Numbers
+	/*1c*/ n_numeric,
 
-	// Identificators
-	i_basic,
-	i_member,
+	       // Identificators
+	/*1d*/ i_basic,
+	/*1e*/ i_member,
 
-	// Whitespaces:
-	w_enter,
-	w_tab,
-	w_space
+	       // Whitespaces:
+	/*1f*/ w_enter,
+	/*20*/ w_tab,
+	/*21*/ w_space,
+
+	       // Parenthesis:
+	/*22*/ p_brace_open,
+	/*23*/ p_brace_close,
+	/*24*/ p_parenthesis_open,
+	/*25*/ p_parenthesis_close,
+	/*26*/ p_square_open,
+	/*27*/ p_square_close
 };
 
 struct token_specifier_intf

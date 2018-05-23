@@ -28,6 +28,7 @@ struct sys_string_settable_string_ref:
 	virtual bool set(sys::char_t const* data, size_t size) noexcept override
 	{
 		*m_string = sys::string(data, size);
+		return true;
 	}
 	
 private:

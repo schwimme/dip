@@ -10,8 +10,9 @@
 namespace checklib
 {
 
-void checker_impl::configure(const sys::string& la_config, const sys::string& sa_config)
+void checker_impl::configure(incident_handler_intf& pHandler, const sys::string& la_config, const sys::string& sa_config)
 {
+	m_p_handler = &pHandler;
 	prepare_base();
 	configure_fsm(la_config);
 	configure_pda(sa_config);
@@ -22,10 +23,10 @@ void checker_impl::check(const std::list<sys::string>& files)
 {
 	for (const sys::string& f : files)
 	{
-		m_threadPool.push([&, file = f]
-		{	
+//		m_threadPool.push([&, file = f]
+//		{	
 			worker_procedure(f); 
-		});
+//		});
 	}
 }
 
@@ -39,7 +40,7 @@ void checker_impl::worker_procedure(const sys::string& file)
 	m_spPda->create_walker(pPdaWalker);
 	std::shared_ptr<base::pda_walker_intf> spPdaWalker(pPdaWalker); // KTTODO - attacher
 
-	std::shared_ptr<worker_intf> spWorker = create_worker(spFsmWalker, spPdaWalker, *this);
+	std::shared_ptr<worker_intf> spWorker = create_worker(spFsmWalker, spPdaWalker, *m_p_handler);
 
 	spWorker->check(file);
 }
@@ -105,13 +106,6 @@ void checker_impl::prepare_base()
 	m_spBaseLoader->get_base(pBase);
 
 	m_spBase.reset(pBase);
-}
-
-
-void checker_impl::on_accident(const accident_info& info)
-{
-	std::lock_guard<std::mutex> l(m_print_mutex);
-	// KTTODO
 }
 
 

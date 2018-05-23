@@ -26,7 +26,7 @@ class checking_module_impl:
 	protected configuration_builder::factory
 {
 public:
-	std::shared_ptr<sys::registrator_intf> configure(const sys::string& config_path, accident_handler_intf& pHandler);
+	void configure(const sys::string& config_path, checklib::incident_handler_intf& pHandler);
 	void check_files(const std::vector<sys::string>& files);
 
 public:

@@ -27,20 +27,31 @@ public:
 	};
 
 private:
-	enum class stack_item_e:
+	enum class stack_item_e :
 		uint32_t
 	{
-		si_class,
-		si_space,
-		si_id,
-		si_cascaded_id,
-		si_enter,
-		si_class_impl,
-		si_inheritance,
-		si_inheritance_impl,
-		si_inheritance_optional,
-		si_visibility,
-		si_tab
+		// Consume symbols
+		/* 0*/ si_space,
+		/* 1*/ si_semicolon,
+		/* 2*/ si_tab,
+		/* 3*/ si_brace_close,
+		/* 4*/ si_visibility,
+		/* 5*/ si_id,
+		/* 6*/ si_enter,
+		/* 7*/ si_colon,
+
+		// Class:
+		/* 8*/ si_class,
+		/* 9*/ si_class_impl,
+
+		// Inherity:
+		/* a*/ si_inheritance,
+		/* b*/ si_inheritance_optional,
+
+		// KTTODO sort:
+		/* c*/ si_cascaded_id,
+		/* d*/ si_cascaded_id_optional,
+
 	};
 
 	struct rule
@@ -58,8 +69,10 @@ public:
 private:
 	void initialize(const sys::string& configuration);
 
+	void build_consume_symbols();
 	void build_class();
 	void build_inheritance();
+	void build_cascaded_id();
 
 private:
 	rules m_rules;

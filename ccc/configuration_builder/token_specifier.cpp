@@ -15,6 +15,7 @@ void token_specifier::initialize(const sys::string& input_configuration)
 	build_numbers();
 	build_identificators();
 	build_whitespaces();
+	build_parenthesis();
 
 	build_priorities();
 }
@@ -95,17 +96,20 @@ void token_specifier::build_priorities()
 {
 	static const std::vector<std::vector<token_descriptor_e>> priorities =
 	{
-		{ token_descriptor_e::k_do,		  token_descriptor_e::i_basic },
-		{ token_descriptor_e::k_while,	  token_descriptor_e::i_basic },
-		{ token_descriptor_e::k_if,		  token_descriptor_e::i_basic },
-		{ token_descriptor_e::k_else,	  token_descriptor_e::i_basic },
-		{ token_descriptor_e::k_for,	  token_descriptor_e::i_basic },
-		{ token_descriptor_e::k_class,	  token_descriptor_e::i_basic },
-		{ token_descriptor_e::k_enum,	  token_descriptor_e::i_basic },
-		{ token_descriptor_e::k_virtual,  token_descriptor_e::i_basic },
-		{ token_descriptor_e::k_const,	  token_descriptor_e::i_basic },
-		{ token_descriptor_e::k_override, token_descriptor_e::i_basic },
-		{ token_descriptor_e::i_member,   token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_do,		   token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_while,	   token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_if,		   token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_else,	   token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_for,	   token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_class,	   token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_enum,	   token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_virtual,   token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_const,	   token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_override,  token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_public,    token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_protected, token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_private,   token_descriptor_e::i_basic },
+		{ token_descriptor_e::i_member,    token_descriptor_e::i_basic },
 	};
 
 	m_priorities = priorities;
@@ -114,15 +118,33 @@ void token_specifier::build_priorities()
 
 void token_specifier::build_whitespaces()
 {
-	static const std::vector<std::pair<token_descriptor_e, sys::string>> identificators =
+	static const std::vector<std::pair<token_descriptor_e, sys::string>> whitespaces =
 	{
 		{ token_descriptor_e::w_enter,	 TEXT("?(.(\n).(\r\n))") },
 		{ token_descriptor_e::w_space,	 TEXT(" ") },
 		{ token_descriptor_e::w_tab,	 TEXT("\t") },
 	};
 
-	m_tokens.insert(m_tokens.end(), identificators.begin(), identificators.end());
+	m_tokens.insert(m_tokens.end(), whitespaces.begin(), whitespaces.end());
 }
+
+
+void token_specifier::build_parenthesis()
+{
+
+	static const std::vector<std::pair<token_descriptor_e, sys::string>> parenthesis =
+	{
+		{ token_descriptor_e::p_brace_open, TEXT("{") },
+		{ token_descriptor_e::p_brace_close, TEXT("}") },
+		{ token_descriptor_e::p_parenthesis_open, TEXT("\\(") },
+		{ token_descriptor_e::p_parenthesis_close, TEXT("\\)") },
+		{ token_descriptor_e::p_square_open, TEXT("[") },
+		{ token_descriptor_e::p_square_close, TEXT("]") },
+	};
+
+	m_tokens.insert(m_tokens.end(), parenthesis.begin(), parenthesis.end());
+}
+
 
 const sys::string token_specifier::serialize() const
 {

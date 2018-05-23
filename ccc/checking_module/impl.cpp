@@ -2,6 +2,8 @@
 #include <error/exceptions.h>
 
 #include <crossmodule/adapters/basestring.h>
+#include <crossmodule/adapters/vector.h>
+
 
 namespace ccc
 {
@@ -21,7 +23,7 @@ checking_module_impl::~checking_module_impl()
 }
 
 
-std::shared_ptr<sys::registrator_intf> checking_module_impl::configure(const sys::string& config_path, accident_handler_intf& pHandler)
+void checking_module_impl::configure(const sys::string& config_path, checklib::incident_handler_intf& pHandler)
 {
 	configure_checklib(config_path);
 
@@ -29,21 +31,16 @@ std::shared_ptr<sys::registrator_intf> checking_module_impl::configure(const sys
 	sys::string la, sa;
 	m_sp_cfg_builder->build_configuration(la, sa, config_path);
 
-	error_t errorCode = m_sp_checker->configure(cross::sys_string_on_string_ref(la), cross::sys_string_on_string_ref(sa));
+	error_t errorCode = m_sp_checker->configure(&pHandler, cross::sys_string_on_string_ref(la), cross::sys_string_on_string_ref(sa));
 	if (FAILED(errorCode))
 	{
 		throw exception_t(errorCode);
 	}
 
-	auto sp = m_event_distributor.register_function([&pHandler](accident_handler_intf::info* p_info)
-	{
-		pHandler.on_ccc_accident(p_info);
-	});
-
 	// Run checking thread:
 	m_check_files_thread = std::thread([&] { check_files_impl(); });
 
-	return sp;
+	return;
 }
 
 
@@ -72,8 +69,22 @@ void checking_module_impl::check_files_impl()
 				return;
 			}
 
-			to_process = m_files_to_check;
+			to_process = std::move(m_files_to_check);
 			m_files_to_check = {};
+		}
+
+		std::vector<cross::string_ref> cmt_to_process;
+		for (const auto& it : to_process)
+		{
+			cmt_to_process.push_back(cross::sys_string_on_string_ref(it));
+		}
+
+		cross::std_vector_on_enumerator<cross::string_ref> adapter(cmt_to_process);
+		error_t rv = m_sp_checker->check(&adapter);
+
+		if (FAILED(rv))
+		{
+			throw exception_t(rv);
 		}
 	}
 }

@@ -7,7 +7,7 @@
 namespace ccc
 {
 
-error_t checking_module_intf_impl::configure(cross::string_ref config_path, sys::registrator_intf** ppRegistrator, accident_handler_intf* pHandler)
+error_t checking_module_intf_impl::configure(cross::string_ref config_path, checklib::incident_handler_intf* pHandler)
 {
 	try
 	{
@@ -16,9 +16,8 @@ error_t checking_module_intf_impl::configure(cross::string_ref config_path, sys:
 			return E_CCC_UNSPECIFIED_HANDLER_WARN;
 		}
 
-		m_reg = m_impl.configure(sys::string(config_path.m_data, config_path.m_size), *pHandler);
-		*ppRegistrator = m_reg.get();
-
+		m_impl.configure(sys::string(config_path.m_data, config_path.m_size), *pHandler);
+		
 		return E_NO_ERROR;
 	}
 	catch (const exception_t& e)

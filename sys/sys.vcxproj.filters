@@ -22,6 +22,9 @@
     <Filter Include="parsing">
       <UniqueIdentifier>{79b9eadd-e371-4ef6-9bc1-f69179bf479b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="json">
+      <UniqueIdentifier>{c955b97f-4b37-4d30-b4be-a5cc88b0bb91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="types\string.h">
@@ -53,6 +56,9 @@
     </ClInclude>
     <ClInclude Include="parsing\parsing.h">
       <Filter>parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="json\value.h">
+      <Filter>json</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

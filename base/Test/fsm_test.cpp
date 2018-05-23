@@ -128,7 +128,7 @@ TEST_METHOD(simple_selection)
 
 TEST_METHOD(mail_validation)
 {
-	auto fsm = create_fsm(TEXT("+(-(az))@+(-(az))\\.-(az)-(az)!(-(az))"));
+	auto fsm = create_fsm(TEXT("+(-(az))@+(-(az))\\.?(.(cz).(com))"));
 	std::shared_ptr<base::fsm_walker_intf> w = fsm->create_walker();
 
 	Assert::IsTrue(w->verify_literal(TEXT("adam")));

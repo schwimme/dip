@@ -13,7 +13,7 @@ class checking_module_intf_impl:
 	public cross::query_impl<checking_module_intf>
 {
 public:
-	virtual error_t configure(cross::string_ref config_path, sys::registrator_intf** ppRegistrator, accident_handler_intf* pHandler) override;
+	virtual error_t configure(cross::string_ref config_path, checklib::incident_handler_intf* pHandler) override;
 	virtual error_t check_files(cross::enumerator<cross::string_ref>* files) override;
 
 private:

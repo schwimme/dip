@@ -40,6 +40,7 @@
     <ClInclude Include="debugging\debug_impl.h" />
     <ClInclude Include="event_distributor\event_distributor.h" />
     <ClInclude Include="event_distributor\registrator_intf.h" />
+    <ClInclude Include="json\value.h" />
     <ClInclude Include="parsing\parsing.h" />
     <ClInclude Include="scopeguard\scopeguard.h" />
     <ClInclude Include="threadpool\threadpool.h" />
