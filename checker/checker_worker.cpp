@@ -1,25 +1,28 @@
 #include "checker_worker.h"
 #include "crossmodule\adapters\basestring.h"
 
+#include <iostream>
+#include <fstream>
+#include <string>
+
+
 namespace checklib
 {
 
 sys::string worker::read_file_content() const
 {
-	//KTTODO  - impl : currently just faked:
-	sys::string content;
+	std::string res;
+	std::string line;
+	std::ifstream myfile(m_file.c_str());
+	if (myfile.is_open == false) return "";
 
-	content = TEXT(R"code(struct abcd:
-	public ab,
-	public cd
-{};
-)code");
+	while (std::getline(myfile, line))
+	{
+		res += line;
+	}
 
-	return content;
-	throw "Not implemented";
+	return res;
 }
-
-
 void worker::check(const sys::string& file)
 {
 	m_file = file;
