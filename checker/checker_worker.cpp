@@ -1,29 +1,21 @@
 #include "checker_worker.h"
-#include "crossmodule\adapters\basestring.h"
+#include <crossmodule/adapters/basestring.h>
+#include <sys/algorithm/file_reader.h>
+#include <sys/scopeguard/scopeguard.h>
+
 
 namespace checklib
 {
 
-sys::string worker::read_file_content() const
-{
-	//KTTODO  - impl : currently just faked:
-	sys::string content;
-
-	content = TEXT(R"code(struct abcd:
-	public ab,
-	public cd
-{};
-)code");
-
-	return content;
-	throw "Not implemented";
-}
-
-
 void worker::check(const sys::string& file)
 {
 	m_file = file;
-	sys::string content = read_file_content();
+	auto guard = sys::scope_guard([this]
+	{
+		m_pHandler->on_finish(cross::string_ref(m_file.data(), m_file.size()), E_NO_ERROR);
+	});
+
+	sys::string content = sys::read_file(m_file);
 
 	std::vector<token> t = parse(content);
 
@@ -128,7 +120,6 @@ void worker::check_syntax_analysis(const std::vector<worker::token>& tokens)
 		report_incident(incident_handler_intf::incident_type::unexpected_end_of_file);
 	}
 
-	m_pHandler->on_finish(cross::string_ref(m_file.data(), m_file.size()), E_NO_ERROR);
 	return;
 }
 

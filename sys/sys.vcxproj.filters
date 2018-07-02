@@ -60,10 +60,16 @@
     <ClInclude Include="json\value.h">
       <Filter>json</Filter>
     </ClInclude>
+    <ClInclude Include="algorithm\file_reader.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debugging\win_debug_impl.cpp">
       <Filter>debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithm\file_reader.cpp">
+      <Filter>algorithm</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

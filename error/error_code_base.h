@@ -33,7 +33,7 @@ static const error_t E_MEMORY_ERROR          = detail::mask::severity::ERROR | 0
 static const error_t E_NOT_IMPLEMENTED_ERROR = detail::mask::severity::ERROR | 0x00000003;
 static const error_t E_INTF_NOT_FOUND_ERROR  = detail::mask::severity::ERROR | 0x00000004; // KTTODO - cross error?
 static const error_t E_INVALID_PARAMETER     = detail::mask::severity::ERROR | 0x00000005;
-
+static const error_t E_COULD_NOT_OPEN_FILE   = detail::mask::severity::ERROR | 0x00000006;
 
 namespace
 {

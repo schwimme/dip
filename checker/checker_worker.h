@@ -36,8 +36,6 @@ public:
 	virtual void check(const sys::string& file) override;
 
 protected:
-	virtual // KTTODO - virtual because of tests - use base::file_intf
-	sys::string read_file_content() const;
 
 // KTTODO - move else:
 	using token_id = uint32_t;

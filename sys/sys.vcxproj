@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algorithm\algorithm.h" />
+    <ClInclude Include="algorithm\file_reader.h" />
     <ClInclude Include="debugging\debug.h" />
     <ClInclude Include="debugging\debug_impl.h" />
     <ClInclude Include="event_distributor\event_distributor.h" />
@@ -48,6 +49,7 @@
     <ClInclude Include="types\string.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="algorithm\file_reader.cpp" />
     <ClCompile Include="debugging\win_debug_impl.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

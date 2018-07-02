@@ -37,11 +37,6 @@ void walker_impl::commit()
 
 bool walker_impl::is_accepted() const
 {
-	if (m_configurations.empty())
-	{
-		return true;
-	}
-
 	for (const auto& i : m_configurations)
 	{
 		if (i.empty())
