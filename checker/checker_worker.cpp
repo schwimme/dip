@@ -1,9 +1,7 @@
 #include "checker_worker.h"
-#include <crossmodule/adapters/basestring.h>
-#include <sys/algorithm/file_reader.h>
-#include <sys/scopeguard/scopeguard.h>
-
-
+#include <iostream>
+#include <fstream>
+#include <string>
 namespace checklib
 {
 
