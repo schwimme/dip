@@ -170,7 +170,7 @@ void cfa_specifier::initialize(const sys::string& configuration)
 	m_rules.push_back({ n_impl_line_end,{ TOKEN(w_enter), base::meta::indent_dec(), base::meta::indent_check(), n_impl_line } });
 
 	m_rules.push_back({ n_statement,{ TOKEN(p_brace_open), TOKEN(w_enter), base::meta::indent_inc(), base::meta::indent_check(), n_impl_line } });
-	m_rules.push_back({ n_statement,{ n_statement_impl, TOKEN(w_enter), base::meta::indent_check(), n_impl_line } });
+	m_rules.push_back({ n_statement,{ n_statement_impl, base::meta::indent_check(), n_impl_line } });
 
 	// Statements:
 
@@ -180,7 +180,8 @@ void cfa_specifier::initialize(const sys::string& configuration)
 	m_rules.push_back({ n_params_call_rest,{ TOKEN(o_comma), TOKEN(w_space), n_params_call_one, n_params_call_rest } });
 	m_rules.push_back({ n_params_call_rest,{ TOKEN(p_parenthesis_close) } });
 
-	m_rules.push_back({ n_statement_impl,{ n_expression_lv } });
+	m_rules.push_back({ n_statement_impl,{ n_expression_lv, TOKEN(w_enter) } });
+	m_rules.push_back({ n_statement_impl,{ TOKEN(w_enter) } });
 
 	m_rules.push_back({ n_expression_lv, { n_structured_id, n_expression_definition } });
 	m_rules.push_back({ n_expression_definition,{ TOKEN(i_basic), n_expression_definition_rest } });
