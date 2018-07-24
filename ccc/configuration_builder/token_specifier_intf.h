@@ -64,12 +64,22 @@ enum class token_descriptor_e:
 	/*24*/ p_parenthesis_open,
 	/*25*/ p_parenthesis_close,
 	/*26*/ p_square_open,
-	/*27*/ p_square_close
+	/*27*/ p_square_close,
+
+	/*28*/ ignored_1,
+	/*29*/ ignored_2,
+	/*2a*/ ignored_3,
+
+	// directives:
+	/*2b*/ p_guard,
+	/*2c*/ p_include_absolute,
+	/*2d*/ p_include_relative,
+
 };
 
 struct token_specifier_intf
 {
-	virtual const sys::string serialize() const = 0;
+	virtual const sys::string serialize(std::vector<uint32_t>& ignored_tokens) const = 0;
 };
 
 }

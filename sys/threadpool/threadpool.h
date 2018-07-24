@@ -67,6 +67,7 @@ protected:
 
 		if (m_stopping)
 		{
+			// Flush jobs:
 			return;
 		}
 

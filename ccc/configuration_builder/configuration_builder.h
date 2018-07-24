@@ -25,7 +25,7 @@ public:
 	};
 
 public:
-	virtual void build_configuration(sys::string& la_cfg, sys::string& sa_cfg, const sys::string& input_config) const override;
+	virtual void build_configuration(sys::string& la_cfg, sys::string& sa_cfg, std::vector<uint32_t>& ignored_tokens, const sys::string& input_config) const override;
 };
 
 }

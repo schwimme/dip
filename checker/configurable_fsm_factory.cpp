@@ -2,6 +2,8 @@
 
 #include "configurable_fsm_factory.h"
 #include <sys/algorithm/algorithm.h>
+#include "error/exceptions.h"
+#include "sys/debugging/debug.h"
 
 
 namespace checklib
@@ -36,7 +38,8 @@ base::fsm::context_id configurable_fsm_ctx_factory::select_context(cross::enumer
 
 	if (m_priorities.size() == 0)
 	{
-		throw "No priorities given";
+		ASSERT(false);
+		throw exception_t(-1);
 	}
 
 	// Identify priority group:
@@ -54,12 +57,11 @@ base::fsm::context_id configurable_fsm_ctx_factory::select_context(cross::enumer
 				}
 				++ctxIter;
 			}
-
-			// ASSERT(false); // ctxIter must be found at least one time in all_ctxs_without_invalid.
 		}
 	}
 
-	throw "cannot found given contexts in one priority group";
+	ASSERT(false);
+	throw exception_t(-2);
 }
 
 

@@ -2,26 +2,24 @@
 
 
 #include "la_cfg_builder_intf.h"
+
 #include <sys/types/string.h>
 #include <memory>
+#include "base_intf/ll_validator/ll_validator_intf.h"
 
 
 namespace checklib
 {
 
 
-struct sa_rule
-{
-	using stack_item = uint32_t;
-	la_cfg::token_id m_token;
-	std::vector<stack_item> m_stackTop;
-	std::vector<stack_item> m_stackReplace;
-};
-
-
 struct sa_cfg
 {
-	std::vector<sa_rule> m_rules;
+	struct rule
+	{
+		base::rule_item parent;
+		std::vector<base::rule_item> successors;
+	};
+	std::vector<rule> m_rules;
 };
 
 

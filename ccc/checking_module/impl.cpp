@@ -29,13 +29,11 @@ void checking_module_impl::configure(const sys::string& config_path, checklib::i
 
 	m_sp_cfg_builder = create_configuration_builder();
 	sys::string la, sa;
-	m_sp_cfg_builder->build_configuration(la, sa, config_path);
+	std::vector<uint32_t> ignored_tokens;
+	m_sp_cfg_builder->build_configuration(la, sa, ignored_tokens, config_path);
 
-	error_t errorCode = m_sp_checker->configure(&pHandler, cross::sys_string_on_string_ref(la), cross::sys_string_on_string_ref(sa));
-	if (FAILED(errorCode))
-	{
-		throw exception_t(errorCode);
-	}
+	cross::std_vector_on_enumerator<uint32_t> adapter(ignored_tokens);
+	THROW_FAIL(m_sp_checker->configure(&pHandler, cross::sys_string_on_string_ref(la), cross::sys_string_on_string_ref(sa), &adapter));
 
 	// Run checking thread:
 	m_check_files_thread = std::thread([&] { check_files_impl(); });
@@ -80,12 +78,7 @@ void checking_module_impl::check_files_impl()
 		}
 
 		cross::std_vector_on_enumerator<cross::string_ref> adapter(cmt_to_process);
-		error_t rv = m_sp_checker->check(&adapter);
-
-		if (FAILED(rv))
-		{
-			throw exception_t(rv);
-		}
+		THROW_FAIL(m_sp_checker->check(&adapter));
 	}
 }
 
@@ -99,10 +92,8 @@ void checking_module_impl::configure_checklib(const sys::string& path)
 	m_sp_checklib.reset(pChecklib);
 
 	checklib::checker_intf* pChecker = nullptr;
-	if (FAILED(m_sp_checklib->create_checker(pChecker)))
-	{
-		throw exception_t(E_INTF_NOT_FOUND_ERROR);
-	}
+	THROW_FAIL(m_sp_checklib->create_checker(pChecker));
+
 	m_sp_checker.reset(pChecker);
 }
 

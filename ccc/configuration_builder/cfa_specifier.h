@@ -7,6 +7,7 @@
 
 
 #include "token_specifier_intf.h"
+#include "base_intf/ll_validator/ll_validator_intf.h"
 
 
 namespace ccc
@@ -56,9 +57,8 @@ private:
 
 	struct rule
 	{
-		token_descriptor_e m_token;
-		std::vector<stack_item_e> m_stack_top;
-		std::vector<stack_item_e> m_stack_replace;
+		base::rule_item m_parent;
+		std::vector<base::rule_item> m_successors;
 	};
 
 	using rules = std::vector<rule>;
@@ -68,11 +68,6 @@ public:
 
 private:
 	void initialize(const sys::string& configuration);
-
-	void build_consume_symbols();
-	void build_class();
-	void build_inheritance();
-	void build_cascaded_id();
 
 private:
 	rules m_rules;

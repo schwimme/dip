@@ -22,7 +22,7 @@ public:
 	};
 
 public:
-	virtual const sys::string serialize() const override;
+	virtual const sys::string serialize(std::vector<uint32_t>& ignored_tokens) const override;
 
 private:
 	void initialize(const sys::string& input_configuration);
@@ -33,6 +33,7 @@ private:
 	void build_identificators();
 	void build_whitespaces();
 	void build_parenthesis();
+	void build_ignored();
 
 	void build_priorities();
 

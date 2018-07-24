@@ -11,29 +11,6 @@ namespace Checker_test
 
 TEST_CLASS(LA_test)
 {
-public:
-
-struct checker_worker_fake:
-	checklib::worker
-{
-	checker_worker_fake(std::shared_ptr<base::fsm_walker_intf> spFsmWalker, std::shared_ptr<base::pda_walker_intf> spPdaWalker, checklib::incident_handler_intf& handler) :
-		checklib::worker(spFsmWalker, spPdaWalker, handler)
-	{}
-
-	virtual sys::string read_file_content() const override
-	{
-		return TEXT("class MANAGER\n{\nprotected:\n\tABC FUNC();\n};");
-	}
-};
-
-struct test_checker :
-	public checklib::checker_impl
-{
-	virtual std::shared_ptr<checklib::worker_intf> create_worker(std::shared_ptr<base::fsm_walker_intf> spFsmWalker, std::shared_ptr<base::pda_walker_intf> spPdaWalker, checklib::incident_handler_intf& handler) const override
-	{
-		return std::make_shared<checker_worker_fake>(spFsmWalker, spPdaWalker, handler);
-	}
-};
 
 TEST_METHOD(KTTODO_ALL_UT)
 {

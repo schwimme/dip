@@ -40,3 +40,11 @@ namespace
 	bool FAILED(error_t e) { return (e & detail::mask::severity::ERROR) == detail::mask::severity::ERROR; }
 	bool SUCCEEDED(error_t e) { return !FAILED(e); }
 }
+
+#ifndef RETURN_FAIL
+#define RETURN_FAIL(e) do { error_t r = (e); if (FAILED(r)) { return r; } } while (0)
+#endif
+
+#ifndef THROW_FAIL
+#define THROW_FAIL(e) do { error_t r = (e); if (FAILED(r)) { throw exception_t(r); } } while (0)
+#endif

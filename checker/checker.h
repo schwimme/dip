@@ -14,6 +14,7 @@
 #include <mutex>
 #include "checker_intf/checker_intf.h"
 #include <sys/event_distributor/event_distributor.h>
+#include "base_intf/ll_validator/ll_validator_intf.h"
 
 
 namespace checklib
@@ -27,7 +28,7 @@ class checker_impl:
 	protected worker::factory
 {
 public:
-	void configure(incident_handler_intf& pHandler, const sys::string& la_config, const sys::string& sa_config);
+	void configure(incident_handler_intf& pHandler, const sys::string& la_config, const sys::string& sa_config, const std::vector<uint32_t>& ignored_tokens);
 	void check(const std::list<sys::string>& files);
 
 private:
@@ -40,7 +41,9 @@ private:
 	std::shared_ptr<base::base_loader_intf>      m_spBaseLoader;
 	std::shared_ptr<base::base_intf>             m_spBase;
 	std::shared_ptr<base::fsm_intf>              m_spFsm;
-	std::shared_ptr<base::pda_intf>              m_spPda;
+	std::shared_ptr<base::ll_validator_intf>     m_spPda;
+
+	std::vector<uint32_t> m_ignored_tokens;
 
 	mutable sys::thread_pool<8> m_threadPool;
 

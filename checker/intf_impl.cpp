@@ -6,12 +6,14 @@
 #include <list>
 
 #include <crossmodule/adapters/basestring.h>
+#include "crossmodule/types/enumerator.h"
+#include <crossmodule/adapters/vector.h>
 
 namespace checklib
 {
 
 // KTTODO - path param is ignored and behavior is as set to true
-error_t intf_impl::configure(incident_handler_intf* pHandler, cross::string_ref la_config, cross::string_ref sa_config)
+error_t intf_impl::configure(incident_handler_intf* pHandler, cross::string_ref la_config, cross::string_ref sa_config, cross::enumerator<uint32_t>* ignored_tokens)
 {
 	try
 	{
@@ -20,7 +22,7 @@ error_t intf_impl::configure(incident_handler_intf* pHandler, cross::string_ref 
 			return E_INVALID_PARAMETER;
 		}
 
-		m_impl.configure(*pHandler, cross::to_sys_string(la_config), cross::to_sys_string(sa_config));
+		m_impl.configure(*pHandler, cross::to_sys_string(la_config), cross::to_sys_string(sa_config), cross::enumerator_to_vector(*ignored_tokens));
 		return E_NO_ERROR;
 	}
 	catch (const exception_t& e)

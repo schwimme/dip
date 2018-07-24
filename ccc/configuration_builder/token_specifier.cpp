@@ -3,7 +3,10 @@
 
 namespace ccc
 {
-
+namespace
+{
+	const sys::char_t ignore_all[] = { '*', '(', '-', '(', 1, -1, ')', ')' };
+}
 
 void token_specifier::initialize(const sys::string& input_configuration)
 {
@@ -16,8 +19,21 @@ void token_specifier::initialize(const sys::string& input_configuration)
 	build_identificators();
 	build_whitespaces();
 	build_parenthesis();
+	build_ignored();
+
+	m_tokens.push_back({ token_descriptor_e::p_guard, TEXT("#pragma once") });
+	m_tokens.push_back({ token_descriptor_e::p_include_absolute, TEXT("#include <*(+(-(az))/)+(-(az))\\.h>") });
+	m_tokens.push_back({ token_descriptor_e::p_include_relative, TEXT("#include \\\"*(+(-(az))/)+(-(az))\\.h\\\"") });
 
 	build_priorities();
+}
+
+
+void token_specifier::build_ignored()
+{
+//	m_tokens.push_back({ token_descriptor_e::ignored_1, sys::string(TEXT("//")) + ignore_all + TEXT("?(.(\n).(\r\n))") });
+//	m_tokens.push_back({ token_descriptor_e::ignored_2, sys::string(TEXT("/\\*")) + ignore_all + TEXT("\\*/") });
+//	m_tokens.push_back({ token_descriptor_e::ignored_3, sys::string(TEXT("?(.(\n).(\r\n))// ccc_ignore_begin")) + ignore_all + TEXT("?(.(\n).(\r\n))// ccc_ignore_end") });
 }
 
 
@@ -84,8 +100,8 @@ void token_specifier::build_identificators()
 {
 	static const std::vector<std::pair<token_descriptor_e, sys::string>> identificators =
 	{
-		{ token_descriptor_e::i_basic,	 TEXT("+(-(az))") },
-		{ token_descriptor_e::i_member,	 TEXT("m_+(-(az))") },
+		{ token_descriptor_e::i_basic,	 TEXT("+(?(-(az)_))") },
+		{ token_descriptor_e::i_member,	 TEXT("m_+(?(-(az)_))") },
 	};
 
 	m_tokens.insert(m_tokens.end(), identificators.begin(), identificators.end());
@@ -146,8 +162,10 @@ void token_specifier::build_parenthesis()
 }
 
 
-const sys::string token_specifier::serialize() const
+const sys::string token_specifier::serialize(std::vector<uint32_t>& ignored_tokens) const
 {
+	ignored_tokens = { (uint32_t)token_descriptor_e::ignored_1 };
+
 	// {[{1,"r1"},{2,"r2"}],[[1,2],[3,4,5,6]]}
 
 	auto remove_last_char = 

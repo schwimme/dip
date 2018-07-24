@@ -21,8 +21,15 @@ struct incident_handler_intf
 
 	enum class incident_type
 	{
+		common_error,
+
 		unrecognized_token,
+
+		multiple_rules_registration,
+		empty_stack,
+		unexpected_token,
 		no_rule,
+		bad_indent,
 		unexpected_end_of_file
 	};
 
@@ -46,7 +53,7 @@ struct checker_intf:
 
 	/*!	\brief Configure checker by given configuration.
 	*/
-	virtual error_t configure(incident_handler_intf* pHandler, cross::string_ref la_config, cross::string_ref sa_config) = 0;
+	virtual error_t configure(incident_handler_intf* pHandler, cross::string_ref la_config, cross::string_ref sa_config, cross::enumerator<uint32_t>* ignored_tokens) = 0;
 
 	/*!	\brief Check given files.
 		KTTODO - callback with errors

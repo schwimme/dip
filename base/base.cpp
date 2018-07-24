@@ -5,6 +5,7 @@
 // Implementations:
 #include <base/FiniteStateMachine/fsm.h>
 #include <base/PushDownAutomata/pda_intf_impl.h>
+#include "ll_validator/ll_validator_impl.h"
 
 
 namespace base
@@ -60,6 +61,23 @@ error_t base_impl::create_pda(cross::versioned_intf_ref<base::pda_intf> pPda) no
 		}
 
 		return E_NOT_IMPLEMENTED_ERROR;
+	}
+	catch (const exception_t& e)
+	{
+		return e.m_code;
+	}
+	catch (...)
+	{
+		return E_COMMON_ERROR;
+	}
+}
+
+error_t base_impl::create_ll_validator(std::shared_ptr<ll_validator_intf>& spFsm) noexcept
+{
+	try
+	{
+		spFsm = std::make_shared<ll_validator_intf_impl>();
+		return E_NO_ERROR;
 	}
 	catch (const exception_t& e)
 	{

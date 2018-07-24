@@ -10,8 +10,9 @@
 namespace checklib
 {
 
-void checker_impl::configure(incident_handler_intf& pHandler, const sys::string& la_config, const sys::string& sa_config)
+void checker_impl::configure(incident_handler_intf& pHandler, const sys::string& la_config, const sys::string& sa_config, const std::vector<uint32_t>& ignored_tokens)
 {
+	m_ignored_tokens = ignored_tokens;
 	m_p_handler = &pHandler;
 	prepare_base();
 	configure_fsm(la_config);
@@ -23,10 +24,7 @@ void checker_impl::check(const std::list<sys::string>& files)
 {
 	for (const sys::string& f : files)
 	{
-//		m_threadPool.push([&, file = f]
-//		{	
-			worker_procedure(f); 
-//		});
+		worker_procedure(f); 
 	}
 }
 
@@ -36,11 +34,11 @@ void checker_impl::worker_procedure(const sys::string& file)
 	// KTTODO crossmodule!
 	std::shared_ptr<base::fsm_walker_intf> spFsmWalker = m_spFsm->create_walker();
 
-	base::pda_walker_intf* pPdaWalker;
-	m_spPda->create_walker(pPdaWalker);
-	std::shared_ptr<base::pda_walker_intf> spPdaWalker(pPdaWalker); // KTTODO - attacher
+	base::ll_validator_walker_intf* pPdaWalker;
+	THROW_FAIL(m_spPda->create_walker(pPdaWalker, /*start_non_term*/1, /*indent_token*/0x20, /*begin_indent_depth*/0)); // KTTODO - toto je odrb - musi byt injecnute cez config (1 - nonterm program, 0x20 - tab)
+	std::shared_ptr<base::ll_validator_walker_intf> spPdaWalker(pPdaWalker); // KTTODO - attacher
 
-	std::shared_ptr<worker_intf> spWorker = create_worker(spFsmWalker, spPdaWalker, *m_p_handler);
+	std::shared_ptr<worker_intf> spWorker = create_worker(spFsmWalker, spPdaWalker, *m_p_handler, m_ignored_tokens);
 
 	spWorker->check(file);
 }
@@ -55,11 +53,7 @@ void checker_impl::configure_fsm(const sys::string& configuration)
 		= std::make_shared<configurable_fsm_ctx_factory>(spCfg->m_priorityGroups);
 
 	std::shared_ptr<base::fsm_intf> spFsm;
-	error_t errorCode = m_spBase->create_fsm(spFsm, spCtxFactory);
-	if (FAILED(errorCode))
-	{
-		throw exception_t(TEXT("Failed to get fsm from base"), errorCode);
-	}
+	THROW_FAIL(m_spBase->create_fsm(spFsm, spCtxFactory));
 
 	base::fsm::state_id idleState = spFsm->generate_state(configurable_fsm_ctx_factory::INVALID_CTX);
 	spFsm->set_start(idleState);
@@ -78,23 +72,12 @@ void checker_impl::configure_pda(const sys::string& configuration)
 	std::shared_ptr<sa_cfg_builder_intf> spCfgBuilder = create_sa_cfg_builder();
 	std::shared_ptr<sa_cfg> spCfg = spCfgBuilder->build(configuration);
 
-	base::pda_intf* pPda = nullptr;
-	error_t errorCode = m_spBase->create_pda(pPda);
-	if (FAILED(errorCode))
-	{
-		throw exception_t(TEXT("Failed to get pda from base"), errorCode);
-	}
-	std::shared_ptr<base::pda_intf> spPda(pPda); // KTTODO - sp attacher
+	THROW_FAIL(m_spBase->create_ll_validator(m_spPda));
 
 	for (const auto& it : spCfg->m_rules)
 	{
-		spPda->add_rule(
-			it.m_token,
-			cross::std_vector_on_enumerator<sa_rule::stack_item>(it.m_stackTop),
-			cross::std_vector_on_enumerator<sa_rule::stack_item>(it.m_stackReplace));
+		m_spPda->add_grammar_rule(it.parent, it.successors);
 	}
-
-	m_spPda = spPda;
 }
 
 
