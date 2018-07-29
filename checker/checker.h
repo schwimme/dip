@@ -45,7 +45,7 @@ private:
 
 	std::vector<uint32_t> m_ignored_tokens;
 
-	mutable sys::thread_pool<8> m_threadPool;
+//	mutable sys::thread_pool<8> m_threadPool;
 
 	incident_handler_intf* m_p_handler = nullptr;
 };

@@ -11,8 +11,58 @@
 #include "ccc/checking_module/impl.h"
 #include <iostream>
 #include "checker/checker.h"
+#include <sys/algorithm/file_reader.h>
 
 #include <base/ll_validator/ll_validator_impl.h>
+#include "sys/debugging/debug.h"
+
+
+#define TEST_PS
+
+
+struct configuration
+{
+	std::vector<sys::string> files;
+	std::string lng;
+};
+
+configuration load_cfg(int argc, char**argv)
+{
+	configuration rv;
+#ifdef _DEBUG
+#	ifdef TEST_PS
+	rv.files = { TEXT("D:/_dip_test/file.ps") };
+	rv.lng = TEXT("ps");
+#	else
+	rv.files = { "D:/_dip_test/zdatastoragemanager.cpp", "D:/_dip_test/zdatastoragemanagerintf.h", "D:/_dip_test/zdatastoragemanager.h" };
+	rv.lng = TEXT("ps");
+#	endif
+#else
+	rv.files.reserve(argc - 1);
+
+	sys::string cfg;
+
+	while (*(++argv))
+	{
+		sys::string arg = sys::convert<sys::char_t>(std::string(*argv));
+
+		if (arg.compare(0, 5, "/lng=") == 0)
+		{
+			rv.lng = &arg[5];
+		}
+		else
+		{
+			rv.files.emplace_back(arg);
+		}
+	}
+
+	ASSERT(cfg.empty() == false);
+#endif
+
+	return rv;
+}
+
+
 
 int g_files_count = 0;
 void wait_for_processed_files(int num)
@@ -23,7 +73,9 @@ void wait_for_processed_files(int num)
 }
 
 
-struct accident_handler: checklib::incident_handler_intf
+
+struct accident_handler:
+	checklib::incident_handler_intf
 {
 	sys::string identify_accident(checklib::incident_handler_intf::incident_type t)
 	{
@@ -55,7 +107,6 @@ struct accident_handler: checklib::incident_handler_intf
 		++g_files_count;
 	}
 };
-
 
 error_t example_using_base()
 {
@@ -121,20 +172,22 @@ void example_using_checklib()
 	wait_for_processed_files(1);
 }
 
-void example_using_ccc()
+void example_using_ccc(const sys::string& cfg, const std::vector<sys::string>& files)
 {
 	accident_handler h;
 	ccc::checking_module_impl c;
-	c.configure(TEXT(""), h);
+	c.configure(TEXT("cpp"), h);
 
-	c.check_files({ "D:/dip_test.cpp" });
+	c.check_files(files);
 	wait_for_processed_files(1);
 }
 
 int main(int argc, char*argv[])
 {
-//	error_t rv = example_using_base();
-//	example_using_checklib();
-	example_using_ccc();
+	//	error_t rv = example_using_base();
+	//	example_using_checklib();
+
+	auto cfg = load_cfg(argc, argv);
+	example_using_ccc(cfg.lng, cfg.files);
 }
 

@@ -1,4 +1,6 @@
 #include "token_specifier.h"
+#include "sys\debugging\debug.h"
+#include "error\exceptions.h"
 
 
 namespace ccc
@@ -8,111 +10,83 @@ namespace
 	const sys::char_t ignore_all[] = { '*', '(', '-', '(', 1, -1, ')', ')' };
 }
 
-void token_specifier::initialize(const sys::string& input_configuration)
+void token_specifier::initialize(const sys::string& configuration)
 {
-	// Currently unused
-	(void)(input_configuration);
-
-	build_keywords();
-	build_operators();
-	build_numbers();
-	build_identificators();
-	build_whitespaces();
-	build_parenthesis();
-	build_ignored();
-
-	m_tokens.push_back({ token_descriptor_e::p_guard, TEXT("#pragma once") });
-	m_tokens.push_back({ token_descriptor_e::p_include_absolute, TEXT("#include <*(+(-(az))/)+(-(az))\\.h>") });
-	m_tokens.push_back({ token_descriptor_e::p_include_relative, TEXT("#include \\\"*(+(-(az))/)+(-(az))\\.h\\\"") });
-
-	build_priorities();
-}
-
-
-void token_specifier::build_ignored()
-{
-//	m_tokens.push_back({ token_descriptor_e::ignored_1, sys::string(TEXT("//")) + ignore_all + TEXT("?(.(\n).(\r\n))") });
-//	m_tokens.push_back({ token_descriptor_e::ignored_2, sys::string(TEXT("/\\*")) + ignore_all + TEXT("\\*/") });
-//	m_tokens.push_back({ token_descriptor_e::ignored_3, sys::string(TEXT("?(.(\n).(\r\n))// ccc_ignore_begin")) + ignore_all + TEXT("?(.(\n).(\r\n))// ccc_ignore_end") });
-}
-
-
-void token_specifier::build_keywords()
-{
-	static const std::vector<std::pair<token_descriptor_e, sys::string>> key_words = 
+	if (configuration == TEXT("cpp"))
 	{
-		{ token_descriptor_e::k_do,		   TEXT("do")},
-		{ token_descriptor_e::k_while,	   TEXT("while")},
-		{ token_descriptor_e::k_if,		   TEXT("if")},
-		{ token_descriptor_e::k_else,	   TEXT("else")},
-		{ token_descriptor_e::k_for,	   TEXT("for")},
-		{ token_descriptor_e::k_class,	   TEXT("?(.(class).(struct))")},
-		{ token_descriptor_e::k_enum,	   TEXT("enum")},
-		{ token_descriptor_e::k_virtual,   TEXT("virtual")},
-		{ token_descriptor_e::k_const,	   TEXT("const")},
-		{ token_descriptor_e::k_override,  TEXT("override")},
-		{ token_descriptor_e::k_namespace, TEXT("namespace")},
-		{ token_descriptor_e::k_public,    TEXT("public")},
-		{ token_descriptor_e::k_protected, TEXT("protected") },
-		{ token_descriptor_e::k_private,   TEXT("private") },
+		build_cpp();
+	}
+	else if (configuration == TEXT("ps"))
+	{
+		build_ps();
+	}
+	else
+	{
+		ASSERT(false);
+		throw exception_t(-9);
+	}
+}
+
+
+void token_specifier::build_cpp()
+{
+	m_tokens =
+	{
+		{ token_descriptor_e::k_do,                TEXT("do") },
+		{ token_descriptor_e::k_while,             TEXT("while") },
+		{ token_descriptor_e::k_if,                TEXT("if") },
+		{ token_descriptor_e::k_else,              TEXT("else") },
+		{ token_descriptor_e::k_for,	           TEXT("for") },
+		{ token_descriptor_e::k_class,	           TEXT("?(.(class).(struct))") },
+		{ token_descriptor_e::k_enum,	           TEXT("enum") },
+		{ token_descriptor_e::k_virtual,           TEXT("virtual") },
+		{ token_descriptor_e::k_const,	           TEXT("const") },
+		{ token_descriptor_e::k_override,          TEXT("override") },
+		{ token_descriptor_e::k_namespace,         TEXT("namespace") },
+		{ token_descriptor_e::k_public,            TEXT("public") },
+		{ token_descriptor_e::k_protected,         TEXT("protected") },
+		{ token_descriptor_e::k_private,           TEXT("private") },
+		{ token_descriptor_e::o_less,              TEXT("<") },
+		{ token_descriptor_e::o_greater,	       TEXT(">") },
+		{ token_descriptor_e::o_plus,		       TEXT("\\+") },
+		{ token_descriptor_e::o_minus,		       TEXT("\\-") },
+		{ token_descriptor_e::o_star,		       TEXT("\\*") },
+		{ token_descriptor_e::o_slash,		       TEXT("/") },
+		{ token_descriptor_e::o_back_slash,	       TEXT("\\\\") },
+		{ token_descriptor_e::o_comma,		       TEXT(",") },
+		{ token_descriptor_e::o_dot,		       TEXT("\\.") },
+		{ token_descriptor_e::o_colon,		       TEXT(":") },
+		{ token_descriptor_e::o_semicolon,	       TEXT(";") },
+		{ token_descriptor_e::o_equal,		       TEXT("=") },
+		{ token_descriptor_e::o_question,	       TEXT("\\?") },
+		{ token_descriptor_e::o_exclamation,       TEXT("\\!") },
+		{ token_descriptor_e::o_or,                TEXT("\\|") },
+		{ token_descriptor_e::o_and,               TEXT("\\&") },
+		{ token_descriptor_e::n_numeric,           TEXT("?(0.(!(\\-)-(19)*(-(09))!(\\.*(-(09)))))") },
+		{ token_descriptor_e::i_basic,	           TEXT("+(?(-(az)_))") },
+		{ token_descriptor_e::i_member,	           TEXT("m_+(?(-(az)_))") },
+		{ token_descriptor_e::w_enter,	           TEXT("?(.(\n).(\r\n))") },
+		{ token_descriptor_e::w_space,	           TEXT(" ") },
+		{ token_descriptor_e::w_tab,	           TEXT("\t") },
+		{ token_descriptor_e::p_guard,             TEXT("#pragma once") },
+		{ token_descriptor_e::p_include_absolute,  TEXT("#include <*(+(-(az))/)+(-(az))\\.h>") },
+		{ token_descriptor_e::p_include_relative,  TEXT("#include \\\"*(+(-(az))/)+(-(az))\\.h\\\"") },
+		{ token_descriptor_e::v_string,            TEXT("\\\"*(?(-(az)-(AZ)_%\\- -(09)\\?\\!\\:'))\\\"") },
+		{ token_descriptor_e::p_brace_open,        TEXT("{") },
+		{ token_descriptor_e::p_brace_close,       TEXT("}") },
+		{ token_descriptor_e::p_parenthesis_open,  TEXT("\\(") },
+		{ token_descriptor_e::p_parenthesis_close, TEXT("\\)") },
+		{ token_descriptor_e::p_square_open,       TEXT("[") },
+		{ token_descriptor_e::p_square_close,      TEXT("]") },
+		// { token_descriptor_e::ignored_1, sys::string(TEXT("//")) + ignore_all + TEXT("?(.(\n).(\r\n))") },
+		// { token_descriptor_e::ignored_2, sys::string(TEXT("/\\*")) + ignore_all + TEXT("\\*/") },
+		// { token_descriptor_e::ignored_3, sys::string(TEXT("?(.(\n).(\r\n))// ccc_ignore_begin")) + ignore_all + TEXT("?(.(\n).(\r\n))// ccc_ignore_end") },
+
 	};
 
-	m_tokens.insert(m_tokens.end(), key_words.begin(), key_words.end());
-}
-
-
-void token_specifier::build_operators()
-{
-	static const std::vector<std::pair<token_descriptor_e, sys::string>> operators =
+	m_priorities =
 	{
-		{ token_descriptor_e::o_less,		 TEXT("<") },
-		{ token_descriptor_e::o_greater,	 TEXT(">") },
-		{ token_descriptor_e::o_plus,		 TEXT("\\+") },
-		{ token_descriptor_e::o_minus,		 TEXT("\\-") },
-		{ token_descriptor_e::o_star,		 TEXT("\\*") },
-		{ token_descriptor_e::o_slash,		 TEXT("/") },
-		{ token_descriptor_e::o_back_slash,	 TEXT("\\\\") },
-		{ token_descriptor_e::o_comma,		 TEXT(",") },
-		{ token_descriptor_e::o_dot,		 TEXT("\\.") },
-		{ token_descriptor_e::o_colon,		 TEXT(":") },
-		{ token_descriptor_e::o_semicolon,	 TEXT(";") },
-		{ token_descriptor_e::o_equal,		 TEXT("=") },
-		{ token_descriptor_e::o_question,	 TEXT("\\?") },
-		{ token_descriptor_e::o_exclamation, TEXT("\\!") }
-	};
-
-	m_tokens.insert(m_tokens.end(), operators.begin(), operators.end());
-}
-
-
-void token_specifier::build_numbers()
-{
-	static const std::pair<token_descriptor_e, sys::string> numbers =
-	{
-		token_descriptor_e::n_numeric, TEXT("(-(19)*(09)!(.(\\.-(19)*(09)))")
-	};
-
-	m_tokens.push_back(numbers);
-}
-
-
-void token_specifier::build_identificators()
-{
-	static const std::vector<std::pair<token_descriptor_e, sys::string>> identificators =
-	{
-		{ token_descriptor_e::i_basic,	 TEXT("+(?(-(az)_))") },
-		{ token_descriptor_e::i_member,	 TEXT("m_+(?(-(az)_))") },
-	};
-
-	m_tokens.insert(m_tokens.end(), identificators.begin(), identificators.end());
-}
-
-
-void token_specifier::build_priorities()
-{
-	static const std::vector<std::vector<token_descriptor_e>> priorities =
-	{
-		{ token_descriptor_e::k_do,		   token_descriptor_e::i_basic },
+		{ token_descriptor_e::k_do,        token_descriptor_e::i_basic },
 		{ token_descriptor_e::k_while,	   token_descriptor_e::i_basic },
 		{ token_descriptor_e::k_if,		   token_descriptor_e::i_basic },
 		{ token_descriptor_e::k_else,	   token_descriptor_e::i_basic },
@@ -126,39 +100,31 @@ void token_specifier::build_priorities()
 		{ token_descriptor_e::k_protected, token_descriptor_e::i_basic },
 		{ token_descriptor_e::k_private,   token_descriptor_e::i_basic },
 		{ token_descriptor_e::i_member,    token_descriptor_e::i_basic },
+		{ token_descriptor_e::o_minus,     token_descriptor_e::n_numeric }
 	};
-
-	m_priorities = priorities;
 }
 
 
-void token_specifier::build_whitespaces()
+void token_specifier::build_ps()
 {
-	static const std::vector<std::pair<token_descriptor_e, sys::string>> whitespaces =
+	m_tokens = 
 	{
-		{ token_descriptor_e::w_enter,	 TEXT("?(.(\n).(\r\n))") },
-		{ token_descriptor_e::w_space,	 TEXT(" ") },
-		{ token_descriptor_e::w_tab,	 TEXT("\t") },
-	};
-
-	m_tokens.insert(m_tokens.end(), whitespaces.begin(), whitespaces.end());
-}
-
-
-void token_specifier::build_parenthesis()
-{
-
-	static const std::vector<std::pair<token_descriptor_e, sys::string>> parenthesis =
-	{
-		{ token_descriptor_e::p_brace_open, TEXT("{") },
-		{ token_descriptor_e::p_brace_close, TEXT("}") },
-		{ token_descriptor_e::p_parenthesis_open, TEXT("\\(") },
+		{ token_descriptor_e::n_numeric,           TEXT("?(0.(!(\\-)-(19)*(-(09))!(\\.*(-(09)))))") },
+		{ token_descriptor_e::i_basic,	           TEXT("$+(?(-(az)_))") },
+		{ token_descriptor_e::i_function_call_ps,  TEXT("-(AZ)+(?(-(az)-))") },
+		{ token_descriptor_e::w_enter,	           TEXT("?(.(\n).(\r\n))") },
+		{ token_descriptor_e::w_space,	           TEXT(" ") },
+		{ token_descriptor_e::w_tab,	           TEXT("\t") },
+		{ token_descriptor_e::p_brace_open,        TEXT("{") },
+		{ token_descriptor_e::p_brace_close,       TEXT("}") },
+		{ token_descriptor_e::p_parenthesis_open,  TEXT("\\(") },
 		{ token_descriptor_e::p_parenthesis_close, TEXT("\\)") },
-		{ token_descriptor_e::p_square_open, TEXT("[") },
-		{ token_descriptor_e::p_square_close, TEXT("]") },
+		{ token_descriptor_e::p_square_open,       TEXT("[") },
+		{ token_descriptor_e::p_square_close,      TEXT("]") },
+		{ token_descriptor_e::i_function_param_ps, TEXT("\\-?(-(az)-(AZ)") },
+		{ token_descriptor_e::v_string,            TEXT("\\\"*(?(-(az)-(AZ)_%\\- -(09)\\?\\!\\:'))\\\"") },
+		{ token_descriptor_e::o_equal,		       TEXT("=") }
 	};
-
-	m_tokens.insert(m_tokens.end(), parenthesis.begin(), parenthesis.end());
 }
 
 

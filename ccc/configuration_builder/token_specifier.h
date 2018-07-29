@@ -26,16 +26,8 @@ public:
 
 private:
 	void initialize(const sys::string& input_configuration);
-
-	void build_keywords();
-	void build_operators();
-	void build_numbers();
-	void build_identificators();
-	void build_whitespaces();
-	void build_parenthesis();
-	void build_ignored();
-
-	void build_priorities();
+	void build_cpp();
+	void build_ps();
 
 private:
 	std::vector<std::vector<token_descriptor_e>>            m_priorities;
