@@ -71,14 +71,14 @@ void token_specifier::build_cpp()
 		{ token_descriptor_e::p_guard,             TEXT("#pragma once") },
 		{ token_descriptor_e::p_include_absolute,  TEXT("#include <*(+(-(az))/)+(-(az))\\.h>") },
 		{ token_descriptor_e::p_include_relative,  TEXT("#include \\\"*(+(-(az))/)+(-(az))\\.h\\\"") },
-		{ token_descriptor_e::v_string,            TEXT("\\\"*(?(-(az)-(AZ)_%\\- -(09)\\?\\!\\:'))\\\"") },
+		{ token_descriptor_e::v_string,            TEXT("\\\"*(?(-(az)-(AZ)_%\\-^$\\*\\/ -(09)\\?\\!\\:'))\\\"") },
 		{ token_descriptor_e::p_brace_open,        TEXT("{") },
 		{ token_descriptor_e::p_brace_close,       TEXT("}") },
 		{ token_descriptor_e::p_parenthesis_open,  TEXT("\\(") },
 		{ token_descriptor_e::p_parenthesis_close, TEXT("\\)") },
 		{ token_descriptor_e::p_square_open,       TEXT("[") },
 		{ token_descriptor_e::p_square_close,      TEXT("]") },
-		// { token_descriptor_e::ignored_1, sys::string(TEXT("//")) + ignore_all + TEXT("?(.(\n).(\r\n))") },
+		{ token_descriptor_e::ignored_1,           TEXT("//*(?(-(az)-(AZ)_%\\-^$\\*\\/ -(09)\\?\\!\\:'))\n") },
 		// { token_descriptor_e::ignored_2, sys::string(TEXT("/\\*")) + ignore_all + TEXT("\\*/") },
 		// { token_descriptor_e::ignored_3, sys::string(TEXT("?(.(\n).(\r\n))// ccc_ignore_begin")) + ignore_all + TEXT("?(.(\n).(\r\n))// ccc_ignore_end") },
 
@@ -111,7 +111,7 @@ void token_specifier::build_ps()
 	{
 		{ token_descriptor_e::n_numeric,           TEXT("?(0.(!(\\-)-(19)*(-(09))!(\\.*(-(09)))))") },
 		{ token_descriptor_e::i_basic,	           TEXT("$+(?(-(az)_))") },
-		{ token_descriptor_e::i_function_call_ps,  TEXT("-(AZ)+(?(-(az)-))") },
+		{ token_descriptor_e::i_function_call_ps,  TEXT("-(AZ)+(?(-(az).(\\--(AZ))))") },
 		{ token_descriptor_e::w_enter,	           TEXT("?(.(\n).(\r\n))") },
 		{ token_descriptor_e::w_space,	           TEXT(" ") },
 		{ token_descriptor_e::w_tab,	           TEXT("\t") },
@@ -121,9 +121,30 @@ void token_specifier::build_ps()
 		{ token_descriptor_e::p_parenthesis_close, TEXT("\\)") },
 		{ token_descriptor_e::p_square_open,       TEXT("[") },
 		{ token_descriptor_e::p_square_close,      TEXT("]") },
-		{ token_descriptor_e::i_function_param_ps, TEXT("\\-?(-(az)-(AZ)") },
-		{ token_descriptor_e::v_string,            TEXT("\\\"*(?(-(az)-(AZ)_%\\- -(09)\\?\\!\\:'))\\\"") },
-		{ token_descriptor_e::o_equal,		       TEXT("=") }
+		{ token_descriptor_e::i_function_param_ps, TEXT("\\-+(?(-(az)-(AZ)))") },
+		{ token_descriptor_e::v_string,            TEXT("\\\"*(?(-(az)-(AZ)_%\\-^$\\*\\/ -(09)\\?\\!\\:'))\\\"") },
+		{ token_descriptor_e::o_equal,		       TEXT("=") },
+		{ token_descriptor_e::o_plus,		       TEXT("\\+") },
+		{ token_descriptor_e::o_minus,		       TEXT("\\-") },
+		{ token_descriptor_e::o_star,		       TEXT("\\*") },
+		{ token_descriptor_e::o_slash,		       TEXT("/") },
+		{ token_descriptor_e::o_or,                TEXT("\\|") },
+		{ token_descriptor_e::k_function,          TEXT("function") },
+		{ token_descriptor_e::k_param,             TEXT("param") },
+		{ token_descriptor_e::k_switch,            TEXT("Switch") },
+		{ token_descriptor_e::k_string,            TEXT("String") },
+		{ token_descriptor_e::k_while,             TEXT("while") },
+		{ token_descriptor_e::k_if,                TEXT("if") },
+		{ token_descriptor_e::k_else,              TEXT("else") },
+		{ token_descriptor_e::o_comma,		       TEXT(",") },
+		{ token_descriptor_e::ignored_1,           TEXT("#*(?(-(az)-(AZ)_%\\-^$\\*\\/ -(09)\\?\\!\\:'))\n") },
+
+	};
+
+	m_priorities = 
+	{
+		{ token_descriptor_e::k_switch, token_descriptor_e::i_function_call_ps },
+		{ token_descriptor_e::k_string, token_descriptor_e::i_function_call_ps }
 	};
 }
 

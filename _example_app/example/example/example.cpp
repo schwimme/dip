@@ -31,11 +31,11 @@ configuration load_cfg(int argc, char**argv)
 	configuration rv;
 #ifdef _DEBUG
 #	ifdef TEST_PS
-	rv.files = { TEXT("D:/_dip_test/file.ps") };
+	rv.files = { TEXT("D:/_dip_test/powershell.ps1") };
 	rv.lng = TEXT("ps");
 #	else
 	rv.files = { "D:/_dip_test/zdatastoragemanager.cpp", "D:/_dip_test/zdatastoragemanagerintf.h", "D:/_dip_test/zdatastoragemanager.h" };
-	rv.lng = TEXT("ps");
+	rv.lng = TEXT("cpp");
 #	endif
 #else
 	rv.files.reserve(argc - 1);
@@ -172,11 +172,11 @@ void example_using_checklib()
 	wait_for_processed_files(1);
 }
 
-void example_using_ccc(const sys::string& cfg, const std::vector<sys::string>& files)
+void example_using_ccc(const sys::string& lng, const std::vector<sys::string>& files)
 {
 	accident_handler h;
 	ccc::checking_module_impl c;
-	c.configure(TEXT("cpp"), h);
+	c.configure(lng, h);
 
 	c.check_files(files);
 	wait_for_processed_files(1);

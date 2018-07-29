@@ -42,6 +42,11 @@ std::shared_ptr<la_cfg> la_cfg_builder::build(const sys::string& configuration) 
 		++p_cfg;
 		check_end(p_cfg);
 
+		if (*p_cfg == TEXT(']'))
+		{
+			break;
+		}
+
 		std::vector<token_id> p = parse_priority_group(p_cfg);
 		check_is(p_cfg, TEXT(','), TEXT(']'));
 		priorities.push_back(std::move(p));
@@ -129,7 +134,7 @@ std::vector<token_id> la_cfg_builder::parse_priority_group(const sys::char_t*& p
 	// [1,2,43]
 	std::vector<token_id> rv;
 
-	check_is(p_cfg, TEXT('['));
+	check_is(p_cfg, TEXT('['), TEXT(']'));
 
 	while (*p_cfg != TEXT(']'))
 	{

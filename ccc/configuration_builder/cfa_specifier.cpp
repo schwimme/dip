@@ -69,6 +69,12 @@ const base::rule_item_non_terminal
 
 	n_script_line(0x39),
 	n_script_line_end(0x3a),
+	n_function_call(0x3b),
+	n_function_call_params(0x3c),
+	n_function_call_params_value(0x3d),
+	n_script_line_impl(0x3e),
+	n_param_type(0x3f),
+	n_params_decl_one_implicit_value(0x40),
 	_n_end(1000);
 
 base::rule_item_terminal from_descriptor(ccc::token_descriptor_e d)
@@ -313,23 +319,72 @@ void cfa_specifier::build_cpp()
 
 void cfa_specifier::build_ps()
 {
+	m_rules.push_back({ n_function_call,{ TOKEN(i_function_call_ps), n_function_call_params } });
+
+	m_rules.push_back({ n_function_call_params,{ TOKEN(w_enter) } });
+	m_rules.push_back({ n_function_call_params,{ TOKEN(w_space), n_function_call_params_value } });
+
+	m_rules.push_back({ n_function_call_params_value,{ TOKEN(o_or), TOKEN(w_space), n_function_call } });
+	m_rules.push_back({ n_function_call_params_value,{ n_universal_value_access, n_function_call_params } });
+	m_rules.push_back({ n_function_call_params_value,{ TOKEN(i_function_param_ps), n_function_call_params } });
+
 	m_rules.push_back({ n_universal_value_access, { TOKEN(i_basic) } });
-	m_rules.push_back({ n_universal_value_access, { TOKEN(i_function_call_ps) } }); // KTTODO - params
 	m_rules.push_back({ n_universal_value_access, { TOKEN(n_numeric) } });
 	m_rules.push_back({ n_universal_value_access, { TOKEN(v_string) } });
 
 	m_rules.push_back({ n_program,{ n_script_line } });
 
 	m_rules.push_back({ n_script_line, { TOKEN(w_enter), n_script_line_end } });
-	m_rules.push_back({ n_script_line,{ TOKEN(i_basic), TOKEN(w_space), TOKEN(o_equal), TOKEN(w_space), n_expression_rv, n_script_line } });
+	m_rules.push_back({ n_script_line, { n_script_line_impl, n_script_line } });
+	m_rules.push_back({ n_script_line,{ n_function_def, n_script_line } });
 
 	m_rules.push_back({ n_script_line_end,{ TOKEN(w_enter) } });
-	m_rules.push_back({ n_script_line_end,{ TOKEN(i_basic), TOKEN(w_space), TOKEN(o_equal), TOKEN(w_space), n_expression_rv, n_script_line } });
+	m_rules.push_back({ n_script_line_end,{ n_script_line_impl, n_script_line } });
+	m_rules.push_back({ n_script_line_end,{ n_function_def, n_script_line } });
 
+	m_rules.push_back({ n_script_line_impl,{ TOKEN(i_basic), TOKEN(w_space), TOKEN(o_equal), TOKEN(w_space), n_expression_rv } });
+	m_rules.push_back({ n_script_line_impl,{ n_function_call } });
+	m_rules.push_back({ n_script_line_impl,{ TOKEN(p_brace_open), TOKEN(w_enter), base::meta::indent_inc() } });
+	m_rules.push_back({ n_script_line_impl,{ TOKEN(p_brace_close), TOKEN(w_enter), base::meta::indent_dec() } });
+
+	m_rules.push_back({ n_expression_rv, { n_function_call } });
 	m_rules.push_back({ n_expression_rv, { n_universal_value_access, n_expression_rv_rest } });
-	m_rules.push_back({ n_expression_rv_rest,{ TOKEN(w_enter) } });
 
-//	m_rules.push_back({ n_impl_line, {} });
+	m_rules.push_back({ n_expression_rv_rest,{ TOKEN(w_enter) } });
+	m_rules.push_back({ n_expression_rv_rest,{ TOKEN(w_space), n_operator_binary, TOKEN(w_space), n_universal_value_access, TOKEN(w_enter) } });
+
+	m_rules.push_back({ n_operator_binary, { TOKEN(o_plus) } });
+	m_rules.push_back({ n_operator_binary, { TOKEN(o_minus) } });
+	m_rules.push_back({ n_operator_binary, { TOKEN(o_star) } });
+	m_rules.push_back({ n_operator_binary, { TOKEN(o_slash) } });
+
+	m_rules.push_back({ n_function_def,{ TOKEN(k_function), TOKEN(w_space), TOKEN(i_function_call_ps), TOKEN(w_enter), TOKEN(p_brace_open), TOKEN(w_enter), n_function_impl_wrapper } });
+	m_rules.push_back({ n_function_impl_wrapper,{ TOKEN(p_brace_close), TOKEN(w_enter) } });
+	m_rules.push_back({ n_function_impl_wrapper,{ TOKEN(w_tab), n_params_decl } });
+
+	m_rules.push_back({ n_params_decl,{ TOKEN(k_param), TOKEN(w_enter), TOKEN(w_tab), TOKEN(p_parenthesis_open), TOKEN(w_enter), TOKEN(w_tab), n_params_decl_one } });
+	m_rules.push_back({ n_params_decl,{ n_statement_impl } });
+
+	m_rules.push_back({ n_params_decl_one,{ TOKEN(w_tab), TOKEN(p_square_open), n_param_type, TOKEN(p_square_close), TOKEN(i_basic), n_params_decl_one_implicit_value } });
+
+	m_rules.push_back({ n_params_decl_one_implicit_value,{ n_params_decl_rest } });
+	m_rules.push_back({ n_params_decl_one_implicit_value,{ TOKEN(w_space), TOKEN(o_equal), TOKEN(w_space), n_universal_value_access, n_params_decl_rest } });
+
+	m_rules.push_back({ n_params_decl_rest,{ TOKEN(o_comma), TOKEN(w_enter), TOKEN(w_tab), n_params_decl_one } });
+	m_rules.push_back({ n_params_decl_rest,{ TOKEN(w_enter), TOKEN(w_tab), TOKEN(w_tab), TOKEN(p_parenthesis_close), TOKEN(w_enter), n_statement } });
+
+	m_rules.push_back({ n_statement,{ TOKEN(w_enter), n_statement } });
+	m_rules.push_back({ n_statement,{ TOKEN(w_tab), base::meta::indent_check(), n_statement_impl, n_statement } });
+	m_rules.push_back({ n_statement,{ TOKEN(p_brace_close), TOKEN(w_enter) } });
+
+	m_rules.push_back({ n_statement_impl,{ n_script_line_impl } });
+
+	m_rules.push_back({ n_statement_impl,{ TOKEN(k_if), TOKEN(w_space), TOKEN(p_parenthesis_open), n_universal_value_access, TOKEN(w_space), TOKEN(i_function_param_ps), TOKEN(w_space), n_universal_value_access, TOKEN(p_parenthesis_close), TOKEN(w_enter) } });
+	m_rules.push_back({ n_statement_impl,{ TOKEN(k_while), TOKEN(w_space), TOKEN(p_parenthesis_open), n_universal_value_access, TOKEN(w_space), TOKEN(i_function_param_ps), TOKEN(w_space), n_universal_value_access, TOKEN(p_parenthesis_close), TOKEN(w_enter) } });
+	m_rules.push_back({ n_statement_impl,{ TOKEN(k_else), TOKEN(w_enter) } });
+
+	m_rules.push_back({ n_param_type,{ TOKEN(k_switch) } });
+	m_rules.push_back({ n_param_type,{ TOKEN(k_string) } });
 }
 
 
