@@ -1,33 +1,9 @@
 #include "file_reader.h"
 #include <fstream>
 #include <error/exceptions.h>
-#include <locale>
-#include <codecvt>
 
 namespace sys
 {
-
-template<typename _Dst, typename _Src>
-std::basic_string<_Dst> convert(const std::basic_string<_Src>& src)
-{
-	return src;
-}
-
-template<>
-std::basic_string<wchar_t> convert(const std::basic_string<char>& src)
-{
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-	return converter.from_bytes(src);
-}
-
-
-template<>
-std::basic_string<char> convert(const std::basic_string<wchar_t>& src)
-{
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-	return converter.to_bytes(src);
-}
-
 
 sys::string read_file(const sys::string& file)
 {

@@ -44,7 +44,7 @@ private:
 	std::vector<uint32_t>                                     m_terminals;
 	std::vector<uint32_t>                                     m_non_terminals;
 
-	std::map<std::vector<rule_item>, std::vector<uint32_t>>   m_first;
+	std::map<rule_item, std::vector<uint32_t>>   m_first;
 
 	std::vector<std::pair<rule_item, std::vector<rule_item>>> m_rules;
 

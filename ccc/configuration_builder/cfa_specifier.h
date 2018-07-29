@@ -67,6 +67,9 @@ public:
 	virtual sys::string serialize() const override;
 
 private:
+	void build_cpp();
+	void build_ps();
+private:
 	void initialize(const sys::string& configuration);
 
 private:

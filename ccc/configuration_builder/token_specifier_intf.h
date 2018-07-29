@@ -75,6 +75,17 @@ enum class token_descriptor_e:
 	/*2c*/ p_include_absolute,
 	/*2d*/ p_include_relative,
 
+	/*2e*/ o_or,
+	/*2f*/ o_and,
+
+	/*30*/ v_string,
+	/*31*/ i_function_call_ps,
+	/*32*/ i_function_param_ps,
+	/*33*/ k_function,
+	/*34*/ k_param,
+	/*35*/ k_switch,
+	/*36*/ k_string,
+	/*37*/ k_int,
 };
 
 struct token_specifier_intf

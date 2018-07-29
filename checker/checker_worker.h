@@ -54,50 +54,7 @@ protected:
 
 	void check_syntax_analysis(const std::vector<token>& tokens);
 
-	void report_incident(error_t err)
-	{
-		incident_handler_intf::incident_type type = incident_handler_intf::incident_type::common_error;
-		switch (err)
-		{
-		case -1: 
-			type = incident_handler_intf::incident_type::multiple_rules_registration;
-			break;
-
-		case -2:
-			type = incident_handler_intf::incident_type::empty_stack;
-			break;
-
-		case -3:
-			type = incident_handler_intf::incident_type::unexpected_token;
-			break;
-
-		case -4:
-			type = incident_handler_intf::incident_type::no_rule;
-			break;
-
-		case -5:
-			type = incident_handler_intf::incident_type::bad_indent;
-			break;
-
-		case -6:
-			type = incident_handler_intf::incident_type::unexpected_end_of_file;
-			break;
-
-		case -7:
-			type = incident_handler_intf::incident_type::unrecognized_token;
-			break;
-
-		default:
-			break;
-		}
-		incident_handler_intf::incident_info info{ cross::sys_string_on_string_ref(m_file), m_col, m_line, type };
-
-		incident_handler_intf::action action_to_take;
-		sys::string replacement;
-		cross::sys_string_settable_string_ref adapter(replacement);
-
-		m_pHandler->on_incident(info, &action_to_take, &adapter);
-	}
+	void report_incident(error_t err);
 
 private:
 	std::shared_ptr<base::fsm_walker_intf> m_spFsmWalker;
