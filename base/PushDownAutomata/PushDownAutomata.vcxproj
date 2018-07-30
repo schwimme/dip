@@ -36,20 +36,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base_intf\ll_validator\ll_validator_intf.h" />
-    <ClInclude Include="..\..\base_intf\PushDownAutomata\pda_defs.h" />
-    <ClInclude Include="..\..\base_intf\PushDownAutomata\pda_intf.h" />
-    <ClInclude Include="..\..\base_intf\PushDownAutomata\pda_walker_intf.h" />
     <ClInclude Include="..\ll_validator\ll_validator_impl.h" />
-    <ClInclude Include="pda_impl.h" />
-    <ClInclude Include="pda_intf_impl.h" />
-    <ClInclude Include="pda_walker_impl.h" />
-    <ClInclude Include="walkable_intf.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ll_validator\ll_validator_impl.cpp" />
-    <ClCompile Include="pda_impl.cpp" />
-    <ClCompile Include="pda_intf_impl.cpp" />
-    <ClCompile Include="pda_walker_impl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\sys\sys.vcxproj">

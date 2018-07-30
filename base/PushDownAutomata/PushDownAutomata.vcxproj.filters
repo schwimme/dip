@@ -14,27 +14,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\base_intf\PushDownAutomata\pda_walker_intf.h">
-      <Filter>Header Files\Intf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\base_intf\PushDownAutomata\pda_intf.h">
-      <Filter>Header Files\Intf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\base_intf\PushDownAutomata\pda_defs.h">
-      <Filter>Header Files\Intf</Filter>
-    </ClInclude>
-    <ClInclude Include="pda_intf_impl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pda_impl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pda_walker_impl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="walkable_intf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\base_intf\ll_validator\ll_validator_intf.h">
       <Filter>Header Files\Intf</Filter>
     </ClInclude>
@@ -43,15 +22,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pda_intf_impl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pda_impl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pda_walker_impl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\ll_validator\ll_validator_impl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
