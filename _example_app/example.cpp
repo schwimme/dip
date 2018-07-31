@@ -17,27 +17,29 @@
 #include "sys/debugging/debug.h"
 
 
-#define TEST_PS
-
-
 struct configuration
 {
 	std::vector<sys::string> files;
-	std::string lng;
+	sys::string lng;
 };
 
 configuration load_cfg(int argc, char**argv)
 {
 	configuration rv;
+
 #ifdef _DEBUG
-#	ifdef TEST_PS
-	rv.files = { TEXT("D:/_dip_test/powershell.ps1") };
-	rv.lng = TEXT("ps");
-#	else
-	rv.files = { "D:/_dip_test/zdatastoragemanager.cpp", "D:/_dip_test/zdatastoragemanagerintf.h", "D:/_dip_test/zdatastoragemanager.h" };
-	rv.lng = TEXT("cpp");
-#	endif
-#else
+	std::string arg1(argv[1]);
+	if (arg1 == "/test_ps")
+	{
+		return{ { TEXT("D:/_dip_test/powershell.ps1") }, TEXT("ps") };
+	}
+	else if (arg1 == "/test_cpp")
+	{
+		return{ { "D:/_dip_test/zdatastoragemanager.cpp" /*, "D:/_dip_test/zdatastoragemanagerintf.h", "D:/_dip_test/zdatastoragemanager.h"*/ }, TEXT("cpp") };
+	}
+
+#endif _DEBUG
+
 	rv.files.reserve(argc - 1);
 
 	sys::string cfg;
@@ -46,7 +48,7 @@ configuration load_cfg(int argc, char**argv)
 	{
 		sys::string arg = sys::convert<sys::char_t>(std::string(*argv));
 
-		if (arg.compare(0, 5, "/lng=") == 0)
+		if (arg.compare(0, 5, TEXT("/lng=")) == 0)
 		{
 			rv.lng = &arg[5];
 		}
@@ -57,7 +59,6 @@ configuration load_cfg(int argc, char**argv)
 	}
 
 	ASSERT(cfg.empty() == false);
-#endif
 
 	return rv;
 }
@@ -65,13 +66,8 @@ configuration load_cfg(int argc, char**argv)
 
 
 int g_files_count = 0;
-void wait_for_processed_files(int num)
-{
-	while (g_files_count != num);
-
-	g_files_count = 0;
-}
-
+std::mutex g_files_count_mutex;
+std::condition_variable g_files_count_cv;
 
 
 struct accident_handler:
@@ -88,14 +84,6 @@ struct accident_handler:
 		}
 	}
 
-
-	enum class incident_type
-	{
-		unrecognized_token,
-		no_rule,
-		unexpected_end_of_file
-	};
-
 	virtual void on_incident(incident_info info, action* action_to_take, cross::settable_string_ref* replacement) noexcept override 
 	{
 		std::cout << 
@@ -104,7 +92,11 @@ struct accident_handler:
 
 	virtual void on_finish(cross::string_ref file, error_t err) override
 	{
-		++g_files_count;
+		{
+			std::lock_guard<std::mutex> l(g_files_count_mutex);
+			++g_files_count;
+		}
+		g_files_count_cv.notify_all();
 	}
 };
 
@@ -169,7 +161,9 @@ void example_using_checklib()
 	c.configure(h, la, sa, { 13 });
 
 	c.check({ "D:/temp.lng" });
-	wait_for_processed_files(1);
+
+	std::unique_lock<std::mutex> l(g_files_count_mutex);
+	g_files_count_cv.wait(l, [] { return g_files_count == 1; });
 }
 
 void example_using_ccc(const sys::string& lng, const std::vector<sys::string>& files)
@@ -179,7 +173,9 @@ void example_using_ccc(const sys::string& lng, const std::vector<sys::string>& f
 	c.configure(lng, h);
 
 	c.check_files(files);
-	wait_for_processed_files(1);
+
+	std::unique_lock<std::mutex> l(g_files_count_mutex);
+	g_files_count_cv.wait(l, [&] { return g_files_count == files.size(); });
 }
 
 int main(int argc, char*argv[])

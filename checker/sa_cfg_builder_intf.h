@@ -20,6 +20,9 @@ struct sa_cfg
 		std::vector<base::rule_item> successors;
 	};
 	std::vector<rule> m_rules;
+
+	base::rule_item m_indent;
+	base::rule_item m_start;
 };
 
 

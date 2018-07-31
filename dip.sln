@@ -67,7 +67,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ccc_test", "ccc\ccc_test\cc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_ExampleApp", "_ExampleApp", "{AC2B165E-BE59-4DF6-8E18-8C94A29F65A2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example", "_example_app\example\example\example.vcxproj", "{47D545CD-2B17-45CE-8ECD-1776D03B11C8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example", "_example_app\example.vcxproj", "{47D545CD-2B17-45CE-8ECD-1776D03B11C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -25,7 +25,7 @@ checking_module_impl::~checking_module_impl()
 
 void checking_module_impl::configure(const sys::string& config_path, checklib::incident_handler_intf& pHandler)
 {
-	configure_checklib(config_path);
+	configure_checklib();
 
 	m_sp_cfg_builder = create_configuration_builder();
 	sys::string la, sa;
@@ -78,12 +78,14 @@ void checking_module_impl::check_files_impl()
 		}
 
 		cross::std_vector_on_enumerator<cross::string_ref> adapter(cmt_to_process);
-		THROW_FAIL(m_sp_checker->check(&adapter));
+
+		// Errors arent handled:
+		m_sp_checker->check(&adapter);
 	}
 }
 
 
-void checking_module_impl::configure_checklib(const sys::string& path)
+void checking_module_impl::configure_checklib()
 {
 	m_sp_checklib_loader = create_checklib_loader();
 

@@ -33,7 +33,7 @@ public:
 	~checking_module_impl();
 
 protected:
-	void configure_checklib(const sys::string& path);
+	void configure_checklib();
 
 
 private: // checklib
